@@ -20,7 +20,7 @@ const Footer = () => {
             <h4>Khám phá</h4>
             <Link to='/find-room'>Tìm phòng trọ</Link>
             <Link to='find-roommate'>Tìm bạn cùng phòng</Link>
-            <Link to='/post-listing'>Đăng tin</Link>
+            <Link to='/post-room'>Đăng trọ</Link>
           </div>
 
           <div className='footer-column'>

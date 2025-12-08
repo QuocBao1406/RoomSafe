@@ -1,0 +1,103 @@
+/* 1. Lớp phủ đen mờ phía sau */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Đen mờ 60% */
+    z-index: 9999; /* Luôn nổi lên trên cùng */
+    display: flex;
+    align-items: center; /* Căn giữa dọc */
+    justify-content: center; /* Căn giữa ngang */
+    animation: fadeIn 0.2s ease-out;
+}
+
+/* 2. Cái hộp nội dung chính */
+.modal-content {
+    background: white;
+    width: 90%; /* Mobile: chiếm 90% màn hình */
+    max-width: 700px; /* PC: tối đa 700px */
+    max-height: 90vh; /* Không cao quá 90% màn hình */
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Để bo góc không bị ảnh che mất */
+    animation: slideUp 0.3s ease-out;
+}
+
+/* 3. Phần Header */
+.modal-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    position: sticky;
+    top: 0;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    padding: 0 5px;
+}
+.btn-close:hover { color: #333; }
+
+/* 4. Phần Body (Nội dung cuộn được) */
+.modal-body {
+    padding: 20px;
+    overflow-y: auto; /* Cho phép cuộn dọc */
+}
+
+.modal-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.modal-title { margin: 0 0 5px; color: #3b82f6; font-size: 22px; }
+.modal-price { color: #dc2626; font-size: 20px; font-weight: bold; margin-bottom: 15px; }
+
+.modal-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+/* 5. Phần Footer */
+.modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    background: #fff;
+    display: flex;
+    gap: 10px;
+}
+
+/* Hiệu ứng Animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
