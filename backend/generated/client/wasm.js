@@ -138,9 +138,34 @@ exports.Prisma.PostImagesScalarFieldEnum = {
   post_id: 'post_id'
 };
 
+exports.Prisma.RoommatePostScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  budget: 'budget',
+  preferred_area: 'preferred_area',
+  gender_preference: 'gender_preference',
+  age_min: 'age_min',
+  age_max: 'age_max',
+  habits: 'habits',
+  contact_zalo: 'contact_zalo',
+  contact_messenger: 'contact_messenger',
+  contact_phone: 'contact_phone',
+  photos: 'photos',
+  status: 'status',
+  user_id: 'user_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.NullsOrder = {
@@ -170,6 +195,27 @@ exports.Prisma.PostsOrderByRelevanceFieldEnum = {
 
 exports.Prisma.PostImagesOrderByRelevanceFieldEnum = {
   image_url: 'image_url'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.RoommatePostOrderByRelevanceFieldEnum = {
+  title: 'title',
+  description: 'description',
+  preferred_area: 'preferred_area',
+  habits: 'habits',
+  contact_zalo: 'contact_zalo',
+  contact_messenger: 'contact_messenger',
+  contact_phone: 'contact_phone'
 };
 exports.users_user_gender = exports.$Enums.users_user_gender = {
   MALE: 'MALE',
@@ -201,10 +247,23 @@ exports.PostCategory = exports.$Enums.PostCategory = {
   NHA_NGUYEN_CAN: 'NHA_NGUYEN_CAN'
 };
 
+exports.RoommateGender = exports.$Enums.RoommateGender = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE',
+  ANY: 'ANY'
+};
+
+exports.RoommateStatus = exports.$Enums.RoommateStatus = {
+  ACTIVE: 'ACTIVE',
+  FOUND: 'FOUND',
+  CLOSED: 'CLOSED'
+};
+
 exports.Prisma.ModelName = {
   Users: 'Users',
   Posts: 'Posts',
-  PostImages: 'PostImages'
+  PostImages: 'PostImages',
+  RoommatePost: 'RoommatePost'
 };
 /**
  * Create the Client
@@ -254,13 +313,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../backend/generated/client\"\n}\n\ndatasource db {\n  provider = \"mysql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Users {\n  user_id           BigInt                  @id @default(autoincrement()) @db.UnsignedBigInt\n  user_name         String                  @unique(map: \"user_name\") @db.VarChar(100)\n  user_password     String                  @db.VarChar(255)\n  user_full_name    String?                 @db.VarChar(255)\n  user_gender       users_user_gender?\n  user_birthday     DateTime?               @db.Date\n  user_phone        String?                 @unique(map: \"user_phone\") @db.VarChar(20)\n  user_email        String                  @unique(map: \"user_email\") @db.VarChar(100)\n  user_address      String?                 @db.VarChar(255)\n  user_avatar       String?                 @db.VarChar(255)\n  user_avg_rating   Decimal?                @default(0.0) @db.Decimal(2, 1)\n  user_review_count Int?                    @default(0)\n  user_bio          String?                 @db.Text\n  user_created_at   DateTime                @default(now()) @db.Timestamp(0)\n  user_verification users_user_verification @default(UNVERIFIED)\n  user_role         users_user_role\n  posts             Posts[]\n}\n\nenum users_user_gender {\n  MALE\n  FEMALE\n  OTHER\n}\n\nenum users_user_verification {\n  UNVERIFIED\n  PENDING\n  VERIFIED\n  REJECTED\n}\n\nenum users_user_role {\n  LANDLORD\n  TENANT\n}\n\nmodel Posts {\n  post_id           Int          @id @default(autoincrement())\n  post_title        String       @db.VarChar(255)\n  post_description  String       @db.Text\n  post_price        Int\n  post_area         Float\n  price_electricity Int?\n  price_water       Int?\n  price_internet    Int?\n  post_address      String       @db.VarChar(255)\n  post_ward         String?      @db.VarChar(100)\n  post_district     String       @db.VarChar(100)\n  post_city         String       @db.VarChar(100)\n  category          PostCategory @default(PHONG_TRO)\n  status            PostStatus   @default(AVAILABLE)\n\n  user_id BigInt @db.UnsignedBigInt\n  user    Users  @relation(fields: [user_id], references: [user_id], onDelete: Cascade)\n\n  // Quan hệ với Ảnh\n  images PostImages[]\n\n  created_at DateTime  @default(now())\n  expired_at DateTime? // Ngày hết hạn tin đăng\n\n  @@map(\"posts\") // Tên bảng trong DB\n}\n\nmodel PostImages {\n  image_id  Int    @id @default(autoincrement())\n  image_url String @db.Text\n\n  // Quan hệ N-1 với Posts\n  post_id Int\n  post    Posts @relation(fields: [post_id], references: [post_id], onDelete: Cascade)\n\n  @@map(\"post_images\")\n}\n\nenum PostStatus {\n  AVAILABLE\n  RENTED\n  HIDDEN\n}\n\nenum PostCategory {\n  PHONG_TRO\n  CHUNG_CU\n  NHA_NGUYEN_CAN\n}\n",
-  "inlineSchemaHash": "689c28e8b59f4e0a35bf368deb08ed951f73fcfc9132700963d89a06ea8eb8af",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../backend/generated/client\"\n}\n\ndatasource db {\n  provider = \"mysql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Users {\n  user_id           BigInt                  @id @default(autoincrement()) @db.UnsignedBigInt\n  user_name         String                  @unique(map: \"user_name\") @db.VarChar(100)\n  user_password     String                  @db.VarChar(255)\n  user_full_name    String?                 @db.VarChar(255)\n  user_gender       users_user_gender?\n  user_birthday     DateTime?               @db.Date\n  user_phone        String?                 @unique(map: \"user_phone\") @db.VarChar(20)\n  user_email        String                  @unique(map: \"user_email\") @db.VarChar(100)\n  user_address      String?                 @db.VarChar(255)\n  user_avatar       String?                 @db.VarChar(255)\n  user_avg_rating   Decimal?                @default(0.0) @db.Decimal(2, 1)\n  user_review_count Int?                    @default(0)\n  user_bio          String?                 @db.Text\n  user_created_at   DateTime                @default(now()) @db.Timestamp(0)\n  user_verification users_user_verification @default(UNVERIFIED)\n  user_role         users_user_role\n  posts             Posts[]\n  roommate_posts    RoommatePost[]\n}\n\nenum users_user_gender {\n  MALE\n  FEMALE\n  OTHER\n}\n\nenum users_user_verification {\n  UNVERIFIED\n  PENDING\n  VERIFIED\n  REJECTED\n}\n\nenum users_user_role {\n  LANDLORD\n  TENANT\n}\n\nmodel Posts {\n  post_id           Int          @id @default(autoincrement())\n  post_title        String       @db.VarChar(255)\n  post_description  String       @db.Text\n  post_price        Int\n  post_area         Float\n  price_electricity Int?\n  price_water       Int?\n  price_internet    Int?\n  post_address      String       @db.VarChar(255)\n  post_ward         String?      @db.VarChar(100)\n  post_district     String       @db.VarChar(100)\n  post_city         String       @db.VarChar(100)\n  category          PostCategory @default(PHONG_TRO)\n  status            PostStatus   @default(AVAILABLE)\n\n  user_id BigInt @db.UnsignedBigInt\n  user    Users  @relation(fields: [user_id], references: [user_id], onDelete: Cascade)\n\n  // Quan hệ với Ảnh\n  images PostImages[]\n\n  created_at DateTime  @default(now())\n  expired_at DateTime? // Ngày hết hạn tin đăng\n\n  @@map(\"posts\") // Tên bảng trong DB\n}\n\nmodel PostImages {\n  image_id  Int    @id @default(autoincrement())\n  image_url String @db.Text\n\n  // Quan hệ N-1 với Posts\n  post_id Int\n  post    Posts @relation(fields: [post_id], references: [post_id], onDelete: Cascade)\n\n  @@map(\"post_images\")\n}\n\nenum PostStatus {\n  AVAILABLE\n  RENTED\n  HIDDEN\n}\n\nenum PostCategory {\n  PHONG_TRO\n  CHUNG_CU\n  NHA_NGUYEN_CAN\n}\n\nenum RoommateGender {\n  MALE\n  FEMALE\n  ANY\n}\n\nenum RoommateStatus {\n  ACTIVE\n  FOUND\n  CLOSED\n}\n\nmodel RoommatePost {\n  id                Int            @id @default(autoincrement())\n  title             String         @db.VarChar(255)\n  description       String         @db.Text\n  budget            Int\n  preferred_area    String         @db.VarChar(255)\n  gender_preference RoommateGender @default(ANY)\n  age_min           Int?\n  age_max           Int?\n  habits            String?        @db.Text\n  contact_zalo      String?        @db.VarChar(255)\n  contact_messenger String?        @db.VarChar(255)\n  contact_phone     String?        @db.VarChar(50)\n  photos            Json?\n  status            RoommateStatus @default(ACTIVE)\n\n  user_id BigInt @db.UnsignedBigInt\n  user    Users  @relation(fields: [user_id], references: [user_id], onDelete: Cascade)\n\n  created_at DateTime @default(now())\n  updated_at DateTime @updatedAt\n\n  @@map(\"roommate_posts\")\n}\n",
+  "inlineSchemaHash": "783f91a9cc18e5ebd468326c7095b35a2f18fddf7e5ba8f251e49625922858e2",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Users\":{\"fields\":[{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"BigInt\"},{\"name\":\"user_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_full_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_gender\",\"kind\":\"enum\",\"type\":\"users_user_gender\"},{\"name\":\"user_birthday\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user_phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_avatar\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_avg_rating\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"user_review_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user_bio\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user_verification\",\"kind\":\"enum\",\"type\":\"users_user_verification\"},{\"name\":\"user_role\",\"kind\":\"enum\",\"type\":\"users_user_role\"},{\"name\":\"posts\",\"kind\":\"object\",\"type\":\"Posts\",\"relationName\":\"PostsToUsers\"}],\"dbName\":null},\"Posts\":{\"fields\":[{\"name\":\"post_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"post_title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post_description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post_price\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"post_area\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"price_electricity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"price_water\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"price_internet\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"post_address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post_ward\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post_district\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post_city\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"enum\",\"type\":\"PostCategory\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"PostStatus\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"BigInt\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"Users\",\"relationName\":\"PostsToUsers\"},{\"name\":\"images\",\"kind\":\"object\",\"type\":\"PostImages\",\"relationName\":\"PostImagesToPosts\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"expired_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"posts\"},\"PostImages\":{\"fields\":[{\"name\":\"image_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"image_url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"post\",\"kind\":\"object\",\"type\":\"Posts\",\"relationName\":\"PostImagesToPosts\"}],\"dbName\":\"post_images\"}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Users\":{\"fields\":[{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"BigInt\"},{\"name\":\"user_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_full_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_gender\",\"kind\":\"enum\",\"type\":\"users_user_gender\"},{\"name\":\"user_birthday\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user_phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_avatar\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_avg_rating\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"user_review_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user_bio\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user_verification\",\"kind\":\"enum\",\"type\":\"users_user_verification\"},{\"name\":\"user_role\",\"kind\":\"enum\",\"type\":\"users_user_role\"},{\"name\":\"posts\",\"kind\":\"object\",\"type\":\"Posts\",\"relationName\":\"PostsToUsers\"},{\"name\":\"roommate_posts\",\"kind\":\"object\",\"type\":\"RoommatePost\",\"relationName\":\"RoommatePostToUsers\"}],\"dbName\":null},\"Posts\":{\"fields\":[{\"name\":\"post_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"post_title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post_description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post_price\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"post_area\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"price_electricity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"price_water\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"price_internet\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"post_address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post_ward\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post_district\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post_city\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"enum\",\"type\":\"PostCategory\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"PostStatus\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"BigInt\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"Users\",\"relationName\":\"PostsToUsers\"},{\"name\":\"images\",\"kind\":\"object\",\"type\":\"PostImages\",\"relationName\":\"PostImagesToPosts\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"expired_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"posts\"},\"PostImages\":{\"fields\":[{\"name\":\"image_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"image_url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"post_id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"post\",\"kind\":\"object\",\"type\":\"Posts\",\"relationName\":\"PostImagesToPosts\"}],\"dbName\":\"post_images\"},\"RoommatePost\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"budget\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"preferred_area\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gender_preference\",\"kind\":\"enum\",\"type\":\"RoommateGender\"},{\"name\":\"age_min\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"age_max\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"habits\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contact_zalo\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contact_messenger\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contact_phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"photos\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"RoommateStatus\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"BigInt\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"Users\",\"relationName\":\"RoommatePostToUsers\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"roommate_posts\"}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

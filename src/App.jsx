@@ -10,6 +10,13 @@ import ManagePostPage from './pages/ManagePostPage.jsx';
 import EditRoomPage from './pages/EditRoomPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import FindRoomPage from './pages/FindRoomPage.jsx';
+import RoommateListPage from './pages/RoommateListPage.jsx';
+import RoommatePostPage from './pages/RoommatePostPage.jsx';
+import RoommateManagePage from './pages/RoommateManagePage.jsx';
+import RoommateEditPage from './pages/RoommateEditPage.jsx';
+import RoommateDetailPage from './pages/RoommateDetailPage.jsx';
+import ProfilePage from './pages/ProfilePage.jsx';
+
 
 function App() {
   return (
@@ -26,6 +33,12 @@ function App() {
           <Route path='/edit-room/:id' element={<EditRoomPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/find-room" element={<FindRoomPage />} />
+          <Route path="/roommate/list" element={<RoommateListPage />} />
+          <Route path="/roommate/post" element={<RoommatePostPage />} />
+          <Route path="/roommate/manage" element={<RoommateManagePage />} />
+          <Route path="/roommate/edit/:id" element={<RoommateEditPage />} />
+          <Route path="/roommate/:id" element={<RoommateDetailPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </main>
 

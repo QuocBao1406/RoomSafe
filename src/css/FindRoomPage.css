@@ -1,95 +1,100 @@
-/* css/ClientRoomPage.css */
-
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+/* css/FindRoomPage.css */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 .client-page-wrapper {
-    /* BIẾN MÀU (Giữ nguyên) */
-    --fr-primary: #6366f1;
-    --fr-primary-dark: #4f46e5;
-    --fr-accent: #f43f5e;
-    --fr-text-main: #0f172a;
+    /* MÀU SẮC */
+    --fr-primary: #4f46e5;       
+    --fr-primary-light: #818cf8;
+    --fr-accent: #f43f5e;        
+    --fr-text-main: #1e293b;     
     --fr-text-sub: #64748b;
-    --fr-bg-page: #f8fafc;
-    --fr-card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --fr-hover-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --fr-bg-page: #f8fafc;       
+    
+    /* SHADOW */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-float: 0 15px 35px -5px rgba(0, 0, 0, 0.1); /* Shadow mềm cho thanh search trắng */
+    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --fr-card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 
     font-family: 'Plus Jakarta Sans', sans-serif;
     background-color: var(--fr-bg-page);
     color: var(--fr-text-main);
     min-height: 100vh;
-    width: 100%;
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
 }
 
-/* HERO SECTION */
+/* --- 1. HERO AREA --- */
 .client-page-wrapper .search-hero {
     position: relative;
-    min-height: 250px; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 20px 20px 60px; 
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%),
-                url('https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=90');
+    padding: 50px 20px 80px; /* Tăng khoảng cách để ảnh thoáng hơn */
+    
+    /* Ảnh nền với lớp phủ tối màu xanh đen sang trọng */
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.7) 100%),
+                url('https://images.unsplash.com/photo-1512918760532-3ad860030eb1?q=80&w=2070&auto=format&fit=crop');
+    
     background-size: cover;
-    background-position: center 30%;
+    background-position: center;
+    text-align: center;
+    border-bottom-left-radius: 40px; /* Bo góc mềm mại hơn */
+    border-bottom-right-radius: 40px;
 }
 
 .client-page-wrapper .hero-title {
-    font-size: 2rem;
-    font-weight: 700;
+    font-size: 1.6rem; 
+    font-weight: 800;
     color: white;
     margin: 0;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-/* FILTER BAR - CẬP NHẬT LAYOUT */
+/* --- 2. THANH TÌM KIẾM (Đã sửa nền trắng) --- */
 .client-page-wrapper .filter-bar-wrapper {
     display: flex; 
     justify-content: center; 
     padding: 0 20px;
-    width: 100%;
-    box-sizing: border-box;
+    margin-top: -55px; /* Đẩy lên cao hơn chút */
+    z-index: 20;
 }
 
 .client-page-wrapper .filter-bar-container {
-    background: white;
-    padding: 10px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+    background: #ffffff; /* CHUYỂN VỀ TRẮNG HOÀN TOÀN CHO SẠCH */
+    padding: 10px 15px;
+    border-radius: 16px; 
+    box-shadow: var(--shadow-float); /* Bóng đổ giúp thanh này nổi hẳn lên */
     display: flex;
     align-items: center;
     width: 100%;
-    max-width: 1200px; /* Tăng max-width để chứa đủ 5 cột */
-    margin-top: -40px; 
-    position: relative;
-    z-index: 10;
-    border: 1px solid #e2e8f0;
+    max-width: 1200px;
+    border: none; /* Bỏ viền để nhìn hiện đại hơn */
 }
 
 .client-page-wrapper .filter-group {
     flex: 1;
-    padding: 5px 15px; /* Giảm padding ngang chút */
-    border-right: 1px solid #e2e8f0;
-    min-width: 140px; /* Đảm bảo ô không bị co quá nhỏ */
+    padding: 4px 16px;
+    border-right: 1px solid #f1f5f9; /* Đường kẻ rất nhạt */
+    min-width: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: all 0.2s;
 }
 
-.client-page-wrapper .filter-group:last-of-type {
-    border-right: none;
+.client-page-wrapper .filter-group:last-of-type { border-right: none; }
+
+.client-page-wrapper .filter-group:hover {
+    background-color: #f8fafc; /* Hover màu xám siêu nhạt */
+    border-radius: 8px;
 }
 
 .client-page-wrapper .filter-label {
-    display: block;
-    font-size: 0.7rem; /* Giảm size label chút */
+    font-size: 0.65rem;
     font-weight: 700;
-    color: var(--fr-text-main);
+    color: #94a3b8; /* Label màu nhạt đi để đỡ rối */
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.5px;
     margin-bottom: 4px;
+    display: flex; align-items: center; gap: 5px;
 }
 
 .client-page-wrapper .filter-input, 
@@ -98,42 +103,40 @@
     border: none;
     background: transparent;
     font-size: 0.9rem;
-    font-weight: 600;
-    color: #334155;
+    font-weight: 700; /* Chữ đậm hơn chút cho dễ đọc trên nền trắng */
+    color: var(--fr-text-main);
     outline: none;
     cursor: pointer;
-    text-overflow: ellipsis; /* Nếu tên tỉnh quá dài thì ... */
-    white-space: nowrap;
-    overflow: hidden;
+    padding: 0;
 }
 
 .client-page-wrapper .btn-search-round {
-    background: linear-gradient(135deg, var(--fr-primary), var(--fr-primary-dark));
+    background: var(--fr-primary);
     color: white;
-    width: 44px; /* Nhỏ lại chút */
-    height: 44px;
-    border-radius: 12px;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-    transition: all 0.3s;
-    margin-left: 5px;
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-left: 10px;
     flex-shrink: 0;
 }
-
 .client-page-wrapper .btn-search-round:hover {
+    background: var(--fr-primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(79, 70, 229, 0.5);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.5);
 }
 
-/* LIST & CARD (Giữ nguyên cấu trúc cũ, chỉ đảm bảo hiển thị tốt) */
+/* --- 3. LIST & BADGE MỚI --- */
 .client-page-wrapper .room-list-container {
-    max-width: 1280px;
-    margin: 40px auto 60px;
-    padding: 0 30px;
+    max-width: 1300px; 
+    margin: 20px auto 60px;
+    padding: 0 24px;
     width: 100%;
     box-sizing: border-box;
 }
@@ -141,115 +144,109 @@
 .client-page-wrapper .list-header-modern {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #e2e8f0;
+    align-items: center;
+    margin-bottom: 25px;
 }
 
-.client-page-wrapper .list-title-modern h2 {
-    font-size: 1.5rem;
+/* STYLE MỚI CHO SỐ LƯỢNG TIN (Dạng đóng khung nhỏ) */
+.client-page-wrapper .result-count-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 30px; /* Bo tròn như viên thuốc */
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+.client-page-wrapper .count-number {
+    color: var(--fr-primary);
     font-weight: 800;
-    color: var(--fr-text-main);
-}
-.client-page-wrapper .list-title-modern span {
-    font-size: 0.9rem;
-    color: var(--fr-text-sub);
+    font-size: 1rem;
 }
 
-/* CARD */
+/* SORT SELECT */
+.client-page-wrapper .sort-select-minimal {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--fr-text-main);
+    background: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.client-page-wrapper .sort-select-minimal:hover { border-color: var(--fr-primary-light); }
+
+/* --- 4. CARD GRID (Giữ nguyên) --- */
 .client-page-wrapper .room-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px; 
 }
-
 .client-page-wrapper .premium-card {
     background: white;
-    border-radius: 16px;
+    border-radius: 20px; 
     overflow: hidden;
     position: relative;
-    box-shadow: var(--fr-card-shadow);
-    transition: all 0.3s ease;
-    border: 1px solid #f1f5f9;
+    box-shadow: var(--shadow-sm); 
+    border: 1px solid transparent; 
     cursor: pointer;
     display: flex;
     flex-direction: column;
+    transition: all 0.3s;
 }
 .client-page-wrapper .premium-card:hover {
     transform: translateY(-5px);
-    box-shadow: var(--fr-hover-shadow);
-    border-color: rgba(99, 102, 241, 0.2);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(79, 70, 229, 0.1); 
 }
-
-/* IMG */
 .client-page-wrapper .card-img-container {
-    height: 190px;
-    position: relative;
-    overflow: hidden;
+    height: 190px; position: relative; overflow: hidden; margin: 8px 8px 0 8px; border-radius: 16px; 
 }
 .client-page-wrapper .card-img-container img {
-    width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;
+    width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease;
 }
 .client-page-wrapper .premium-card:hover .card-img-container img { transform: scale(1.08); }
-.client-page-wrapper .card-img-container::after {
-    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 70px;
-    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent); pointer-events: none;
-}
-
-/* BADGES */
-.client-page-wrapper .badge-category {
-    position: absolute; top: 12px; left: 12px;
-    background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(4px);
-    color: var(--fr-primary-dark); padding: 4px 10px; border-radius: 8px;
-    font-size: 0.7rem; font-weight: 700; text-transform: uppercase; z-index: 2;
-}
-.client-page-wrapper .card-heart-btn {
-    position: absolute; top: 12px; right: 12px;
-    width: 30px; height: 30px; background: rgba(255,255,255,0.9);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    color: #94a3b8; cursor: pointer; z-index: 2; font-size: 14px; transition: 0.2s;
-}
-.client-page-wrapper .card-heart-btn:hover { background: white; color: var(--fr-accent); }
-
 .client-page-wrapper .card-price-overlay {
-    position: absolute; bottom: 12px; left: 12px; z-index: 2;
-    display: flex; align-items: baseline; gap: 3px;
+    position: absolute; bottom: 10px; left: 10px; z-index: 2;
+    background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(4px);
+    padding: 6px 12px; border-radius: 12px; display: flex; align-items: baseline; gap: 4px;
 }
-.client-page-wrapper .price-amount { font-size: 1.15rem; font-weight: 800; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-.client-page-wrapper .price-unit { font-size: 0.8rem; color: rgba(255,255,255,0.9); font-weight: 500; }
-
-/* CONTENT */
-.client-page-wrapper .card-content { padding: 16px; flex: 1; display: flex; flex-direction: column; }
+.client-page-wrapper .price-amount { font-size: 1rem; font-weight: 700; color: white; }
+.client-page-wrapper .price-unit { font-size: 0.7rem; color: #cbd5e1; }
+.client-page-wrapper .card-heart-btn {
+    position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; 
+    background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: #94a3b8; z-index: 2; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s;
+}
+.client-page-wrapper .card-heart-btn:hover { transform: scale(1.1); color: var(--fr-accent); }
+.client-page-wrapper .badge-category {
+    position: absolute; top: 10px; left: 10px; background: var(--fr-primary);
+    color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+}
+.client-page-wrapper .card-content { padding: 16px 12px; }
 .client-page-wrapper .card-title-link {
-    font-size: 1rem; font-weight: 700; color: var(--fr-text-main);
-    margin-bottom: 6px; line-height: 1.4;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    font-size: 1rem; font-weight: 700; color: var(--fr-text-main); margin-bottom: 6px; line-height: 1.4;
+    display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; 
 }
 .client-page-wrapper .card-location {
-    font-size: 0.8rem; color: var(--fr-text-sub); margin-bottom: 12px;
-    display: flex; align-items: center; gap: 5px;
+    font-size: 0.8rem; color: #64748b; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
 }
-.client-page-wrapper .card-amenities {
-    display: flex; gap: 10px; padding-top: 12px; border-top: 1px dashed #e2e8f0; margin-top: auto; flex-wrap: wrap;
+.client-page-wrapper .card-amenities { display: flex; gap: 8px; flex-wrap: wrap; }
+.client-page-wrapper .amenity-pill {
+    font-size: 0.75rem; font-weight: 600; color: #64748b; background: #f1f5f9; padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 4px;
 }
-.client-page-wrapper .amenity-item {
-    display: flex; align-items: center; gap: 5px; font-size: 0.75rem; font-weight: 600; color: #64748b;
-}
-
-/* SKELETON */
-.client-page-wrapper .skeleton-loader {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%; height: 300px; border-radius: 16px; animation: loading 1.5s infinite;
-}
-@keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
 /* RESPONSIVE */
 @media (max-width: 1024px) {
-    .client-page-wrapper .filter-bar-container { flex-wrap: wrap; gap: 10px; padding: 15px; border-radius: 12px; }
-    .client-page-wrapper .filter-group { flex: 1 1 45%; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin: 0; }
-    .client-page-wrapper .btn-search-round { width: 100%; border-radius: 8px; margin: 5px 0 0 0; }
-}
-@media (max-width: 600px) {
-    .client-page-wrapper .filter-group { flex: 1 1 100%; }
+    .client-page-wrapper .filter-bar-container { flex-wrap: wrap; padding: 15px; }
+    .client-page-wrapper .filter-group { flex: 1 1 45%; border: 1px solid #f1f5f9; padding: 10px; margin: 5px; border-radius: 8px; }
+    .client-page-wrapper .btn-search-round { width: 100%; margin: 10px 0 0 0; }
+    .client-page-wrapper .search-hero { padding-bottom: 60px; }
 }

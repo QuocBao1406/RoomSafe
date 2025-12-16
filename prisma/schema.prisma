@@ -26,6 +26,7 @@ model Users {
   user_verification users_user_verification @default(UNVERIFIED)
   user_role         users_user_role
   posts             Posts[]
+  roommate_posts RoommatePost[]
 }
 
 enum users_user_gender {
@@ -95,4 +96,41 @@ enum PostCategory {
   PHONG_TRO
   CHUNG_CU
   NHA_NGUYEN_CAN
+}
+
+enum RoommateGender {
+  MALE
+  FEMALE
+  ANY
+}
+
+enum RoommateStatus {
+  ACTIVE
+  FOUND
+  CLOSED
+}
+
+model RoommatePost {
+  id                 Int             @id @default(autoincrement())
+  title              String          @db.VarChar(255)
+  description        String          @db.Text
+  budget             Int
+  preferred_area     String          @db.VarChar(255)
+  gender_preference  RoommateGender  @default(ANY)
+  age_min            Int?
+  age_max            Int?
+  habits             String?         @db.Text
+  contact_zalo       String?         @db.VarChar(255)
+  contact_messenger  String?         @db.VarChar(255)
+  contact_phone      String?         @db.VarChar(50)
+  photos             Json?
+  status             RoommateStatus  @default(ACTIVE)
+
+  user_id BigInt @db.UnsignedBigInt
+  user    Users  @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("roommate_posts")
 }

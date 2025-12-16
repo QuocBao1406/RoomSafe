@@ -5,7 +5,11 @@ import { UserContext } from '../contexts/UserContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import { toast, Toaster } from 'react-hot-toast';
 import '../css/PostRoomPage.css';
-import { FaHome, FaMapMarked , FaImages, FaInfoCircle, FaDollarSign, FaCloudUploadAlt } from 'react-icons/fa';
+import { 
+            FaHome, FaMapMarked , FaImages, FaInfoCircle, FaDollarSign, FaCloudUploadAlt, 
+            FaTrash, FaTags, FaMapPin, FaLightbulb,
+            FaPaperPlane
+        } from 'react-icons/fa';
 
 const PostRoomPage = () => {
     const { user } = useContext(UserContext);
@@ -16,7 +20,9 @@ const PostRoomPage = () => {
     // state hieu ung keo tha anh
     const [isDragging, setIsDragging] = useState(false);
 
-    const { register, handleSubmit, setValue, formState: { errors, isSubmitting }} = useForm();
+    const { register, handleSubmit, setValue, watch, formState: { errors, isSubmitting }} = useForm();
+
+    const watchedValues = watch();
 
     const [provinces, setProvinces] = useState([]); // danh sach tinh/thanh pho
     const [districts, setDistricts] = useState([]); // danh sach quan/huyen
@@ -65,6 +71,11 @@ const PostRoomPage = () => {
             console.error("Lỗi lấy quận huyện:", error);
         }
     };
+
+    const formatPrice = (price) => {
+        if(!price || isNaN(price)) return '0';
+        return Number(price).toLocaleString("vi-VN");
+    }
 
     // xu ly khi chon quan/huyen
     const handleDistrictChange = async (e) => {
@@ -207,7 +218,7 @@ const PostRoomPage = () => {
             });
 
             toast.success("Đăng tin thành công!");
-            setTimeout(() => navigate('/landlord-dashboard'), 1500);
+            setTimeout(() => navigate('/dashboard'), 1500);
 
         } catch (error) {
             console.error(error);
@@ -217,237 +228,292 @@ const PostRoomPage = () => {
 
     return (
         <div className="post-page-wrapper">
-            <Toaster position="top-center" />
+            <Toaster position="top-center" reverseOrder={false} />
 
-            <div className="post-container">
+            <div className="post-container-xl">
                 <div className="post-header">
                     <h1>Đăng tin phòng trọ</h1>
-                    <p>Điền thông tin chi tiết để thu hút người thuê nhanh chóng hơn</p>
+                    <p>Tiếp cận hàng ngàn người thuê trọ mỗi ngày chỉ với vài bước đơn giản</p>
                 </div>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="post-form">
-                    {/* Section 1: Thong tin co ban*/}
-                    <div className="form-section">
-                        <div className="section-title">
-                            <FaHome className="icon" />
-                            <h3>Thông tin cơ bản</h3>
-                        </div>
+                <form onSubmit={handleSubmit(onSubmit)} className="post-grid-layout">
+                    <div className="left-column">
+                        {/* Section 1: Thong tin co ban*/}
+                        <div className="form-section">
+                            <div className="section-title">
+                                <div className="icon-box"><FaHome /></div>
+                                <h3>Thông tin cơ bản</h3>
+                            </div>
 
-                        <div className="form-group">
-                            <label>Tiêu đề tin đăng <span className="required">*</span></label>
-                            <input
-                                type="text"
-                                className={errors.title ? "input-error" : ""}
-                                placeholder="Ví dụ phòng trọ cao cấp, full nội thất..."
-                                {...register('title', {required: true})}
-                            />
-                            {errors.title && <span className="error-msg">Vui lòng nhập tiêu đề</span>}
-                        </div>
-
-                        <div className="form-row four-cols">
                             <div className="form-group">
-                                <label>Loại phòng</label>
-                                <div className="select-wrapper">
+                                <label>Tiêu đề tin đăng <span className="required">*</span></label>
+                                <input
+                                    type="text"
+                                    className={errors.title ? "input-error" : ""}
+                                    placeholder="VD: Phòng trọ cao cấp, full nội thất, gần ĐH Việt Hàn..."
+                                    {...register('title', {required: true})}
+                                />
+                                {errors.title && <span className="error-msg">Tiêu đề không được để trống</span>}
+                            </div>
+
+                            <div className="form-row two-cols">
+                                <div className="form-group">
+                                    <label>Loại phòng</label>
                                     <select {...register('category')}>
                                         <option value="PHONG_TRO">Phòng trọ</option>
                                         <option value="CHUNG_CU">Chung cư</option>
                                         <option value="NHA_NGUYEN_CAN">Nhà nguyên căn</option>
                                     </select>
                                 </div>
+
+                                <div className="form-group">
+                                    <label>Thời hạn hiển thị</label>
+                                    <select {...register('duration', {required: true})}>
+                                        <option value="7">7 ngày</option>
+                                        <option value="15">15 ngày</option>
+                                        <option value="30">30 ngày</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Section 2: Chi phi & dien tich */}
+                        <div className="form-section">
+                            <div className="section-title">
+                                <div className="icon-box"><FaTags /></div>
+                                <h3>Chi phí & diện tích</h3>
+                            </div>
+
+                            <div className="form-row two-cols">
+                                <div className="form-group">
+                                    <label>Giá thuê (VNĐ/tháng) <span className="required">*</span></label>
+                                    <input
+                                        type="number"
+                                        step="1000"
+                                        {...register('price', {required: true})}
+                                        placeholder="Nhập giá phòng..."
+                                    />
+                                </div>
+                                
+                                <div className="form-group">
+                                    <label>Diện tích (m²) <span className="required">*</span></label>
+                                    <input type="number" step="1" {...register('area', {required: true})} placeholder="Nhập diện tích..." />
+                                </div>
+                            </div>
+
+                            <div style={{marginTop: 20}}>
+                                <label style={{fontSize: '1rem', fontWeight: 600, marginBottom: 8, display: 'block', color: '#beb200ff'}}>
+                                    Dịch vụ (Nhập 0 nếu miễn phí)
+                                </label>
+                                <div className="form-row three-cols">
+                                    <div className="form-group">
+                                        <label>Giá điện (đ/kwh)</label>
+                                        <input type="number" {...register('price_electricity')} placeholder="0" />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>Giá nước (đ/khối)</label>
+                                        <input type="number" {...register('price_water')} placeholder="0" />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label>Internet (đ/tháng)</label>
+                                        <input type="number" {...register('price_internet')} placeholder="0" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Section 3: Dia chi */}
+                        <div className="form-section">
+                            <div className="section-title">
+                                <div className="icon-box"><FaMapMarked /></div>
+                                <h3>Địa chỉ (63 Tỉnh thành cũ)</h3>
+                            </div>
+
+                            <div className="form-row three-cols">
+                                <div className="form-group">
+                                    <label>Tỉnh/Thành phố <span className="required">*</span></label>
+                                    <select
+                                        className={errors.city ? "input-error" : ""}
+                                        {...register('province_id', {
+                                            required: true,
+                                            onChange: (e) => handleProvinceChange(e)
+                                        })}
+                                    >
+                                        <option value="">-- Chọn Tỉnh/Thành Phố --</option>
+                                        {provinces.map((province) => (
+                                            <option key={province.id} value={province.id}>
+                                                {province.full_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Quận/Huyện <span className="required">*</span></label>
+                                    <select
+                                        className={errors.district ? "input-error": ""}
+                                        {...register('district_id', {
+                                            required: true,
+                                            onChange: (e) => handleDistrictChange(e)
+                                        })}
+                                    >
+                                        <option value="">-- Chọn Quận/Huyện --</option>
+                                        {districts.map((district) => (
+                                            <option key={district.id} value={district.id}>
+                                                {district.full_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Phường/Xã <span className="required">*</span></label>
+                                    <select
+                                        disabled={!selectedDistrict}
+                                        {...register('ward_id', {
+                                            onChange: (e) => handleWardChange(e)
+                                        })}
+                                    >
+                                        <option value="">-- Chọn Phường/Xã --</option>
+                                        {wards.map((ward) => (
+                                            <option key={ward.id} value={ward.id}>
+                                                {ward.full_name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
 
                             <div className="form-group">
-                                <label>Thời hạn tin</label>
-                            <div className="select-wrapper">
-                                <select {...register('duration', {required: true})}>
-                                    <option value="7">7 ngày</option>
-                                    <option value="15">15 ngày</option>
-                                    <option value="30">30 ngày</option>
-                                </select>
-                            </div>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Giá thuê (đ/tháng) <span className="required">*</span></label>
+                                <label>Địa chỉ cụ thể (Số nhà, tên đường) <span className="required">*</span></label>
                                 <input
-                                    type="number"
-                                    {...register('price', {required: true})}
-                                    placeholder="Nhập giá phòng..."
+                                    {...register('address', { required: true })}
+                                    placeholder="VD: 470 Trần Đại Nghĩa"
                                 />
                             </div>
-                            
-                            <div className="form-group">
-                                <label>Diện tích (m²) <span className="required">*</span></label>
-                                <input type="number" step="0.1" {...register('area', {required: true})} placeholder="Nhập diện tích..." />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Section 2: Dia chi */}
-                    <div className="form-section">
-                        <div className="section-title">
-                            <FaMapMarked  className="icon" />
-                            <h3>Địa chỉ (63 Tỉnh thành cũ)</h3>
                         </div>
 
-                        <div className="form-row three-cols">
-                            <div className="form-group">
-                                <label>Tỉnh/Thành phố <span className="required">*</span></label>
-                                <select
-                                    className={errors.city ? "input-error" : ""}
-                                    {...register('province_id', {
-                                        required: true,
-                                        onChange: (e) => handleProvinceChange(e)
-                                    })}
-                                >
-                                    <option value="">-- Chọn Tỉnh/Thành Phố --</option>
-                                    {provinces.map((province) => (
-                                        <option key={province.id} value={province.id}>
-                                            {province.full_name}
-                                        </option>
-                                    ))}
-                                </select>
+                        {/* Section 4: Hinh anh */}
+                        <div className="form-section">
+                            <div className="section-title">
+                                <div className="icon-box"><FaImages /></div>
+                                <h3>Hình ảnh (Đã chọn: {selectedImages.length}/10)</h3>
                             </div>
 
-                            <div className="form-group">
-                                <label>Quận/Huyện <span className="required">*</span></label>
-                                <select
-                                    className={errors.district ? "input-error": ""}
-                                    {...register('district_id', {
-                                        required: true,
-                                        onChange: (e) => handleDistrictChange(e)
-                                    })}
-                                >
-                                    <option value="">-- Chọn Quận/Huyện --</option>
-                                    {districts.map((district) => (
-                                        <option key={district.id} value={district.id}>
-                                            {district.full_name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Phường/Xã <span className="required">*</span></label>
-                                <select
-                                    disabled={!selectedDistrict}
-                                    {...register('ward_id', {
-                                        onChange: (e) => handleWardChange(e)
-                                    })}
-                                >
-                                    <option value="">-- Chọn Phường/Xã --</option>
-                                    {wards.map((ward) => (
-                                        <option key={ward.id} value={ward.id}>
-                                            {ward.full_name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="form-group">
-                            <label>Địa chỉ cụ thể (Số nhà, tên đường) <span className="required">*</span></label>
-                            <input
-                                {...register('address', { required: true })}
-                                placeholder="VD: 470 Trần Đại Nghĩa"
-                            />
-                        </div>
-                    </div>
-
-                    {/* Section 3: Dich vu */}
-                    <div className="form-section">
-                        <div className="section-title">
-                            <FaDollarSign className="icon" />
-                            <h3>Chi phí dịch vụ</h3>
-                        </div>
-
-                        <div className="form-row three-cols">
-                            <div className="form-group">
-                                <label>Giá điện (đ/kwh)</label>
-                                <input type="number" {...register('price_electricity')} placeholder="0 = Miễn phí" />
-                            </div>
-
-                            <div className="form-group">
-                                <label>Giá nước (đ/khối)</label>
-                                <input type="number" {...register('price_water')} placeholder="0 = Miễn phí" />
-                            </div>
-
-                            <div className="form-group">
-                                <label>Internet (đ/tháng)</label>
-                                <input type="number" {...register('price_internet')} placeholder="0 = Miễn phí" />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Section 4: Hinh anh */}
-                    <div className="form-section">
-                        <div className="section-title">
-                            <FaImages className="icon" />
-                            <h3>Hình ảnh (Đã chọn: {selectedImages.length}/10)</h3>
-                        </div>
-
-                        <div className={`upload-container ${isDragging ? 'dragging' : ''}`}
-                            onDragOver={onDragOver}
-                            onDragLeave={onDragLeave}
-                            onDrop={onDrop}
-                        >
-                            <input
-                                type="file"
-                                id="file-upload"
-                                multiple
-                                accept="image/*"
-                                onChange={handleImageChange}
-                                className="file-input-hidden"
-                            />
-                            <label htmlFor="file-upload" className="upload-label">
-                                <FaCloudUploadAlt className="upload-icon" />
-                                <span>
-                                    {isDragging ? "Kéo thả ảnh vào đây!" : "Bấm để chọn hoặc kéo thả ảnh vào đây"}
-                                </span>
-                            </label>
-                        </div>
-
-                        {previewUrls.length > 0 && (
-                            <div className="image-preview-grid">
-                                {previewUrls.map((url, index) => (
-                                    <div key={index} className="image-card">
-                                        <img src={url} alt={`preview-${index}`} />
-
-                                        <button
-                                            type="button"
-                                            className="btn-remove-image"
-                                            onClick={() => removeImage(index)}
-                                        >
-                                            &times; {/* dau nhan (x) */}
-                                        </button>
+                            <div className={`upload-container ${isDragging ? 'dragging' : ''}`}
+                                onDragOver={onDragOver}
+                                onDragLeave={onDragLeave}
+                                onDrop={onDrop}
+                            >
+                                <input
+                                    type="file"
+                                    id="file-upload"
+                                    multiple
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    className="file-input-hidden"
+                                />
+                                <label htmlFor="file-upload" className="upload-label">
+                                    <FaCloudUploadAlt className="upload-icon-circle" />
+                                    <div>
+                                        <span style={{fontWeight: 700, color: '#0f172a'}}>
+                                            {isDragging ? "Kéo thả ảnh vào đây!" : "Bấm để chọn hoặc kéo thả ảnh vào đây"}
+                                        </span>
                                     </div>
-                                ))}
+                                    <small style={{color: '#94a3b8'}}>Hỗ trợ: JPG, PNG, WEBP (Tối đa 10 ảnh)</small>
+                                </label>
                             </div>
-                        )}
-                    </div>
 
-                    {/* Section 5: Mo ta */}
-                    <div className="form-section">
-                        <div className="section-title">
-                            <FaInfoCircle className="icon" />
-                            <h3>Mô tả chi tiết</h3>
+                            {previewUrls.length > 0 && (
+                                <div className="image-preview-grid">
+                                    {previewUrls.map((url, index) => (
+                                        <div key={index} className="image-card">
+                                            <img src={url} alt={`preview-${index}`} />
+
+                                            <button
+                                                type="button"
+                                                className="btn-remove-image"
+                                                onClick={() => removeImage(index)}
+                                            >
+                                                <FaTrash size={12} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
-                        <div className="form-group">
-                            <textarea
-                                {...register('description', { required: true })}
-                                rows="6"
-                                placeholder="Mô tả chi tiết về phòng trọ, tiện ích xung quanh, giờ giấc sinh hoạt..."
-                            ></textarea>
+                        {/* Section 5: Mo ta */}
+                        <div className="form-section">
+                            <div className="section-title">
+                                <div className="icon-box"><FaInfoCircle /></div>
+                                <h3>Mô tả chi tiết</h3>
+                            </div>
+
+                            <div className="form-group">
+                                <textarea
+                                    {...register('description', { required: true })}
+                                    rows="8"
+                                    placeholder="Hãy viết mô tả đầy đủ về: tiện ích, nội thất, giờ giấc, an ninh..."
+                                ></textarea>
+                            </div>
                         </div>
                     </div>
 
-                    {/* nut submit */}
-                    <div className="form-actions">
-                        <button type="button" className="btn-cancel" onClick={() => navigate(-1)}>Hủy bỏ</button>
-                        <button type="submit" className="btn-submit" disabled={isSubmitting}>
-                            {isSubmitting ? <span className="spinner"></span> : 'Đăng tin'}
-                        </button>
+                    <div className="right-column">
+                        <div className="right-column">
+                            <div className="preview-title-bar">
+                                Xem trước tin đăng
+                            </div>
+
+                            <div className="live-card">
+                                <div className="live-card-img">
+                                    {previewUrls.length > 0 ? <img src={previewUrls[0]} alt="cover" /> : <FaImages />}
+                                    <div className="live-badge">
+                                        {
+                                            watchedValues.category === 'PHONG_TRO' ? 'Phòng trọ' :
+                                            watchedValues.category === 'CHUNG_CU' ? 'Chung cư' :
+                                            watchedValues.category === 'NHA_NGUYEN_CAN' ? 'Nguyên căn' : 'Không có'
+                                        }
+                                    </div>
+                                </div>
+                                <div className="live-card-body">
+                                    <div className="live-category">
+                                        {watchedValues.category ? watchedValues.category.replace('_', ' ') : 'Loại phòng'}
+                                    </div>
+                                    <h4 className="live-title">
+                                        {watchedValues.title || 'Tiêu đề tin đăng sẽ hiển thị ở đây...'}
+                                    </h4>
+                                    <div className="live-price">
+                                        {formatPrice(watchedValues.price)} <span>VNĐ/tháng</span>
+                                    </div>
+                                    <div className="live-address">
+                                        <FaMapPin />
+                                        <span className="truncate">
+                                            {watchedValues.district || 'Huyện'}, {watchedValues.city || 'Tỉnh'}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="tips-widget">
+                                <h4><FaLightbulb />Mẹo hay</h4>
+                                <ul>
+                                    <li>Hình ảnh rõ nét tăng 30% lượt xem.</li>
+                                    <li>Tiêu đề đầy đủ địa điểm thu hút hơn.</li>
+                                    <li>Điền đúng giá để tránh bị báo cáo.</li>
+                                </ul>
+                            </div>
+
+                            <div className="form-actions">
+                                <button type="submit" className="btn-submit" disabled={isSubmitting}>
+                                    {isSubmitting ? 'Đang xử lý...' : <><FaPaperPlane />Đăng tin ngay</>}
+                                </button>
+                                <button type="button" className="btn-cancel" onClick={() => navigate(-1)}>Hủy bỏ</button>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

@@ -10,10 +10,10 @@
 .login-page-wrapper {
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    min-height: 92vh;
     width: 100%;
     background: #e9f1f5;
+    padding-top: 70px;
 }
 
 .login-register-container {

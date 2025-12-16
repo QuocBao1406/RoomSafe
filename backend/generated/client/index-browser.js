@@ -166,9 +166,34 @@ exports.Prisma.PostImagesScalarFieldEnum = {
   post_id: 'post_id'
 };
 
+exports.Prisma.RoommatePostScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  budget: 'budget',
+  preferred_area: 'preferred_area',
+  gender_preference: 'gender_preference',
+  age_min: 'age_min',
+  age_max: 'age_max',
+  habits: 'habits',
+  contact_zalo: 'contact_zalo',
+  contact_messenger: 'contact_messenger',
+  contact_phone: 'contact_phone',
+  photos: 'photos',
+  status: 'status',
+  user_id: 'user_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.NullsOrder = {
@@ -198,6 +223,27 @@ exports.Prisma.PostsOrderByRelevanceFieldEnum = {
 
 exports.Prisma.PostImagesOrderByRelevanceFieldEnum = {
   image_url: 'image_url'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.RoommatePostOrderByRelevanceFieldEnum = {
+  title: 'title',
+  description: 'description',
+  preferred_area: 'preferred_area',
+  habits: 'habits',
+  contact_zalo: 'contact_zalo',
+  contact_messenger: 'contact_messenger',
+  contact_phone: 'contact_phone'
 };
 exports.users_user_gender = exports.$Enums.users_user_gender = {
   MALE: 'MALE',
@@ -229,10 +275,23 @@ exports.PostStatus = exports.$Enums.PostStatus = {
   HIDDEN: 'HIDDEN'
 };
 
+exports.RoommateGender = exports.$Enums.RoommateGender = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE',
+  ANY: 'ANY'
+};
+
+exports.RoommateStatus = exports.$Enums.RoommateStatus = {
+  ACTIVE: 'ACTIVE',
+  FOUND: 'FOUND',
+  CLOSED: 'CLOSED'
+};
+
 exports.Prisma.ModelName = {
   Users: 'Users',
   Posts: 'Posts',
-  PostImages: 'PostImages'
+  PostImages: 'PostImages',
+  RoommatePost: 'RoommatePost'
 };
 
 /**
