@@ -72,7 +72,32 @@ model Posts {
   created_at DateTime  @default(now())
   expired_at DateTime? // Ngày hết hạn tin đăng
 
+  roommate_details  RoommateDetails?
+
   @@map("posts") // Tên bảng trong DB
+}
+
+model RoommateDetails {
+  id          Int     @id @default(autoincrement())
+  
+  // Quan hệ 1-1 với Posts
+  post_id     Int     @unique // Quan trọng: @unique đảm bảo 1 Post chỉ có 1 chi tiết
+  post        Posts   @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
+
+  // Các thông tin đặc thù tìm bạn
+  gender_partner  String?  @default("ALL") // Mong muốn giới tính: NAM, NU, ALL
+  age_range_min   Int?     // Tuổi tối thiểu
+  age_range_max   Int?     // Tuổi tối đa
+  career          String?  // Nghề nghiệp: SINH_VIEN, DA_DI_LAM
+  
+  // Lưu trữ dạng text hoặc JSON String
+  habits          String?  @db.Text // Thói quen: "Ngủ sớm, Không hút thuốc, Sạch sẽ..."
+  hobbies         String?  @db.Text // Sở thích: "Game, Đá bóng, Nấu ăn..."
+  
+  // Có thể thêm chi phí chia sẻ
+  shared_cost     String?  // Ví dụ: "Chia đều", "Thỏa thuận"
+
+  @@map("roommate_details")
 }
 
 model PostImages {

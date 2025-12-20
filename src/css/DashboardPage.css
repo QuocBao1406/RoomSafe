@@ -1,219 +1,277 @@
-/* css/DashboardPage.css */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
 
 .dashboard-wrapper {
-    padding: 30px 50px;
-    background-color: #f9fafb; /* Màu nền xám nhẹ toàn trang */
+    padding: 30px;
+    background-color: #f8fafc;
     min-height: 100vh;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    display: flex;
+    justify-content: center;
 }
 
-/* --- HEADER --- */
+.dashboard-container {
+    width: 100%;
+    max-width: 1280px;
+}
+
 .dashboard-header {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    padding: 30px;
+    border-radius: 20px;
+    color: white;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.3);
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 40px;
-}
-
-.welcome-text h1 {
-    font-size: 32px;
-    color: #111827;
-    margin: 0 0 10px 0;
-    font-weight: 800;
-}
-
-.welcome-text p {
-    color: #6b7280;
-    font-size: 16px;
-    margin: 0;
-}
-
-.date-badge {
-    background: white;
-    padding: 10px 20px;
-    border-radius: 50px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    color: #4b5563;
-    font-weight: 500;
-    font-size: 14px;
-    display: flex;
     align-items: center;
-    gap: 8px;
-}
-
-/* --- STATS GRID (Cấu trúc chung) --- */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 25px;
-    margin-bottom: 40px;
-}
-
-.stat-card {
-    background: white;
-    padding: 25px;
-    border-radius: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s;
-    border: 1px solid #f3f4f6;
     position: relative;
     overflow: hidden;
 }
 
+.dashboard-header::after {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.welcome-text { z-index: 1; }
+.welcome-text h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0 0 5px 0;
+    letter-spacing: -0.5px;
+}
+.welcome-text p {
+    font-size: 0.95rem;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.date-badge {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(255,255,255,0.3);
+    z-index: 1;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .stat-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+    border-color: #cbd5e1;
 }
 
 .card-top {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 15px;
 }
 
-.stat-icon-wrapper {
-    width: 50px;
-    height: 50px;
+.stat-icon-box {
+    width: 48px;
+    height: 48px;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 1.4rem;
 }
 
+.stat-card.revenue .stat-icon-box { background: #ecfdf5; color: #10b981; }
+.stat-card.revenue .stat-change { color: #10b981; background: #dcfce7; }
+
+.stat-card.occupancy .stat-icon-box { background: #eff6ff; color: #3b82f6; }
+.stat-card.occupancy .stat-change { color: #3b82f6; background: #dbeafe; }
+
+.stat-card.rooms .stat-icon-box { background: #fff7ed; color: #f97316; }
+.stat-card.rooms .stat-change { color: #f97316; background: #ffedd5; }
+
+.stat-main { margin-top: 5px; }
 .stat-value {
-    font-size: 28px;
+    font-size: 1.8rem;
     font-weight: 800;
-    margin-bottom: 5px;
+    color: #1e293b;
+    line-height: 1.2;
 }
-
 .stat-label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #6b7280;
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-top: 4px;
 }
 
-/* --- TÙY CHỈNH MÀU RIÊNG CHO TỪNG THẺ (Quan trọng) --- */
-
-/* 1. Thẻ Doanh thu (Màu Xanh Lá - Tiền bạc) */
-.card-green {
-    border-bottom: 4px solid #10b981; /* Viền dưới màu xanh */
-}
-.card-green .stat-icon-wrapper {
-    background-color: #ecfdf5; /* Nền icon xanh nhạt */
-    color: #10b981;           /* Icon xanh đậm */
-}
-.card-green .stat-value {
-    color: #10b981; /* Số tiền màu xanh */
-}
-.card-green .highlight-text {
-    color: #10b981;
-    background: #ecfdf5;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
+.stat-change {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
 }
 
-/* 2. Thẻ Tỉ lệ lấp đầy (Màu Xanh Dương - Biểu đồ) */
-.card-blue {
-    border-bottom: 4px solid #3b82f6;
-}
-.card-blue .stat-icon-wrapper {
-    background-color: #eff6ff;
-    color: #3b82f6;
-}
-.card-blue .stat-value {
-    color: #1f2937; /* Số màu đen cho dễ đọc */
-}
-.card-blue .highlight-text {
-    color: #3b82f6;
-    font-size: 12px;
-    font-weight: bold;
-}
-/* Thanh progress bar riêng cho màu xanh */
-.progress-bg {
+.progress-container {
     width: 100%;
     height: 6px;
-    background: #f3f4f6;
+    background: #f1f5f9;
     border-radius: 10px;
     margin-top: 15px;
+    overflow: hidden;
 }
-.progress-fill {
+.progress-bar {
     height: 100%;
+    background: #3b82f6;
     border-radius: 10px;
-    background: #3b82f6; /* Màu thanh loading */
-    transition: width 1s ease-in-out;
+    transition: width 1s ease;
 }
 
-/* 3. Thẻ Tổng phòng (Màu Cam/Vàng - Năng động) */
-.card-orange {
-    border-bottom: 4px solid #f59e0b;
-}
-.card-orange .stat-icon-wrapper {
-    background-color: #fffbeb;
-    color: #f59e0b;
-}
-.card-orange .stat-value {
-    color: #1f2937;
-}
-
-/* --- TABLE SECTION --- */
 .dashboard-content {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 2.2fr 1fr;
     gap: 30px;
 }
 
 .section-card {
     background: white;
     border-radius: 16px;
-    padding: 25px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    overflow: hidden;
 }
 
 .section-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #f1f5f9;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
 }
 
 .section-title {
-    font-size: 18px;
+    font-size: 1.1rem;
     font-weight: 700;
-    color: #111827;
+    color: #1e293b;
 }
 
-.btn-view-all {
-    color: #4f46e5;
-    background: #eef2ff;
+.btn-link {
+    background: none;
     border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
+    color: #2563eb;
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
-    font-size: 13px;
-    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
-.btn-view-all:hover { background: #e0e7ff; }
+.btn-link:hover { text-decoration: underline; }
 
-.modern-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-.modern-table th { text-align: left; color: #9ca3af; font-size: 12px; padding: 0 15px; text-transform: uppercase; }
-.modern-table tr { background: #f9fafb; transition: 0.2s; }
-.modern-table tr:hover { background: #f3f4f6; transform: scale(1.01); }
-.modern-table td { padding: 15px; font-size: 14px; color: #374151; }
-.modern-table td:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
-.modern-table td:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
+.table-responsive { padding: 0 24px 20px; }
+.modern-table { width: 100%; border-collapse: separate; border-spacing: 0 15px; }
 
-/* Các dòng info bên phải */
-.info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #e5e7eb; }
-.info-row:last-child { border: none; }
-.info-label { color: #6b7280; font-size: 14px; }
-.info-val { font-weight: 700; color: #111827; }
+.modern-table th {
+    text-align: left;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.modern-table tr { transition: transform 0.2s; }
+.modern-table tr:hover { transform: translateX(5px); }
+
+.modern-table td { vertical-align: middle; }
+
+.post-cell { display: flex; align-items: center; gap: 12px; }
+.mini-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #e2e8f0;
+}
+.post-info h4 { margin: 0; font-size: 0.95rem; color: #1e293b; }
+.post-info span { font-size: 0.8rem; color: #64748b; }
+
+.price-cell { font-weight: 700; color: #2563eb; font-size: 0.95rem; }
+
+.status-pill {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+.status-pill.available { background: #dcfce7; color: #166534; }
+.status-pill.rented { background: #f1f5f9; color: #475569; }
+.status-pill.hidden { background: #fff7ed; color: #9a3412; }
+
+.sidebar-content { padding: 24px; }
+
+.analysis-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #e2e8f0;
+}
+.analysis-item:last-child { border: none; }
+
+.analysis-label { font-size: 0.9rem; color: #64748b; }
+.analysis-value { font-weight: 700; color: #1e293b; }
+
+.cta-banner {
+    margin: 24px;
+    background: linear-gradient(135deg, #4f46e5, #9333ea);
+    padding: 20px;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+}
+.cta-btn {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    color: #4f46e5;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.cta-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
 /* Responsive */
-@media (max-width: 1000px) {
+@media (max-width: 1024px) {
     .dashboard-content { grid-template-columns: 1fr; }
 }

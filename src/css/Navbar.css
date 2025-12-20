@@ -125,7 +125,7 @@ nav-menu-mobile {
   cursor: pointer;
 }
 
-.avatar-wrapper {
+.nav-avatar-wrapper {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -146,7 +146,7 @@ nav-menu-mobile {
   border: 2px solid #007bff;
 }
 
-.user-name {
+.nav-user-name {
   font-weight: 400;
   color: #333;
   max-width: 150px;

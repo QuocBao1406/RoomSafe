@@ -65,7 +65,13 @@ function LoginPage() {
 
       const userData = res.data;
 
-      // tao object luu user vao localStorage
+      if (userData.token) {
+          localStorage.setItem('token', userData.token);
+          console.log("Token đã được lưu:", userData.token);
+      } else {
+          console.error("Lỗi: Backend không trả về token!", userData);
+      }
+
       const localUser = {
         id: userData.id,
         username: userData.username || data.username,

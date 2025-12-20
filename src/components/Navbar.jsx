@@ -155,13 +155,13 @@ const Navbar = () => {
         <div className='nav-auth-desktop'>
           {user ? (
             <div className="user-dropdown-container" ref={dropdownRef}>
-              <div className="avatar-wrapper" onClick={toggleDropdown}>
+              <div className="nav-avatar-wrapper" onClick={toggleDropdown}>
                 <img
                   src={user.avatar || defaultAvatar}
                   alt="Avatar"
                   className="user-avatar"
                 />
-                <span className="user-name">{user.name || user.username}</span>
+                <span className="nav-user-name">{user.name || user.username}</span>
               </div>
 
               {/* Dropdown menu */}

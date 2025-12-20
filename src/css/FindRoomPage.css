@@ -1,22 +1,15 @@
-/* css/FindRoomPage.css */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+/* src/css/FindRoomPage.css */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
 
 .client-page-wrapper {
-    /* MÀU SẮC */
+    /* --- BẢNG MÀU & BIẾN --- */
     --fr-primary: #4f46e5;       
-    --fr-primary-light: #818cf8;
     --fr-accent: #f43f5e;        
-    --fr-text-main: #1e293b;     
+    --fr-text-main: #0f172a;     
     --fr-text-sub: #64748b;
     --fr-bg-page: #f8fafc;       
     
-    /* SHADOW */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-float: 0 15px 35px -5px rgba(0, 0, 0, 0.1); /* Shadow mềm cho thanh search trắng */
-    --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    --fr-card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     background-color: var(--fr-bg-page);
     color: var(--fr-text-main);
     min-height: 100vh;
@@ -24,229 +17,206 @@
     flex-direction: column;
 }
 
-/* --- 1. HERO AREA --- */
+/* --- 1. HERO AREA (NỀN PARALLAX) --- */
 .client-page-wrapper .search-hero {
     position: relative;
-    padding: 50px 20px 80px; /* Tăng khoảng cách để ảnh thoáng hơn */
+    padding: 60px 20px 100px; /* Padding đáy lớn để thanh search đè lên */
     
-    /* Ảnh nền với lớp phủ tối màu xanh đen sang trọng */
-    background: linear-gradient(180deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.7) 100%),
-                url('https://images.unsplash.com/photo-1512918760532-3ad860030eb1?q=80&w=2070&auto=format&fit=crop');
+    /* Ảnh nền căn hộ hiện đại + Lớp phủ tối */
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%),
+                url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=2070&auto=format&fit=crop');
     
     background-size: cover;
     background-position: center;
+    background-attachment: fixed; /* Hiệu ứng ảnh đứng yên khi cuộn (Parallax) */
+    
     text-align: center;
-    border-bottom-left-radius: 40px; /* Bo góc mềm mại hơn */
-    border-bottom-right-radius: 40px;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
 }
 
 .client-page-wrapper .hero-title {
-    font-size: 1.6rem; 
-    font-weight: 800;
-    color: white;
-    margin: 0;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    font-size: 2.2rem; font-weight: 800; color: white; margin: 0 0 10px 0; letter-spacing: -0.5px;
+}
+.client-page-wrapper .hero-subtitle {
+    color: #cbd5e1; font-size: 1rem; margin: 0; font-weight: 500;
 }
 
-/* --- 2. THANH TÌM KIẾM (Đã sửa nền trắng) --- */
+/* --- 2. THANH TÌM KIẾM (FLOATING PILL) --- */
 .client-page-wrapper .filter-bar-wrapper {
-    display: flex; 
-    justify-content: center; 
-    padding: 0 20px;
-    margin-top: -55px; /* Đẩy lên cao hơn chút */
+    display: flex; justify-content: center; padding: 0 20px;
+    margin-top: -60px; /* Kéo lên đè vào Hero */
     z-index: 20;
 }
 
 .client-page-wrapper .filter-bar-container {
-    background: #ffffff; /* CHUYỂN VỀ TRẮNG HOÀN TOÀN CHO SẠCH */
-    padding: 10px 15px;
-    border-radius: 16px; 
-    box-shadow: var(--shadow-float); /* Bóng đổ giúp thanh này nổi hẳn lên */
-    display: flex;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px;
-    border: none; /* Bỏ viền để nhìn hiện đại hơn */
+    background: #ffffff; padding: 8px;
+    border-radius: 100px; /* Bo tròn hoàn toàn */
+    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.15);
+    display: flex; align-items: center;
+    width: 100%; max-width: 1100px;
+    border: 1px solid rgba(255,255,255,0.5);
 }
 
 .client-page-wrapper .filter-group {
-    flex: 1;
-    padding: 4px 16px;
-    border-right: 1px solid #f1f5f9; /* Đường kẻ rất nhạt */
-    min-width: 110px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex: 1; padding: 8px 24px;
+    border-right: 1px solid #e2e8f0;
+    display: flex; flex-direction: column; justify-content: center;
     transition: all 0.2s;
 }
-
 .client-page-wrapper .filter-group:last-of-type { border-right: none; }
-
-.client-page-wrapper .filter-group:hover {
-    background-color: #f8fafc; /* Hover màu xám siêu nhạt */
-    border-radius: 8px;
-}
+.client-page-wrapper .filter-group:hover { background-color: #f8fafc; border-radius: 30px; }
 
 .client-page-wrapper .filter-label {
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: #94a3b8; /* Label màu nhạt đi để đỡ rối */
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-    display: flex; align-items: center; gap: 5px;
+    font-size: 0.7rem; font-weight: 700; color: #64748b;
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 6px;
 }
 
 .client-page-wrapper .filter-input, 
 .client-page-wrapper .filter-select {
-    width: 100%;
-    border: none;
-    background: transparent;
-    font-size: 0.9rem;
-    font-weight: 700; /* Chữ đậm hơn chút cho dễ đọc trên nền trắng */
-    color: var(--fr-text-main);
-    outline: none;
-    cursor: pointer;
-    padding: 0;
+    width: 100%; border: none; background: transparent;
+    font-size: 0.95rem; font-weight: 700; color: var(--fr-text-main);
+    outline: none; cursor: pointer; padding: 0; font-family: inherit;
 }
+.client-page-wrapper .filter-input::placeholder { color: #cbd5e1; font-weight: 500; }
 
 .client-page-wrapper .btn-search-round {
-    background: var(--fr-primary);
-    color: white;
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-left: 10px;
-    flex-shrink: 0;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white; width: 52px; height: 52px; border-radius: 50%; border: none;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+    transition: transform 0.2s; margin-left: 10px; flex-shrink: 0;
 }
-.client-page-wrapper .btn-search-round:hover {
-    background: var(--fr-primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.5);
-}
+.client-page-wrapper .btn-search-round:hover { transform: scale(1.05); box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5); }
 
-/* --- 3. LIST & BADGE MỚI --- */
+/* --- 3. LIST HEADER --- */
 .client-page-wrapper .room-list-container {
-    max-width: 1300px; 
-    margin: 20px auto 60px;
-    padding: 0 24px;
-    width: 100%;
-    box-sizing: border-box;
+    max-width: 1200px; margin: 40px auto 60px;
+    padding: 0 24px; width: 100%; box-sizing: border-box;
 }
 
 .client-page-wrapper .list-header-modern {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px dashed #e2e8f0;
 }
 
-/* STYLE MỚI CHO SỐ LƯỢNG TIN (Dạng đóng khung nhỏ) */
-.client-page-wrapper .result-count-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: white;
-    border: 1px solid #e2e8f0;
-    padding: 8px 16px;
-    border-radius: 30px; /* Bo tròn như viên thuốc */
-    font-size: 0.85rem;
-    color: #64748b;
-    font-weight: 600;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+.client-page-wrapper .result-badge {
+    background: white; border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 20px;
+    font-size: 0.9rem; font-weight: 600; color: #64748b;
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.client-page-wrapper .result-badge b { color: var(--fr-primary); }
+
+.client-page-wrapper .sort-box {
+    display: flex; align-items: center; gap: 10px; white-space: nowrap;
+}
+.client-page-wrapper .sort-select {
+    border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px;
+    font-size: 0.9rem; color: var(--fr-text-main); background: white;
+    cursor: pointer; outline: none; font-family: inherit; font-weight: 600;
 }
 
-.client-page-wrapper .count-number {
-    color: var(--fr-primary);
-    font-weight: 800;
-    font-size: 1rem;
-}
-
-/* SORT SELECT */
-.client-page-wrapper .sort-select-minimal {
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--fr-text-main);
-    background: white;
-    cursor: pointer;
-    transition: 0.2s;
-}
-.client-page-wrapper .sort-select-minimal:hover { border-color: var(--fr-primary-light); }
-
-/* --- 4. CARD GRID (Giữ nguyên) --- */
+/* --- 4. CARD GRID (RICH INFO) --- */
 .client-page-wrapper .room-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 25px; 
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* Thẻ rộng hơn */
+    gap: 30px;
 }
+
 .client-page-wrapper .premium-card {
-    background: white;
-    border-radius: 20px; 
-    overflow: hidden;
-    position: relative;
-    box-shadow: var(--shadow-sm); 
-    border: 1px solid transparent; 
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    transition: all 0.3s;
+    background: white; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f1f5f9;
+    cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex; flex-direction: column; height: 100%;
 }
 .client-page-wrapper .premium-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-hover);
-    border-color: rgba(79, 70, 229, 0.1); 
+    transform: translateY(-6px); box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1); border-color: #e2e8f0;
 }
+
+/* Ảnh Thumb */
 .client-page-wrapper .card-img-container {
-    height: 190px; position: relative; overflow: hidden; margin: 8px 8px 0 8px; border-radius: 16px; 
+    height: 220px; position: relative; overflow: hidden;
 }
 .client-page-wrapper .card-img-container img {
     width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease;
 }
 .client-page-wrapper .premium-card:hover .card-img-container img { transform: scale(1.08); }
-.client-page-wrapper .card-price-overlay {
-    position: absolute; bottom: 10px; left: 10px; z-index: 2;
+
+/* Badge Giá (Góc trái dưới ảnh) */
+.client-page-wrapper .price-badge {
+    position: absolute; bottom: 12px; left: 12px;
+    background: white; padding: 6px 12px; border-radius: 8px;
+    color: #db2777; font-weight: 800; font-size: 1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; align-items: baseline; gap: 4px;
+}
+.client-page-wrapper .price-badge small { font-size: 0.75rem; color: #64748b; font-weight: 600; }
+
+/* Badge Loại phòng (Góc trái trên) */
+.client-page-wrapper .category-badge {
+    position: absolute; top: 12px; left: 12px;
     background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(4px);
-    padding: 6px 12px; border-radius: 12px; display: flex; align-items: baseline; gap: 4px;
-}
-.client-page-wrapper .price-amount { font-size: 1rem; font-weight: 700; color: white; }
-.client-page-wrapper .price-unit { font-size: 0.7rem; color: #cbd5e1; }
-.client-page-wrapper .card-heart-btn {
-    position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; 
-    background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    color: #94a3b8; z-index: 2; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s;
-}
-.client-page-wrapper .card-heart-btn:hover { transform: scale(1.1); color: var(--fr-accent); }
-.client-page-wrapper .badge-category {
-    position: absolute; top: 10px; left: 10px; background: var(--fr-primary);
-    color: white; padding: 4px 10px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
-}
-.client-page-wrapper .card-content { padding: 16px 12px; }
-.client-page-wrapper .card-title-link {
-    font-size: 1rem; font-weight: 700; color: var(--fr-text-main); margin-bottom: 6px; line-height: 1.4;
-    display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; 
-}
-.client-page-wrapper .card-location {
-    font-size: 0.8rem; color: #64748b; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
-}
-.client-page-wrapper .card-amenities { display: flex; gap: 8px; flex-wrap: wrap; }
-.client-page-wrapper .amenity-pill {
-    font-size: 0.75rem; font-weight: 600; color: #64748b; background: #f1f5f9; padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 4px;
+    color: white; padding: 4px 10px; border-radius: 6px;
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
 }
 
-/* RESPONSIVE */
+/* Nút Tim */
+.client-page-wrapper .card-heart-btn {
+    position: absolute; top: 12px; right: 12px;
+    width: 36px; height: 36px; background: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #94a3b8; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s; z-index: 5;
+}
+.client-page-wrapper .card-heart-btn:hover { color: #f43f5e; transform: scale(1.1); }
+
+/* Body Card */
+.client-page-wrapper .card-content {
+    padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1;
+}
+
+.client-page-wrapper .card-title {
+    font-size: 1.1rem; font-weight: 700; color: #1e293b; margin: 0; line-height: 1.4;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+.client-page-wrapper .card-address {
+    font-size: 0.9rem; color: #64748b; display: flex; align-items: flex-start; gap: 8px;
+    line-height: 1.4; min-height: 2.8em;
+}
+.client-page-wrapper .address-text {
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+/* Service Tags (Dịch vụ) */
+.client-page-wrapper .service-tags {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px;
+}
+.client-page-wrapper .tag {
+    font-size: 0.75rem; font-weight: 600; padding: 4px 8px; border-radius: 6px;
+    background: #f1f5f9; color: #475569; display: flex; align-items: center; gap: 4px;
+}
+.client-page-wrapper .tag.area { background: #eff6ff; color: #2563eb; }
+.client-page-wrapper .tag.free { background: #dcfce7; color: #166534; }
+
+/* Footer Card */
+.client-page-wrapper .card-footer {
+    padding: 12px 20px; border-top: 1px solid #f1f5f9; background: #fcfcfc;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.8rem; color: #64748b;
+}
+.client-page-wrapper .user-info { display: flex; align-items: center; gap: 8px; }
+.client-page-wrapper .user-avatar {
+    width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid #e2e8f0;
+}
+.client-page-wrapper .time-posted {
+    font-size: 0.75rem; font-style: italic; color: #94a3b8;
+}
+
+/* Responsive */
 @media (max-width: 1024px) {
-    .client-page-wrapper .filter-bar-container { flex-wrap: wrap; padding: 15px; }
-    .client-page-wrapper .filter-group { flex: 1 1 45%; border: 1px solid #f1f5f9; padding: 10px; margin: 5px; border-radius: 8px; }
-    .client-page-wrapper .btn-search-round { width: 100%; margin: 10px 0 0 0; }
-    .client-page-wrapper .search-hero { padding-bottom: 60px; }
+    .client-page-wrapper .filter-bar-container { flex-direction: column; border-radius: 20px; padding: 15px; }
+    .client-page-wrapper .filter-group { width: 100%; border-right: none; border-bottom: 1px solid #f1f5f9; padding: 15px; }
+    .client-page-wrapper .btn-search-round { width: 100%; border-radius: 12px; margin-top: 10px; margin-left: 0; }
+    .client-page-wrapper .hero-title { font-size: 1.8rem; }
 }

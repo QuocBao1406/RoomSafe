@@ -36,7 +36,7 @@ router.get("/user/:id", async(req,res) => {
         console.error("Lỗi lấy danh sách bài đăng:", error);
         res.status(500).json({ message: "Lỗi server khi tải danh sách bài đăng "});
     }
-})
+});
 
 // up toi da 10 anh
 router.post("/create", async (req, res) => {
@@ -221,26 +221,63 @@ router.put("/update/:id", upload.array('images', 10), async (req, res) => {
     }
 });
 
-router.get("/public", async (req, res) => {
+router.put("/update-status/:id", async (req, res) => {
     try {
-        // Lấy tất cả bài viết có trạng thái AVAILABLE và chưa hết hạn
-        const posts = await prisma.posts.findMany({
+        const postId = parseInt(req.params.id);
+        const {status} = req.body;
+
+        if(!status) {
+            return res.status(400).json({success: false, message: "Thiếu trạng thái (status)"});
+        }
+
+        const updatePost = await prisma.posts.update({
             where: {
-                status: 'AVAILABLE', // Chỉ lấy bài đang hiển thị
-                expired_at: {
-                    gt: new Date() // Chỉ lấy bài chưa hết hạn (expired_at > hiện tại)
-                }
+                post_id: postId
             },
-            include: {
-                images: true, // Kèm ảnh để làm thumbnail
-                // user: true // (Optional) Nếu muốn hiện tên người đăng
-            },
-            orderBy: {
-                created_at: 'desc' // Bài mới nhất lên đầu
+            data: {
+                status: status,
             }
         });
 
-        // Xử lý BigInt (user_id) và map thumbnail
+        return res.status(200).json({
+            success: true,
+            message: "Cập nhật trạng thái thành công!",
+            data: updatePost,
+        })
+    } catch (error) {
+        if (error.code === 'P2025') {
+            return res.status(404).json({
+                success: false,
+                message: "Không tìm thấy bài đăng này.",
+            });
+        }
+
+        console.error("Lỗi update Prisma:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Lỗi server khi cập nhật trạng thái.",
+        });
+    }
+});
+
+router.get("/public", async (req, res) => {
+    try {
+        const posts = await prisma.posts.findMany({
+            where: {
+                status: 'AVAILABLE',
+                expired_at: {
+                    gt: new Date()
+                }
+            },
+            include: {
+                images: true,
+            },
+            orderBy: {
+                created_at: 'desc'
+            }
+        });
+
         const safePosts = posts.map(post => ({
             ...post,
             user_id: post.user_id.toString(),

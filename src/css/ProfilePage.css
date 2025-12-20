@@ -1,91 +1,175 @@
-/* css/ProfilePage.css */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+
 .profile-wrapper {
-    background-color: #f3f4f6;
-    min-height: 100vh;
+    background-color: #f8fafc; /* Nền xám xanh nhạt sang trọng */
+    min-height: calc(100vh - 60px);
     padding: 40px 20px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    display: flex;
+    justify-content: center;
 }
 
 .profile-container {
-    max-width: 1000px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 1100px;
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 350px 1fr; /* Sidebar rộng hơn chút */
     gap: 30px;
+    align-items: start;
 }
 
-/* SIDEBAR TRÁI */
+/* --- SIDEBAR TRÁI (STYLE CARD) --- */
 .profile-sidebar {
     background: white;
-    border-radius: 16px;
-    padding: 30px 20px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05); /* Bóng đổ mềm */
+    border: 1px solid #f1f5f9;
+    position: relative;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    height: fit-content;
+}
+
+/* Cover Gradient đẹp mắt */
+.sidebar-cover {
+    height: 130px;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    position: relative;
+}
+
+/* Avatar đè lên cover */
+.sidebar-body {
+    padding: 0 30px 40px;
+    margin-top: -65px; /* Kéo lên đè vào cover */
+    position: relative;
+}
+
+.avatar-wrapper {
+    width: 130px; height: 130px;
+    margin: 0 auto 15px;
+    position: relative;
+    border-radius: 50%;
+    background: white;
+    padding: 4px; /* Viền trắng bao quanh */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .avatar-box {
-    width: 120px; height: 120px; margin: 0 auto 15px;
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
     position: relative;
 }
-.avatar-img {
-    width: 100%; height: 100%; object-fit: cover;
-    border-radius: 50%; border: 4px solid #f9fafb;
-}
 
-.user-role-badge {
-    display: inline-block; padding: 4px 12px;
-    border-radius: 20px; font-size: 12px; font-weight: bold;
-    margin-bottom: 15px; text-transform: uppercase;
-}
-.role-landlord { background: #dbeafe; color: #1e40af; } /* Xanh dương */
-.role-tenant { background: #dcfce7; color: #166534; }   /* Xanh lá */
+.avatar-img { width: 100%; height: 100%; object-fit: cover; }
 
-.sidebar-stats {
-    margin-top: 20px; text-align: left;
-    border-top: 1px solid #f3f4f6; padding-top: 15px;
+.camera-overlay {
+    position: absolute; bottom: 5px; right: 5px;
+    background: #1e293b; color: white;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; border: 2px solid white;
+    transition: 0.2s; z-index: 10;
 }
-.stat-item {
+.camera-overlay:hover { background: #4f46e5; transform: scale(1.1); }
+
+.user-name {
+    font-size: 1.4rem; font-weight: 800; color: #1e293b;
+    margin: 10px 0 2px;
+}
+.user-email { color: #64748b; font-size: 0.9rem; margin-bottom: 20px; }
+
+/* Badge Role Xịn */
+.user-badge {
+    display: inline-block; padding: 6px 16px;
+    border-radius: 30px; font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    margin-bottom: 25px;
+}
+.badge-landlord { background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; }
+.badge-tenant { background: #ecfdf5; color: #059669; border: 1px solid #d1fae5; }
+
+.sidebar-info-list {
+    background: #f8fafc; border-radius: 12px; padding: 20px;
+    text-align: left;
+}
+.info-item {
     display: flex; justify-content: space-between;
-    margin-bottom: 10px; font-size: 14px; color: #4b5563;
+    font-size: 0.9rem; margin-bottom: 10px; color: #475569;
 }
+.info-item:last-child { margin-bottom: 0; }
+.info-item b { color: #1e293b; font-weight: 600; }
 
-/* FORM PHẢI */
+/* --- FORM PHẢI (STYLE HIỆN ĐẠI) --- */
 .profile-content {
     background: white;
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
 }
 
 .content-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 25px; padding-bottom: 15px;
-    border-bottom: 1px solid #e5e7eb;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 30px; padding-bottom: 20px;
+    border-bottom: 1px solid #f1f5f9;
 }
+.content-header h1 { font-size: 1.6rem; font-weight: 700; color: #1e293b; margin: 0 0 5px; }
+.content-header p { color: #64748b; margin: 0; font-size: 0.95rem; }
 
-.btn-edit-toggle {
-    background: #4f46e5; color: white;
-    border: none; padding: 8px 20px; border-radius: 8px;
-    cursor: pointer; font-weight: 600;
+/* Nút bấm */
+.btn-action {
+    padding: 10px 20px; border-radius: 10px; font-weight: 600; font-size: 0.9rem;
+    cursor: pointer; border: none; display: flex; align-items: center; gap: 8px;
+    transition: 0.2s;
 }
-.btn-cancel { background: #e5e7eb; color: #374151; margin-right: 10px; }
+.btn-edit { background: #eff6ff; color: #4f46e5; }
+.btn-edit:hover { background: #e0e7ff; color: #4338ca; }
+.btn-save { background: #4f46e5; color: white; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
+.btn-save:hover { background: #4338ca; transform: translateY(-2px); }
+.btn-cancel { background: white; color: #ef4444; border: 1px solid #fee2e2; }
 
+/* --- FORM GRID & INPUT MAGIC (QUAN TRỌNG NHẤT) --- */
 .form-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 25px;
 }
-.form-group { margin-bottom: 5px; }
-.form-group.full { grid-column: span 2; }
-.form-label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
-
-.form-input, .form-select, .form-textarea {
-    width: 100%; padding: 10px;
-    border: 1px solid #d1d5db; border-radius: 8px;
-    background: #f9fafb; font-size: 14px;
+.form-section-title {
+    grid-column: span 2; font-size: 0.75rem; text-transform: uppercase;
+    color: #94a3b8; font-weight: 700; letter-spacing: 1px; margin: 10px 0 5px;
 }
-.form-input:focus { border-color: #4f46e5; outline: none; background: white; }
-.form-input:disabled { background: #f3f4f6; color: #9ca3af; cursor: not-allowed; }
+.form-group label {
+    font-size: 0.85rem; font-weight: 600; color: #64748b; margin-bottom: 6px; display: flex; align-items: center; gap: 5px;
+}
 
-@media (max-width: 768px) {
+/* BIẾN HÌNH INPUT: Khi xem thì giống text, khi sửa mới hiện khung */
+.form-input {
+    width: 100%; padding: 10px 0;
+    font-family: inherit; font-size: 1rem; color: #1e293b;
+    background: transparent; border: none; border-bottom: 1px solid transparent;
+    border-radius: 0; transition: all 0.2s;
+}
+
+/* Trạng thái CHỈ XEM (Disabled) */
+.form-input:disabled {
+    background: transparent; color: #0f172a; cursor: default;
+    border-bottom: 1px solid #f1f5f9; /* Dòng kẻ mờ tinh tế */
+}
+.form-input.read-only:disabled { color: #64748b; border: none; } /* Username/Email mờ hơn */
+
+/* Trạng thái CHỈNH SỬA */
+.form-input.editable {
+    padding: 10px 15px; border: 1px solid #cbd5e1; border-radius: 10px; background: white;
+}
+.form-input.editable:focus {
+    border-color: #6366f1; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); outline: none;
+}
+
+/* Full width cho địa chỉ và bio */
+.full-width { grid-column: span 2; }
+.form-textarea { resize: none; line-height: 1.5; }
+
+@media (max-width: 900px) {
     .profile-container { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full-width { grid-column: span 1; }
 }

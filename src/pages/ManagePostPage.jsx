@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext} from 'react';
 import axios from 'axios';
 import { UserContext } from '../contexts/UserContext.jsx';
 import { useNavigate } from 'react-router-dom';
-import { FaEdit, FaTrash, FaEye, FaClock, FaMapMarkedAlt, FaBed, FaRulerCombined } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaEye, FaClock, FaMapMarkedAlt, FaBed, FaRulerCombined, FaHistory, FaCheckCircle, FaLayerGroup, FaPlus, FaExpandArrowsAlt, FaMapMarkerAlt } from 'react-icons/fa';
 import '../css/ManagePostPage.css';
 import { toast, Toaster } from 'react-hot-toast';
 import RoomDetailModal from '../components/RoomDetailModal.jsx';
@@ -15,6 +15,34 @@ const ManagePostPage = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState(null);
+
+    const stats = {
+        total: posts.length,
+        rented: posts.filter(p => p.status === 'RENTED').length,
+        available: posts.filter(p => p.status === 'AVAILABLE').length,
+    }
+
+    const getCategoryName = (cat) => {
+        const map = {'PHONG_TRO': 'Phòng trọ', 'CHUNG_CU': 'Chung cư', 'NHA_NGUYEN_CAN': 'Nhà nguyên căn'};
+        return map[cat] || 'Phòng trọ';
+    }
+
+    const handleToggleStatus = async (post) => {
+        const newStatus = post.status === 'RENTED' ? 'AVAILABLE' : 'RENTED';
+        const confirmMsg = newStatus === 'RENTED'
+        ? "Xác nhận phòng này đã có khách thuê?"
+        : "Xác nhận phòng này hiện còn trống?";
+
+        if(!window.confirm(confirmMsg)) return;
+
+        try {
+            await axios.put(`http://localhost:5000/api/posts/update-status/${post.post_id}`, {status: newStatus});
+            setPosts(prev => prev.map(p => p.post_id === post.post_id ? { ...p, status: newStatus } : p));
+            toast.success("Đã cập nhật tình trạng phòng!");
+        } catch (error) {
+            toast.error("Lỗi cập nhật");
+        }
+    }
 
     const handleViewRoom = (post) => {
         const fmt = (price) => {
@@ -111,83 +139,110 @@ const ManagePostPage = () => {
         <div className="manage-page-wrapper">
             <Toaster position="top-center" />
             <div className="manage-container">
+
                 <div className="manage-header">
-                    <div>
-                        <h1>Quản lý phòng trọ</h1>
-                        <p>Xem và quản lý các phòng trọ bạn đang cho thuê</p>
+                    <div className="header-left">
+                        <div className="header-title">
+                            <h1>Quản lý phòng trọ</h1>
+                        </div>
                     </div>
-                    <button className="btn-create-new" onClick={() => navigate('/post-room')}>
-                        + Đăng tin mới
+
+                    <div className="header-stats">
+                        <div className="stat-item" title="Tổng số tin">
+                                <FaLayerGroup size={14}/> 
+                                <span>Tổng: <strong>{stats.total}</strong></span>
+                            </div>
+                            
+                            <span className="stat-divider"></span>
+                            
+                            <div className="stat-item" title="Đang hiển thị">
+                                <FaCheckCircle size={14}/> 
+                                <span>Trống: <strong>{stats.available}</strong></span>
+                            </div>
+
+                            <span className="stat-divider"></span>
+
+                            <div className="stat-item" title="Đã cho thuê">
+                                <FaHistory size={14}/> 
+                                <span>Đã thuê: <strong>{stats.rented}</strong></span>
+                            </div>
+                    </div>
+
+                    <button className="btn-create-compact" onClick={() => navigate('/post-room')}>
+                        <FaPlus style={{color: '#2563eb'}} /> Đăng tin mới
                     </button>
                 </div>
 
-                {(!Array.isArray(posts)) || posts.length === 0 ? (
-                    <div className="empty-state">
-                        <img src="https://cdn-icons-png.flaticon.com/512/4076/4076432.png" alt="Empty" />
-                        <p>Bạn chưa có tin đăng nào</p>
-                        <button className="btn-create-new" onClick={() => navigate('/post-room')}>Đăng ngay</button>
+                {posts.length === 0 ? (
+                    <div className="empty-state" style={{textAlign:'center', padding:60, background:'white', borderRadius:16, border:'1px dashed #cbd5e1'}}>
+                        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" width="80" alt="empty" style={{opacity:0.5, marginBottom: 15}}/>
+                        <h3 style={{color:'#1e293b', margin:'0 0 8px 0'}}>Chưa có tin đăng nào</h3>
+                        <p style={{color:'#64748b', margin:'0 0 20px 0'}}>Đăng tin ngay để tiếp cận hàng ngàn người thuê.</p>
+                        <button className="btn-create-compact" style={{margin:'0 auto', background:'#2563eb', color:'white'}} onClick={() => navigate('/post-room')}>Đăng ngay</button>
                     </div>
                 ) : (
                     <div className="post-grid">
                         {posts.map((post) => (
-                            <div key={post.post_id} className="post-card">
-                                <div className="card-thumb">
+                            <div key={post.post_id} className={`post-card ${post.status === 'RENTED' ? 'is-rented' : ''}`}>
+                                <div className="card-thumb" onClick={() => handleViewRoom(post)}>
                                     <img
-                                        src={post.thumbnail || "https://via.placeholder.com/300x200?text=No+Image" }
+                                        src={post.thumbnail || "https://via.placeholder.com/400x300?text=RoomSafe" }
                                         alt={post.post_title}
+                                        style={post.status === 'RENTED' ? {filter: 'grayscale(100%', opacity: 0.8} : {}}
                                     />
-                                    <div className="card-overlay-top">
-                                        {getStatusLabel(post.status)}
-                                    </div>
-                                    <div className="card-overlay-bottom">
-                                        <span className="price-tag">{formatPrice(post.post_price)}/tháng</span>
+                                    <div className={`status-badge-on-img ${post.status === 'RENTED' ? 'rented' : 'available'}`}>
+                                        {post.status === 'RENTED' ? 'Đã chốt' : 'Còn trống'}
                                     </div>
                                 </div>
 
                                 <div className="card-body">
-                                    <h3 className="post-title" title={post.post_title}>{post.post_title}</h3>
+                                    <div className="card-top-row">
+                                        <span className="category-text">{getCategoryName(post.category)}</span>
+                                        <span>{new Date(post.created_at).toLocaleDateString('vi-VN')}</span>
+                                    </div>
+
+                                    <h3 className="post-title" title={post.post_title} onClick={() => handleViewRoom(post)}>{post.post_title}</h3>
                                     
-                                    <div className="post-meta">
-                                        <div className="meta-row">
-                                            <FaMapMarkedAlt className="icon" />
-                                            <span>
-                                                {post.post_address}, {post.post_ward}, {post.post_city}
-                                            </span>
-                                        </div>
+                                    <div className="specs-row">
+                                        <span className="price-text">{formatPrice(post.post_price)}/tháng</span>
+                                        <span className="area-text">
+                                            <FaExpandArrowsAlt size={10} /> {post.post_area} m²
+                                        </span>
+                                    </div>
 
-                                        <div className="meta-row specs">
-                                            <span><FaRulerCombined className="icon" />{post.post_area}</span>
+                                    <div className="address-row">
+                                        <FaMapMarkerAlt style={{color:'#64748b', marginTop: 3, flexShrink: 0}}/>
+                                        <span className="address-text" title={`${post.post_address}, ${post.post_ward}, ${post.post_district}, ${post.post_city}`}>
+                                            {`${post.post_address}, ${post.post_ward}, ${post.post_district}, ${post.post_city}`}
+                                        </span>
 
-                                            <span className={`expired-date ${new Date(post.expired_at)} < new Date() ? 'expired' : ''}`}>
-                                                <FaClock className="icon" />
-                                                {post.expired_at ? new Date(post.expired_at).toLocaleDateString('vi-VN') : "Vô thời hạn"}
-                                            </span>
-                                        </div>
                                     </div>
                                 </div>
 
                                 <div className="card-footer">
-                                    <button 
-                                        className="btn-action btn-view" 
-                                        title="Xem chi tiết"
-                                        onClick={() => handleViewRoom(post)}
-                                    >
-                                        <FaEye /> Xem
-                                    </button>
-                                    <button 
-                                        className="btn-action btn-edit" 
-                                        title="Sửa tin"
-                                        onClick={() => navigate(`/edit-room/${post.post_id}`)}
-                                    >
-                                        <FaEdit /> Sửa
-                                    </button>
-                                    <button
-                                        className="btn-action btn-delete"
-                                        title="Xóa tin"
-                                        onClick={() => handleDelete(post.post_id)}
-                                    >
-                                        <FaTrash /> Xóa
-                                    </button>
+                                    <div className={`status-toggle ${post.status === 'RENTED' ? 'rented' : 'available'}`} onClick={() => handleToggleStatus(post)}>
+                                        <div className="toggle-dot"></div>
+                                        <span className="status-label">
+                                            {post.status === 'RENTED' ? 'Đã cho thuê' : 'Còn trống'}
+                                        </span>
+                                    </div>
+
+                                    <div style={{display: 'flex', gap: 8}}>
+                                        <button 
+                                            className="action-btn-small" 
+                                            title="Sửa tin"
+                                            onClick={() => navigate(`/edit-room/${post.post_id}`)}
+                                        >
+                                            <FaEdit /> Sửa
+                                        </button>
+                                        <button
+                                            className="action-btn-small"
+                                            title="Xóa tin"
+                                            onClick={() => handleDelete(post.post_id)}
+                                        >
+                                            <FaTrash /> Xóa
+                                        </button>
+                                    </div>
                                 </div>
                             </div> 
                         ))}

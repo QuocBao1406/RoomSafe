@@ -2,228 +2,192 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { UserContext } from '../contexts/UserContext.jsx';
 import { useNavigate } from 'react-router-dom';
-import { FaHome, FaWallet, FaChartPie, FaCalendarAlt, FaArrowRight } from 'react-icons/fa';
+import { FaWallet, FaChartPie, FaHome, FaCalendarAlt, FaArrowRight, FaImage } from 'react-icons/fa';
 import '../css/DashboardPage.css';
 
 const DashboardPage = () => {
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
-    
-    // State lưu trữ các chỉ số thống kê
+
     const [stats, setStats] = useState({
         total: 0,
         rented: 0,
         occupancyRate: 0,
-        estimatedRevenue: 0, // Doanh thu hiện tại (từ phòng đã thuê)
-        potentialRevenue: 0, // Doanh thu tiềm năng (nếu full phòng)
-        avgPrice: 0          // Giá trung bình
+        estimatedRevenue: 0,
+        potentialRevenue: 0,
+        avgPrice: 0
     });
-
-    // State lưu danh sách bài mới nhất
     const [recentPosts, setRecentPosts] = useState([]);
 
-    // Helper: Định dạng tiền tệ (VNĐ)
-    const formatMoney = (amount) => {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-    };
+    const formatMoney = (amount) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
-    // Helper: Tính toán số liệu từ danh sách bài đăng tải về
     const calculateStats = (posts) => {
         const total = posts.length;
         if (total === 0) return;
-
-        // 1. Đếm số phòng đã thuê (dựa trên status RENTED)
         const rented = posts.filter(p => p.status === 'RENTED').length;
-        
-        // 2. Tính tỉ lệ lấp đầy (%)
         const occupancyRate = Math.round((rented / total) * 100);
-
-        // 3. Tính toán tài chính
-        // - estimatedRevenue: Cộng tổng tiền các phòng ĐÃ THUÊ
-        const estimatedRevenue = posts
-            .filter(p => p.status === 'RENTED')
-            .reduce((sum, p) => sum + (p.post_price || 0), 0);
-            
-        // - potentialRevenue: Cộng tổng tiền TẤT CẢ các phòng (Max doanh thu)
+        const estimatedRevenue = posts.filter(p => p.status === 'RENTED').reduce((sum, p) => sum + (p.post_price || 0), 0);
         const potentialRevenue = posts.reduce((sum, p) => sum + (p.post_price || 0), 0);
-
-        // - avgPrice: Giá trung bình 1 phòng
         const avgPrice = Math.round(potentialRevenue / total);
-
         setStats({ total, rented, occupancyRate, estimatedRevenue, potentialRevenue, avgPrice });
     };
 
-    // Gọi API khi component được load
     useEffect(() => {
         const fetchData = async () => {
             if (!user || !user.id) return;
             try {
-                // Gọi API lấy toàn bộ bài đăng của user
                 const res = await axios.get(`http://localhost:5000/api/posts/user/${user.id}`);
                 const data = res.data.data || [];
-                
-                // Tính toán số liệu
                 calculateStats(data);
-                
-                // Lấy 5 bài đăng mới nhất (sắp xếp theo ngày tạo)
                 const sortedPosts = [...data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
                 setRecentPosts(sortedPosts.slice(0, 5));
-            } catch (error) {
-                console.error("Lỗi tải dashboard:", error);
-            }
+            } catch (error) { console.error("Lỗi tải dashboard:", error); }
         };
         fetchData();
     }, [user]);
 
-    // Helper: Render trạng thái với style đẹp
-    const renderStatus = (status) => {
+    const renderStatusPill = (status) => {
         switch(status) {
-            case 'AVAILABLE': return <span style={{padding:'4px 10px', borderRadius:'20px', background:'#dcfce7', color:'#166534', fontSize:'12px', fontWeight:'bold'}}>Còn trống</span>;
-            case 'RENTED': return <span style={{padding:'4px 10px', borderRadius:'20px', background:'#f3f4f6', color:'#374151', fontSize:'12px', fontWeight:'bold'}}>Đã thuê</span>;
-            case 'HIDDEN': return <span style={{padding:'4px 10px', borderRadius:'20px', background:'#ffedd5', color:'#c2410c', fontSize:'12px', fontWeight:'bold'}}>Đang ẩn</span>;
-            default: return <span>{status}</span>;
+            case 'AVAILABLE': return <span className="status-pill available">Còn trống</span>;
+            case 'RENTED': return <span className="status-pill rented">Đã thuê</span>;
+            default: return <span className="status-pill hidden">Ẩn</span>;
         }
     };
 
     return (
         <div className="dashboard-wrapper">
-            {/* 1. Header Chào Mừng */}
-            <div className="dashboard-header">
-                <div className="welcome-text">
-                    <h1>Tổng quan hoạt động</h1>
-                    <p>Chào {user?.name}, chúc bạn một ngày kinh doanh hiệu quả!</p>
-                </div>
-                <div className="date-badge">
-                    <FaCalendarAlt style={{color: '#6b7280'}} />
-                    {new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' })}
-                </div>
-            </div>
+            <div className="dashboard-container">
 
-            {/* 2. Grid Thống Kê (3 Thẻ - 3 Màu riêng biệt) */}
-            <div className="stats-grid">
-                
-                {/* Card 1: Doanh thu (Màu Xanh Lá - card-green) */}
-                <div className="stat-card card-green">
-                    <div className="card-top">
-                        <div className="stat-icon-wrapper">
-                            <FaWallet />
+                <div className="dashboard-header">
+                    <div className="welcome-text">
+                        <h1>Xin chào, {user?.name}!</h1>
+                        <p>Đây là tổng quan tình hình kinh doanh hôm nay.</p>
+                    </div>
+                    <div className="date-badge">
+                        <FaCalendarAlt />
+                        {new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' })}
+                    </div>
+                </div>
+
+                <div className="stats-grid">
+                    <div className="stat-card revenue">
+                        <div className="card-top">
+                            <div className="stat-icon-box"><FaWallet /></div>
+                            <span className="stat-change">
+                                {stats.potentialRevenue ? Math.round((stats.estimatedRevenue/stats.potentialRevenue)*100) : 0}% đạt được
+                            </span>
                         </div>
-                        {/* % Doanh thu đạt được so với tiềm năng */}
-                        <span className="highlight-text">
-                            {stats.potentialRevenue ? Math.round((stats.estimatedRevenue/stats.potentialRevenue)*100) : 0}% đạt được
-                        </span>
-                    </div>
-                    <div className="stat-value">
-                        {formatMoney(stats.estimatedRevenue)}
-                    </div>
-                    <div className="stat-label">Doanh thu thực tế / tháng</div>
-                </div>
-
-                {/* Card 2: Tỉ lệ lấp đầy (Màu Xanh Dương - card-blue) */}
-                <div className="stat-card card-blue">
-                    <div className="card-top">
-                        <div className="stat-icon-wrapper">
-                            <FaChartPie />
-                        </div>
-                        <span className="highlight-text">
-                            {stats.rented} / {stats.total} phòng
-                        </span>
-                    </div>
-                    <div className="stat-value">{stats.occupancyRate}%</div>
-                    <div className="stat-label">Tỉ lệ lấp đầy</div>
-                    {/* Thanh Progress Bar */}
-                    <div className="progress-bg">
-                        <div className="progress-fill" style={{width: `${stats.occupancyRate}%`}}></div>
-                    </div>
-                </div>
-
-                {/* Card 3: Tổng phòng (Màu Cam - card-orange) */}
-                <div className="stat-card card-orange">
-                    <div className="card-top">
-                        <div className="stat-icon-wrapper">
-                            <FaHome />
+                        <div className="stat-main">
+                            <div className="stat-value">{formatMoney(stats.estimatedRevenue)}</div>
+                            <div className="stat-label">Doanh thu thực tế / tháng</div>
                         </div>
                     </div>
-                    <div className="stat-value">{stats.total}</div>
-                    <div className="stat-label">Tổng số phòng quản lý</div>
-                </div>
-            </div>
 
-            {/* 3. Nội dung Chi tiết (Chia cột 2 bên) */}
-            <div className="dashboard-content">
-                
-                {/* Cột Trái: Bảng tin mới nhất */}
-                <div className="section-card">
-                    <div className="section-header">
-                        <div className="section-title">Tin đăng gần đây</div>
-                        <button className="btn-view-all" onClick={() => navigate('/manage-post')}>
-                            Xem tất cả <FaArrowRight style={{marginLeft: '5px', fontSize: '10px'}}/>
-                        </button>
+                    <div className="stat-card occupancy">
+                        <div className="card-top">
+                            <div className="stat-icon-box"><FaChartPie /></div>
+                            <span className="stat-change">{stats.rented}/{stats.total} phòng</span>
+                        </div>
+                        <div className="stat-main">
+                            <div className="stat-value">{stats.occupancyRate}%</div>
+                            <div className="stat-label">Tỉ lệ lấp đầy</div>
+                            <div className="progress-container">
+                                <div className="progress-bar" style={{width: `${stats.occupancyRate}%`}}></div>
+                            </div>
+                        </div>
                     </div>
 
-                    <table className="modern-table">
-                        <thead>
-                            <tr>
-                                <th>Phòng / Tiêu đề</th>
-                                <th>Giá thuê</th>
-                                <th>Trạng thái</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {recentPosts.length > 0 ? recentPosts.map(post => (
-                                <tr key={post.post_id}>
-                                    <td>
-                                        <div style={{fontWeight: '600', color: '#1f2937'}}>{post.post_title}</div>
-                                        <div style={{fontSize: '12px', color: '#9ca3af', marginTop: '2px'}}>
-                                            {new Date(post.created_at).toLocaleDateString('vi-VN')}
-                                        </div>
-                                    </td>
-                                    <td style={{fontWeight: 'bold', color: '#4f46e5'}}>
-                                        {formatMoney(post.post_price)}
-                                    </td>
-                                    <td>{renderStatus(post.status)}</td>
-                                </tr>
-                            )) : (
-                                <tr><td colSpan="3" style={{textAlign: 'center', color: '#999', padding: '20px'}}>Chưa có tin nào</td></tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-
-                {/* Cột Phải: Thông tin phân tích bổ sung */}
-                <div className="section-card">
-                    <div className="section-header">
-                        <div className="section-title">Phân tích nhanh</div>
-                    </div>
-                    
-                    <div className="info-row">
-                        <span className="info-label">Doanh thu tiềm năng (Max)</span>
-                        <span className="info-val">{formatMoney(stats.potentialRevenue)}</span>
-                    </div>
-                    <div className="info-row">
-                        <span className="info-label">Giá thuê trung bình</span>
-                        <span className="info-val">{formatMoney(stats.avgPrice)}</span>
-                    </div>
-                    <div className="info-row">
-                        <span className="info-label">Phòng còn trống</span>
-                        <span className="info-val" style={{color: '#f59e0b'}}>
-                            {stats.total - stats.rented} phòng
-                        </span>
-                    </div>
-                    
-                    {/* Banner nút hành động */}
-                    <div style={{marginTop: '25px', background: 'linear-gradient(135deg, #6366f1, #a855f7)', padding: '20px', borderRadius: '12px', color: 'white', textAlign: 'center'}}>
-                        <h4 style={{margin: '0 0 5px 0', fontSize: '16px'}}>Cần thêm khách thuê?</h4>
-                        <p style={{margin: '0 0 15px 0', fontSize: '13px', opacity: 0.9}}>Đăng tin mới ngay để lấp đầy phòng trống.</p>
-                        <button 
-                            onClick={() => navigate('/post-room')}
-                            style={{padding: '10px 20px', background: 'white', color: '#6366f1', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', width: '100%'}}
-                        >
-                            + Đăng tin mới
-                        </button>
+                    <div className="stat-card rooms">
+                        <div className="card-top">
+                            <div className="stat-icon-box"><FaHome /></div>
+                        </div>
+                        <div className="stat-main">
+                            <div className="stat-value">{stats.total}</div>
+                            <div className="stat-label">Tổng số phòng quản lý</div>
+                        </div>
                     </div>
                 </div>
 
+                <div className="dashboard-content">
+
+                    <div className="section-card">
+                        <div className="section-header">
+                            <div className="section-title">Tin đăng mới nhất</div>
+                            <button className="btn-link" onClick={() => navigate('/manage-post')}>
+                                Xem tất cả <FaArrowRight />
+                            </button>
+                        </div>
+                        
+                        <div className="table-responsive">
+                            <table className="modern-table">
+                                <thead>
+                                    <tr>
+                                        <th style={{width: '50%'}}>Phòng / Địa chỉ</th>
+                                        <th>Giá thuê</th>
+                                        <th>Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {recentPosts.length > 0 ? recentPosts.map(post => (
+                                        <tr key={post.post_id} onClick={() => navigate('/manage-post')} style={{cursor:'pointer'}}>
+                                            <td>
+                                                <div className="post-cell">
+                                                    {/* Ảnh Thumbnail nhỏ */}
+                                                    {post.thumbnail ? 
+                                                        <img src={post.thumbnail} alt="" className="mini-thumb" /> :
+                                                        <div className="mini-thumb" style={{display:'flex',alignItems:'center', justifyContent:'center', background:'#f1f5f9'}}><FaImage style={{color:'#cbd5e1'}}/></div>
+                                                    }
+                                                    <div className="post-info">
+                                                        <h4>{post.post_title}</h4>
+                                                        <span>{new Date(post.created_at).toLocaleDateString('vi-VN')}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="price-cell">
+                                                {formatMoney(post.post_price)}
+                                            </td>
+                                            <td>{renderStatusPill(post.status)}</td>
+                                        </tr>
+                                    )) : (
+                                        <tr><td colSpan="3" style={{textAlign: 'center', padding: '30px', color: '#94a3b8'}}>Chưa có tin đăng nào</td></tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div className="section-card">
+                        <div className="section-header">
+                            <div className="section-title">Phân tích nhanh</div>
+                        </div>
+                        
+                        <div className="sidebar-content">
+                            <div className="analysis-item">
+                                <span className="analysis-label">Doanh thu tối đa</span>
+                                <span className="analysis-value">{formatMoney(stats.potentialRevenue)}</span>
+                            </div>
+                            <div className="analysis-item">
+                                <span className="analysis-label">Giá trung bình</span>
+                                <span className="analysis-value">{formatMoney(stats.avgPrice)}</span>
+                            </div>
+                            <div className="analysis-item">
+                                <span className="analysis-label">Phòng còn trống</span>
+                                <span className="analysis-value" style={{color: '#f59e0b'}}>
+                                    {stats.total - stats.rented} phòng
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="cta-banner">
+                            <div style={{fontWeight: '700', fontSize:'1.1rem', marginBottom:'5px'}}>Thêm khách thuê?</div>
+                            <div style={{fontSize:'0.9rem', opacity:0.9}}>Đăng tin mới để lấp đầy phòng trống ngay.</div>
+                            <button className="cta-btn" onClick={() => navigate('/post-room')}>
+                                + Đăng tin mới
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     );
