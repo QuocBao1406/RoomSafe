@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
-import RoommateForm from "../components/RoommateForm.jsx";
 import roommateApi from "../services/roommateApi.js";
 import { UserContext } from "../contexts/UserContext.jsx";
 import "../css/Roommate.css";

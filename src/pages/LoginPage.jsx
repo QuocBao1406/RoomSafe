@@ -88,9 +88,9 @@ function LoginPage() {
       // doi 1s roi chuyen trang
       setTimeout(() => {
         if ( localUser.role === 'LANDLORD') {
-          navigate('/post-room');
+          navigate('/dashboard');
         } else {
-          navigate('/find-room');
+          navigate('/');
         }
       }, 1000);
     } catch (error) {

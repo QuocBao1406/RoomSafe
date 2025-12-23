@@ -121,6 +121,7 @@ enum PostCategory {
   PHONG_TRO
   CHUNG_CU
   NHA_NGUYEN_CAN
+  O_GHEP
 }
 
 enum RoommateGender {

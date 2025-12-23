@@ -1,146 +1,154 @@
 import React, { useEffect } from 'react';
 import '../css/RoomDetailModal.css';
+import { 
+    FaMapMarkerAlt, FaBolt, FaTint, FaWifi, FaInfoCircle, 
+    FaExpandArrowsAlt, FaClock, FaCalendarAlt 
+} from 'react-icons/fa';
 
 const RoomDetailModal = ({ isOpen, onClose, roomData }) => {
-  if (!isOpen) return null;
+    useEffect(() => {
+        if (isOpen) document.body.style.overflow = 'hidden';
+        else document.body.style.overflow = 'auto';
+        return () => { document.body.style.overflow = 'auto'; };
+    }, [isOpen]);
 
-  useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === 'Escape') onClose();
+    if (!isOpen || !roomData) return null;
+
+    // --- HELPER ---
+    const formatDate = (date) => date ? new Date(date).toLocaleDateString('vi-VN') : "...";
+    
+    const formatMoney = (val) => {
+        if (!val || val == 0) return "Miễn phí";
+        if (typeof val === 'string' && val.includes('tr')) return val; 
+        return Number(val).toLocaleString('vi-VN');
     };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [onClose]);
 
-  // Helper render trạng thái
-  const renderStatus = (status) => {
-      const map = {
-          'AVAILABLE': { text: 'Đang hiển thị', color: '#16a34a' },
-          'HIDDEN': { text: 'Đang ẩn', color: '#d97706' },
-          'RENTED': { text: 'Đã cho thuê', color: '#4b5563' }
-      };
-      const curr = map[status] || { text: status, color: '#000' };
-      return <span style={{color: curr.color, fontWeight: 'bold'}}>● {curr.text}</span>;
-  };
+    // --- XỬ LÝ ẢNH ---
+    const placeholder = "https://via.placeholder.com/800x500?text=Chua+co+anh";
+    let images = roomData.images && roomData.images.length > 0 ? roomData.images : [];
+    
+    if (images.length === 0 && (roomData.image || roomData.thumbnail)) {
+        images = [{ image_url: roomData.image || roomData.thumbnail }];
+    }
+    if (images.length === 0) images = [{ image_url: placeholder }];
 
-  const formatDate = (date) => date ? new Date(date).toLocaleDateString('vi-VN') : "Vô thời hạn";
+    const mainImg = images[0].image_url || images[0].url;
+    const subImg1 = images[1]?.image_url || images[1]?.url || mainImg;
+    const subImg2 = images[2]?.image_url || images[2]?.url || subImg1;
+    const isSingleMode = images.length < 2;
 
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        
-        {/* HEADER */}
-        <div className="modal-header">
-          <h3>Chi tiết tin đăng (ID: {roomData.id || '#'})</h3>
-          <button className="btn-close" onClick={onClose}>&times;</button>
-        </div>
+    return (
+        <div className="rdm-overlay" onClick={onClose}>
+            <div className="rdm-container" onClick={e => e.stopPropagation()}>
+                
+                {/* HEADER */}
+                <div className="rdm-header">
+                    <h3><FaInfoCircle color="#2563eb"/> Chi tiết bài đăng</h3>
+                    <button className="rdm-close-btn" onClick={onClose}>&times;</button>
+                </div>
 
-        {/* BODY */}
-        <div className="modal-body">
-            
-            {/* --- PHẦN ẢNH (ĐÃ SỬA) --- */}
-            {/* Logic: Nếu có album nhiều ảnh thì hiện lưới, nếu không thì hiện 1 ảnh to */}
-            {roomData.images && roomData.images.length > 0 ? (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginBottom: '15px' }}>
-                    {/* Ảnh đầu tiên to (chiếm 2 cột) */}
-                    <div style={{ gridColumn: 'span 2' }}>
-                         <img 
-                            src={roomData.images[0].image_url || roomData.images[0].url || roomData.image} 
-                            alt="Main" 
-                            className="modal-image" 
-                            style={{ height: '250px', marginBottom: '0', width: '100%', objectFit: 'cover' }}
-                        />
+                {/* BODY */}
+                <div className="rdm-body">
+                    
+                    {/* GALLERY */}
+                    <div className={`rdm-gallery ${isSingleMode ? 'single' : ''}`}>
+                        <img src={mainImg} alt="Main" className="rdm-img-main" />
+                        {!isSingleMode && (
+                            <div className="rdm-img-col">
+                                <img src={subImg1} alt="Sub 1" className="rdm-img-sub" />
+                                <img src={subImg2} alt="Sub 2" className="rdm-img-sub" />
+                            </div>
+                        )}
                     </div>
-                    {/* Các ảnh phụ bên dưới */}
-                    {roomData.images.slice(1).map((img, index) => (
-                        <img 
-                            key={index}
-                            src={img.image_url || img.url} 
-                            alt={`Sub ${index}`}
-                            className="modal-image"
-                            style={{ height: '120px', marginBottom: '0', width: '100%', objectFit: 'cover' }}
-                        />
-                    ))}
-                </div>
-            ) : (
-                // Nếu không có album thì hiện ảnh thumbnail cũ
-                <img 
-                    src={roomData.image || "https://via.placeholder.com/600x300?text=No+Image"} 
-                    alt="Room" 
-                    className="modal-image"
-                />
-            )}
-            {/* --------------------------- */}
-            
-            {/* Tiêu đề & Giá thuê */}
-            <div style={{marginBottom: '20px'}}>
-                <span style={{
-                    background: '#dbeafe', color: '#1e40af', 
-                    padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold'
-                }}>
-                    {roomData.category}
-                </span>
-                <h2 className="modal-title" style={{marginTop: '8px'}}>{roomData.title}</h2>
-                <div style={{display: 'flex', alignItems: 'center', gap: '15px'}}>
-                    <p className="modal-price" style={{marginBottom: 0}}>{roomData.price} /tháng</p>
-                    <span style={{color: '#666'}}>• {roomData.area} m²</span>
-                </div>
-                <p style={{marginTop: '5px', color: '#555', fontSize: '14px'}}>📍 {roomData.address}</p>
-            </div>
 
-            {/* Bảng giá dịch vụ */}
-            <h4 style={{margin: '0 0 10px', color: '#333'}}>💰 Chi phí dịch vụ</h4>
-            <div className="modal-info-grid" style={{gridTemplateColumns: '1fr 1fr 1fr', background: '#f0fdf4', border: '1px solid #bbf7d0'}}>
-                <div style={{textAlign: 'center'}}>
-                    <div style={{fontSize: '12px', color: '#666'}}>Điện</div>
-                    <div style={{fontWeight: 'bold', color: '#166534'}}>{roomData.elecPrice}</div>
-                </div>
-                <div style={{textAlign: 'center', borderLeft: '1px solid #bbf7d0', borderRight: '1px solid #bbf7d0'}}>
-                    <div style={{fontSize: '12px', color: '#666'}}>Nước</div>
-                    <div style={{fontWeight: 'bold', color: '#0369a1'}}>{roomData.waterPrice}</div>
-                </div>
-                <div style={{textAlign: 'center'}}>
-                    <div style={{fontSize: '12px', color: '#666'}}>Internet</div>
-                    <div style={{fontWeight: 'bold', color: '#7c3aed'}}>{roomData.internetPrice}</div>
-                </div>
-            </div>
+                    {/* CONTENT GRID */}
+                    <div className="rdm-content-grid">
+                        
+                        {/* CỘT TRÁI */}
+                        <div className="rdm-col-left">
+                            <span className="rdm-category-badge">
+                                {roomData.category === 'PHONG_TRO' ? 'Phòng trọ' : 
+                                 roomData.category === 'CHUNG_CU' ? 'Căn hộ' : 'Nhà nguyên căn'}
+                            </span>
 
-            {/* Thông tin quản lý */}
-            <h4 style={{margin: '15px 0 10px', color: '#333'}}>⚙️ Trạng thái tin</h4>
-            <div className="modal-info-grid" style={{background: '#fff7ed', border: '1px solid #fed7aa'}}>
-                <div>Trạng thái: {renderStatus(roomData.status)}</div>
-                <div>Ngày tạo: {formatDate(roomData.created_at)}</div>
-                <div>Hết hạn: <strong style={{color: '#c2410c'}}>{formatDate(roomData.expired_at)}</strong></div>
-            </div>
+                            <h2>{roomData.title}</h2>
+                            
+                            <div className="rdm-address">
+                                <FaMapMarkerAlt color="#ef4444" style={{marginTop:3}}/>
+                                <span>{roomData.address}</span>
+                            </div>
 
-            {/* Mô tả */}
-            <h4 style={{margin: '15px 0 5px', color: '#333'}}>📝 Mô tả chi tiết</h4>
-            <div style={{
-                background: '#f9fafb', padding: '12px', borderRadius: '8px', 
-                fontSize: '14px', lineHeight: '1.6', color: '#374151', whiteSpace: 'pre-wrap'
-            }}>
-                {roomData.description}
+                            <div className="rdm-desc-box">
+                                <strong>Mô tả:</strong><br/>
+                                {roomData.description || "Chưa có mô tả chi tiết."}
+                            </div>
+                        </div>
+
+                        {/* CỘT PHẢI */}
+                        <div className="rdm-col-right">
+                            <div className="rdm-info-card">
+                                <div className="rdm-price-row">
+                                    {roomData.price} <small style={{fontSize:14, fontWeight:500, color:'#64748b'}}>/tháng</small>
+                                </div>
+
+                                <div className="rdm-status-row">
+                                    <span><FaExpandArrowsAlt color="#94a3b8"/> Diện tích:</span>
+                                    <strong>{roomData.area} m²</strong>
+                                </div>
+                                <div className="rdm-status-row">
+                                    <span><FaClock color="#94a3b8"/> Ngày đăng:</span>
+                                    <strong>{formatDate(roomData.created_at)}</strong>
+                                </div>
+                                <div className="rdm-status-row">
+                                    <span><FaCalendarAlt color="#94a3b8"/> Hết hạn:</span>
+                                    <strong style={{color: '#d97706'}}>{formatDate(roomData.expired_at)}</strong>
+                                </div>
+                                <div className="rdm-status-row">
+                                    <span>Trạng thái:</span>
+                                    <strong style={{
+                                        color: roomData.status === 'AVAILABLE' ? '#16a34a' : 
+                                               roomData.status === 'RENTED' ? '#64748b' : '#ca8a04'
+                                    }}>
+                                        {roomData.status === 'AVAILABLE' ? 'Đang hiện' : 
+                                         roomData.status === 'RENTED' ? 'Đã thuê' : 'Đang ẩn'}
+                                    </strong>
+                                </div>
+
+                                <div style={{height:1, background:'#f1f5f9', margin:'15px 0'}}></div>
+
+                                <div style={{fontSize:12, fontWeight:700, color:'#94a3b8', textTransform:'uppercase'}}>Dịch vụ</div>
+                                <div className="rdm-service-grid">
+                                    <div className="rdm-sv-item">
+                                        <FaBolt color="#eab308" style={{fontSize:16, marginBottom:4}}/>
+                                        <span className="rdm-sv-val">{roomData.elecPrice}</span>
+                                        <span className="rdm-sv-lbl">Điện</span>
+                                    </div>
+                                    <div className="rdm-sv-item">
+                                        <FaTint color="#3b82f6" style={{fontSize:16, marginBottom:4}}/>
+                                        <span className="rdm-sv-val">{roomData.waterPrice}</span>
+                                        <span className="rdm-sv-lbl">Nước</span>
+                                    </div>
+                                    <div className="rdm-sv-item">
+                                        <FaWifi color="#8b5cf6" style={{fontSize:16, marginBottom:4}}/>
+                                        <span className="rdm-sv-val">{roomData.internetPrice}</span>
+                                        <span className="rdm-sv-lbl">Net</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* FOOTER */}
+                <div className="rdm-footer">
+                    <button className="rdm-btn-sec" onClick={onClose}>Đóng</button>
+                    <button className="rdm-btn-pri" onClick={() => window.open(`/room/${roomData.id}`, '_blank')}>
+                        Xem trang thực tế
+                    </button>
+                </div>
             </div>
         </div>
-
-        {/* FOOTER */}
-        <div className="modal-footer" style={{justifyContent: 'flex-end'}}>
-          <button 
-            onClick={onClose}
-            style={{
-                padding: '8px 24px',
-                backgroundColor: '#374151', color: 'white',
-                border: 'none', borderRadius: '6px',
-                cursor: 'pointer', fontWeight: '500'
-            }}
-          >
-            Đóng
-          </button>
-        </div>
-
-      </div>
-    </div>
-  );
+    );
 };
 
 export default RoomDetailModal;

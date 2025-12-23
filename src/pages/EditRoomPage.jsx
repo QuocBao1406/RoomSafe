@@ -169,7 +169,7 @@ const EditRoomPage = () => {
                     <button className="btn-back" onClick={() => navigate(-1)} title="Quay lại">
                         <FaArrowLeft />
                     </button>
-                    <div className="header-title">
+                    <div className="edit-header-title">
                         <h1>Chỉnh sửa tin đăng <span className="sub-id">#{id}</span></h1>
                     </div>
                 </div>

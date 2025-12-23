@@ -24,6 +24,11 @@ export type Users = $Result.DefaultSelection<Prisma.$UsersPayload>
  */
 export type Posts = $Result.DefaultSelection<Prisma.$PostsPayload>
 /**
+ * Model RoommateDetails
+ * 
+ */
+export type RoommateDetails = $Result.DefaultSelection<Prisma.$RoommateDetailsPayload>
+/**
  * Model PostImages
  * 
  */
@@ -77,7 +82,8 @@ export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus]
 export const PostCategory: {
   PHONG_TRO: 'PHONG_TRO',
   CHUNG_CU: 'CHUNG_CU',
-  NHA_NGUYEN_CAN: 'NHA_NGUYEN_CAN'
+  NHA_NGUYEN_CAN: 'NHA_NGUYEN_CAN',
+  O_GHEP: 'O_GHEP'
 };
 
 export type PostCategory = (typeof PostCategory)[keyof typeof PostCategory]
@@ -267,6 +273,16 @@ export class PrismaClient<
     * ```
     */
   get posts(): Prisma.PostsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.roommateDetails`: Exposes CRUD operations for the **RoommateDetails** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RoommateDetails
+    * const roommateDetails = await prisma.roommateDetails.findMany()
+    * ```
+    */
+  get roommateDetails(): Prisma.RoommateDetailsDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.postImages`: Exposes CRUD operations for the **PostImages** model.
@@ -730,6 +746,7 @@ export namespace Prisma {
   export const ModelName: {
     Users: 'Users',
     Posts: 'Posts',
+    RoommateDetails: 'RoommateDetails',
     PostImages: 'PostImages',
     RoommatePost: 'RoommatePost'
   };
@@ -750,7 +767,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "users" | "posts" | "postImages" | "roommatePost"
+      modelProps: "users" | "posts" | "roommateDetails" | "postImages" | "roommatePost"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -883,6 +900,72 @@ export namespace Prisma {
           count: {
             args: Prisma.PostsCountArgs<ExtArgs>
             result: $Utils.Optional<PostsCountAggregateOutputType> | number
+          }
+        }
+      }
+      RoommateDetails: {
+        payload: Prisma.$RoommateDetailsPayload<ExtArgs>
+        fields: Prisma.RoommateDetailsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RoommateDetailsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoommateDetailsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RoommateDetailsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoommateDetailsPayload>
+          }
+          findFirst: {
+            args: Prisma.RoommateDetailsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoommateDetailsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RoommateDetailsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoommateDetailsPayload>
+          }
+          findMany: {
+            args: Prisma.RoommateDetailsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoommateDetailsPayload>[]
+          }
+          create: {
+            args: Prisma.RoommateDetailsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoommateDetailsPayload>
+          }
+          createMany: {
+            args: Prisma.RoommateDetailsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.RoommateDetailsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoommateDetailsPayload>
+          }
+          update: {
+            args: Prisma.RoommateDetailsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoommateDetailsPayload>
+          }
+          deleteMany: {
+            args: Prisma.RoommateDetailsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RoommateDetailsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.RoommateDetailsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RoommateDetailsPayload>
+          }
+          aggregate: {
+            args: Prisma.RoommateDetailsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRoommateDetails>
+          }
+          groupBy: {
+            args: Prisma.RoommateDetailsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RoommateDetailsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RoommateDetailsCountArgs<ExtArgs>
+            result: $Utils.Optional<RoommateDetailsCountAggregateOutputType> | number
           }
         }
       }
@@ -1116,6 +1199,7 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     users?: UsersOmit
     posts?: PostsOmit
+    roommateDetails?: RoommateDetailsOmit
     postImages?: PostImagesOmit
     roommatePost?: RoommatePostOmit
   }
@@ -2734,6 +2818,7 @@ export namespace Prisma {
     expired_at?: boolean
     user?: boolean | UsersDefaultArgs<ExtArgs>
     images?: boolean | Posts$imagesArgs<ExtArgs>
+    roommate_details?: boolean | Posts$roommate_detailsArgs<ExtArgs>
     _count?: boolean | PostsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["posts"]>
 
@@ -2763,6 +2848,7 @@ export namespace Prisma {
   export type PostsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UsersDefaultArgs<ExtArgs>
     images?: boolean | Posts$imagesArgs<ExtArgs>
+    roommate_details?: boolean | Posts$roommate_detailsArgs<ExtArgs>
     _count?: boolean | PostsCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -2771,6 +2857,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UsersPayload<ExtArgs>
       images: Prisma.$PostImagesPayload<ExtArgs>[]
+      roommate_details: Prisma.$RoommateDetailsPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       post_id: number
@@ -3132,6 +3219,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UsersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UsersDefaultArgs<ExtArgs>>): Prisma__UsersClient<$Result.GetResult<Prisma.$UsersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     images<T extends Posts$imagesArgs<ExtArgs> = {}>(args?: Subset<T, Posts$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostImagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    roommate_details<T extends Posts$roommate_detailsArgs<ExtArgs> = {}>(args?: Subset<T, Posts$roommate_detailsArgs<ExtArgs>>): Prisma__RoommateDetailsClient<$Result.GetResult<Prisma.$RoommateDetailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3545,6 +3633,25 @@ export namespace Prisma {
   }
 
   /**
+   * Posts.roommate_details
+   */
+  export type Posts$roommate_detailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoommateDetails
+     */
+    select?: RoommateDetailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoommateDetails
+     */
+    omit?: RoommateDetailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoommateDetailsInclude<ExtArgs> | null
+    where?: RoommateDetailsWhereInput
+  }
+
+  /**
    * Posts without action
    */
   export type PostsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3560,6 +3667,1025 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: PostsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RoommateDetails
+   */
+
+  export type AggregateRoommateDetails = {
+    _count: RoommateDetailsCountAggregateOutputType | null
+    _avg: RoommateDetailsAvgAggregateOutputType | null
+    _sum: RoommateDetailsSumAggregateOutputType | null
+    _min: RoommateDetailsMinAggregateOutputType | null
+    _max: RoommateDetailsMaxAggregateOutputType | null
+  }
+
+  export type RoommateDetailsAvgAggregateOutputType = {
+    id: number | null
+    post_id: number | null
+    age_range_min: number | null
+    age_range_max: number | null
+  }
+
+  export type RoommateDetailsSumAggregateOutputType = {
+    id: number | null
+    post_id: number | null
+    age_range_min: number | null
+    age_range_max: number | null
+  }
+
+  export type RoommateDetailsMinAggregateOutputType = {
+    id: number | null
+    post_id: number | null
+    gender_partner: string | null
+    age_range_min: number | null
+    age_range_max: number | null
+    career: string | null
+    habits: string | null
+    hobbies: string | null
+    shared_cost: string | null
+  }
+
+  export type RoommateDetailsMaxAggregateOutputType = {
+    id: number | null
+    post_id: number | null
+    gender_partner: string | null
+    age_range_min: number | null
+    age_range_max: number | null
+    career: string | null
+    habits: string | null
+    hobbies: string | null
+    shared_cost: string | null
+  }
+
+  export type RoommateDetailsCountAggregateOutputType = {
+    id: number
+    post_id: number
+    gender_partner: number
+    age_range_min: number
+    age_range_max: number
+    career: number
+    habits: number
+    hobbies: number
+    shared_cost: number
+    _all: number
+  }
+
+
+  export type RoommateDetailsAvgAggregateInputType = {
+    id?: true
+    post_id?: true
+    age_range_min?: true
+    age_range_max?: true
+  }
+
+  export type RoommateDetailsSumAggregateInputType = {
+    id?: true
+    post_id?: true
+    age_range_min?: true
+    age_range_max?: true
+  }
+
+  export type RoommateDetailsMinAggregateInputType = {
+    id?: true
+    post_id?: true
+    gender_partner?: true
+    age_range_min?: true
+    age_range_max?: true
+    career?: true
+    habits?: true
+    hobbies?: true
+    shared_cost?: true
+  }
+
+  export type RoommateDetailsMaxAggregateInputType = {
+    id?: true
+    post_id?: true
+    gender_partner?: true
+    age_range_min?: true
+    age_range_max?: true
+    career?: true
+    habits?: true
+    hobbies?: true
+    shared_cost?: true
+  }
+
+  export type RoommateDetailsCountAggregateInputType = {
+    id?: true
+    post_id?: true
+    gender_partner?: true
+    age_range_min?: true
+    age_range_max?: true
+    career?: true
+    habits?: true
+    hobbies?: true
+    shared_cost?: true
+    _all?: true
+  }
+
+  export type RoommateDetailsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RoommateDetails to aggregate.
+     */
+    where?: RoommateDetailsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoommateDetails to fetch.
+     */
+    orderBy?: RoommateDetailsOrderByWithRelationInput | RoommateDetailsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RoommateDetailsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoommateDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoommateDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RoommateDetails
+    **/
+    _count?: true | RoommateDetailsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RoommateDetailsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RoommateDetailsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RoommateDetailsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RoommateDetailsMaxAggregateInputType
+  }
+
+  export type GetRoommateDetailsAggregateType<T extends RoommateDetailsAggregateArgs> = {
+        [P in keyof T & keyof AggregateRoommateDetails]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRoommateDetails[P]>
+      : GetScalarType<T[P], AggregateRoommateDetails[P]>
+  }
+
+
+
+
+  export type RoommateDetailsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoommateDetailsWhereInput
+    orderBy?: RoommateDetailsOrderByWithAggregationInput | RoommateDetailsOrderByWithAggregationInput[]
+    by: RoommateDetailsScalarFieldEnum[] | RoommateDetailsScalarFieldEnum
+    having?: RoommateDetailsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RoommateDetailsCountAggregateInputType | true
+    _avg?: RoommateDetailsAvgAggregateInputType
+    _sum?: RoommateDetailsSumAggregateInputType
+    _min?: RoommateDetailsMinAggregateInputType
+    _max?: RoommateDetailsMaxAggregateInputType
+  }
+
+  export type RoommateDetailsGroupByOutputType = {
+    id: number
+    post_id: number
+    gender_partner: string | null
+    age_range_min: number | null
+    age_range_max: number | null
+    career: string | null
+    habits: string | null
+    hobbies: string | null
+    shared_cost: string | null
+    _count: RoommateDetailsCountAggregateOutputType | null
+    _avg: RoommateDetailsAvgAggregateOutputType | null
+    _sum: RoommateDetailsSumAggregateOutputType | null
+    _min: RoommateDetailsMinAggregateOutputType | null
+    _max: RoommateDetailsMaxAggregateOutputType | null
+  }
+
+  type GetRoommateDetailsGroupByPayload<T extends RoommateDetailsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RoommateDetailsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RoommateDetailsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RoommateDetailsGroupByOutputType[P]>
+            : GetScalarType<T[P], RoommateDetailsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RoommateDetailsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    post_id?: boolean
+    gender_partner?: boolean
+    age_range_min?: boolean
+    age_range_max?: boolean
+    career?: boolean
+    habits?: boolean
+    hobbies?: boolean
+    shared_cost?: boolean
+    post?: boolean | PostsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["roommateDetails"]>
+
+
+
+  export type RoommateDetailsSelectScalar = {
+    id?: boolean
+    post_id?: boolean
+    gender_partner?: boolean
+    age_range_min?: boolean
+    age_range_max?: boolean
+    career?: boolean
+    habits?: boolean
+    hobbies?: boolean
+    shared_cost?: boolean
+  }
+
+  export type RoommateDetailsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "post_id" | "gender_partner" | "age_range_min" | "age_range_max" | "career" | "habits" | "hobbies" | "shared_cost", ExtArgs["result"]["roommateDetails"]>
+  export type RoommateDetailsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    post?: boolean | PostsDefaultArgs<ExtArgs>
+  }
+
+  export type $RoommateDetailsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RoommateDetails"
+    objects: {
+      post: Prisma.$PostsPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      post_id: number
+      gender_partner: string | null
+      age_range_min: number | null
+      age_range_max: number | null
+      career: string | null
+      habits: string | null
+      hobbies: string | null
+      shared_cost: string | null
+    }, ExtArgs["result"]["roommateDetails"]>
+    composites: {}
+  }
+
+  type RoommateDetailsGetPayload<S extends boolean | null | undefined | RoommateDetailsDefaultArgs> = $Result.GetResult<Prisma.$RoommateDetailsPayload, S>
+
+  type RoommateDetailsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RoommateDetailsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RoommateDetailsCountAggregateInputType | true
+    }
+
+  export interface RoommateDetailsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RoommateDetails'], meta: { name: 'RoommateDetails' } }
+    /**
+     * Find zero or one RoommateDetails that matches the filter.
+     * @param {RoommateDetailsFindUniqueArgs} args - Arguments to find a RoommateDetails
+     * @example
+     * // Get one RoommateDetails
+     * const roommateDetails = await prisma.roommateDetails.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RoommateDetailsFindUniqueArgs>(args: SelectSubset<T, RoommateDetailsFindUniqueArgs<ExtArgs>>): Prisma__RoommateDetailsClient<$Result.GetResult<Prisma.$RoommateDetailsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RoommateDetails that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RoommateDetailsFindUniqueOrThrowArgs} args - Arguments to find a RoommateDetails
+     * @example
+     * // Get one RoommateDetails
+     * const roommateDetails = await prisma.roommateDetails.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RoommateDetailsFindUniqueOrThrowArgs>(args: SelectSubset<T, RoommateDetailsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RoommateDetailsClient<$Result.GetResult<Prisma.$RoommateDetailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RoommateDetails that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoommateDetailsFindFirstArgs} args - Arguments to find a RoommateDetails
+     * @example
+     * // Get one RoommateDetails
+     * const roommateDetails = await prisma.roommateDetails.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RoommateDetailsFindFirstArgs>(args?: SelectSubset<T, RoommateDetailsFindFirstArgs<ExtArgs>>): Prisma__RoommateDetailsClient<$Result.GetResult<Prisma.$RoommateDetailsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RoommateDetails that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoommateDetailsFindFirstOrThrowArgs} args - Arguments to find a RoommateDetails
+     * @example
+     * // Get one RoommateDetails
+     * const roommateDetails = await prisma.roommateDetails.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RoommateDetailsFindFirstOrThrowArgs>(args?: SelectSubset<T, RoommateDetailsFindFirstOrThrowArgs<ExtArgs>>): Prisma__RoommateDetailsClient<$Result.GetResult<Prisma.$RoommateDetailsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RoommateDetails that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoommateDetailsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RoommateDetails
+     * const roommateDetails = await prisma.roommateDetails.findMany()
+     * 
+     * // Get first 10 RoommateDetails
+     * const roommateDetails = await prisma.roommateDetails.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const roommateDetailsWithIdOnly = await prisma.roommateDetails.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RoommateDetailsFindManyArgs>(args?: SelectSubset<T, RoommateDetailsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoommateDetailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RoommateDetails.
+     * @param {RoommateDetailsCreateArgs} args - Arguments to create a RoommateDetails.
+     * @example
+     * // Create one RoommateDetails
+     * const RoommateDetails = await prisma.roommateDetails.create({
+     *   data: {
+     *     // ... data to create a RoommateDetails
+     *   }
+     * })
+     * 
+     */
+    create<T extends RoommateDetailsCreateArgs>(args: SelectSubset<T, RoommateDetailsCreateArgs<ExtArgs>>): Prisma__RoommateDetailsClient<$Result.GetResult<Prisma.$RoommateDetailsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RoommateDetails.
+     * @param {RoommateDetailsCreateManyArgs} args - Arguments to create many RoommateDetails.
+     * @example
+     * // Create many RoommateDetails
+     * const roommateDetails = await prisma.roommateDetails.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RoommateDetailsCreateManyArgs>(args?: SelectSubset<T, RoommateDetailsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a RoommateDetails.
+     * @param {RoommateDetailsDeleteArgs} args - Arguments to delete one RoommateDetails.
+     * @example
+     * // Delete one RoommateDetails
+     * const RoommateDetails = await prisma.roommateDetails.delete({
+     *   where: {
+     *     // ... filter to delete one RoommateDetails
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RoommateDetailsDeleteArgs>(args: SelectSubset<T, RoommateDetailsDeleteArgs<ExtArgs>>): Prisma__RoommateDetailsClient<$Result.GetResult<Prisma.$RoommateDetailsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RoommateDetails.
+     * @param {RoommateDetailsUpdateArgs} args - Arguments to update one RoommateDetails.
+     * @example
+     * // Update one RoommateDetails
+     * const roommateDetails = await prisma.roommateDetails.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RoommateDetailsUpdateArgs>(args: SelectSubset<T, RoommateDetailsUpdateArgs<ExtArgs>>): Prisma__RoommateDetailsClient<$Result.GetResult<Prisma.$RoommateDetailsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RoommateDetails.
+     * @param {RoommateDetailsDeleteManyArgs} args - Arguments to filter RoommateDetails to delete.
+     * @example
+     * // Delete a few RoommateDetails
+     * const { count } = await prisma.roommateDetails.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RoommateDetailsDeleteManyArgs>(args?: SelectSubset<T, RoommateDetailsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RoommateDetails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoommateDetailsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RoommateDetails
+     * const roommateDetails = await prisma.roommateDetails.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RoommateDetailsUpdateManyArgs>(args: SelectSubset<T, RoommateDetailsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one RoommateDetails.
+     * @param {RoommateDetailsUpsertArgs} args - Arguments to update or create a RoommateDetails.
+     * @example
+     * // Update or create a RoommateDetails
+     * const roommateDetails = await prisma.roommateDetails.upsert({
+     *   create: {
+     *     // ... data to create a RoommateDetails
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RoommateDetails we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RoommateDetailsUpsertArgs>(args: SelectSubset<T, RoommateDetailsUpsertArgs<ExtArgs>>): Prisma__RoommateDetailsClient<$Result.GetResult<Prisma.$RoommateDetailsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RoommateDetails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoommateDetailsCountArgs} args - Arguments to filter RoommateDetails to count.
+     * @example
+     * // Count the number of RoommateDetails
+     * const count = await prisma.roommateDetails.count({
+     *   where: {
+     *     // ... the filter for the RoommateDetails we want to count
+     *   }
+     * })
+    **/
+    count<T extends RoommateDetailsCountArgs>(
+      args?: Subset<T, RoommateDetailsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RoommateDetailsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RoommateDetails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoommateDetailsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RoommateDetailsAggregateArgs>(args: Subset<T, RoommateDetailsAggregateArgs>): Prisma.PrismaPromise<GetRoommateDetailsAggregateType<T>>
+
+    /**
+     * Group by RoommateDetails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RoommateDetailsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RoommateDetailsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RoommateDetailsGroupByArgs['orderBy'] }
+        : { orderBy?: RoommateDetailsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RoommateDetailsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRoommateDetailsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RoommateDetails model
+   */
+  readonly fields: RoommateDetailsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RoommateDetails.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RoommateDetailsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    post<T extends PostsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PostsDefaultArgs<ExtArgs>>): Prisma__PostsClient<$Result.GetResult<Prisma.$PostsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RoommateDetails model
+   */
+  interface RoommateDetailsFieldRefs {
+    readonly id: FieldRef<"RoommateDetails", 'Int'>
+    readonly post_id: FieldRef<"RoommateDetails", 'Int'>
+    readonly gender_partner: FieldRef<"RoommateDetails", 'String'>
+    readonly age_range_min: FieldRef<"RoommateDetails", 'Int'>
+    readonly age_range_max: FieldRef<"RoommateDetails", 'Int'>
+    readonly career: FieldRef<"RoommateDetails", 'String'>
+    readonly habits: FieldRef<"RoommateDetails", 'String'>
+    readonly hobbies: FieldRef<"RoommateDetails", 'String'>
+    readonly shared_cost: FieldRef<"RoommateDetails", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RoommateDetails findUnique
+   */
+  export type RoommateDetailsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoommateDetails
+     */
+    select?: RoommateDetailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoommateDetails
+     */
+    omit?: RoommateDetailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoommateDetailsInclude<ExtArgs> | null
+    /**
+     * Filter, which RoommateDetails to fetch.
+     */
+    where: RoommateDetailsWhereUniqueInput
+  }
+
+  /**
+   * RoommateDetails findUniqueOrThrow
+   */
+  export type RoommateDetailsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoommateDetails
+     */
+    select?: RoommateDetailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoommateDetails
+     */
+    omit?: RoommateDetailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoommateDetailsInclude<ExtArgs> | null
+    /**
+     * Filter, which RoommateDetails to fetch.
+     */
+    where: RoommateDetailsWhereUniqueInput
+  }
+
+  /**
+   * RoommateDetails findFirst
+   */
+  export type RoommateDetailsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoommateDetails
+     */
+    select?: RoommateDetailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoommateDetails
+     */
+    omit?: RoommateDetailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoommateDetailsInclude<ExtArgs> | null
+    /**
+     * Filter, which RoommateDetails to fetch.
+     */
+    where?: RoommateDetailsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoommateDetails to fetch.
+     */
+    orderBy?: RoommateDetailsOrderByWithRelationInput | RoommateDetailsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RoommateDetails.
+     */
+    cursor?: RoommateDetailsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoommateDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoommateDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RoommateDetails.
+     */
+    distinct?: RoommateDetailsScalarFieldEnum | RoommateDetailsScalarFieldEnum[]
+  }
+
+  /**
+   * RoommateDetails findFirstOrThrow
+   */
+  export type RoommateDetailsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoommateDetails
+     */
+    select?: RoommateDetailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoommateDetails
+     */
+    omit?: RoommateDetailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoommateDetailsInclude<ExtArgs> | null
+    /**
+     * Filter, which RoommateDetails to fetch.
+     */
+    where?: RoommateDetailsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoommateDetails to fetch.
+     */
+    orderBy?: RoommateDetailsOrderByWithRelationInput | RoommateDetailsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RoommateDetails.
+     */
+    cursor?: RoommateDetailsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoommateDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoommateDetails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RoommateDetails.
+     */
+    distinct?: RoommateDetailsScalarFieldEnum | RoommateDetailsScalarFieldEnum[]
+  }
+
+  /**
+   * RoommateDetails findMany
+   */
+  export type RoommateDetailsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoommateDetails
+     */
+    select?: RoommateDetailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoommateDetails
+     */
+    omit?: RoommateDetailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoommateDetailsInclude<ExtArgs> | null
+    /**
+     * Filter, which RoommateDetails to fetch.
+     */
+    where?: RoommateDetailsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RoommateDetails to fetch.
+     */
+    orderBy?: RoommateDetailsOrderByWithRelationInput | RoommateDetailsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RoommateDetails.
+     */
+    cursor?: RoommateDetailsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RoommateDetails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RoommateDetails.
+     */
+    skip?: number
+    distinct?: RoommateDetailsScalarFieldEnum | RoommateDetailsScalarFieldEnum[]
+  }
+
+  /**
+   * RoommateDetails create
+   */
+  export type RoommateDetailsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoommateDetails
+     */
+    select?: RoommateDetailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoommateDetails
+     */
+    omit?: RoommateDetailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoommateDetailsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RoommateDetails.
+     */
+    data: XOR<RoommateDetailsCreateInput, RoommateDetailsUncheckedCreateInput>
+  }
+
+  /**
+   * RoommateDetails createMany
+   */
+  export type RoommateDetailsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RoommateDetails.
+     */
+    data: RoommateDetailsCreateManyInput | RoommateDetailsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RoommateDetails update
+   */
+  export type RoommateDetailsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoommateDetails
+     */
+    select?: RoommateDetailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoommateDetails
+     */
+    omit?: RoommateDetailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoommateDetailsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RoommateDetails.
+     */
+    data: XOR<RoommateDetailsUpdateInput, RoommateDetailsUncheckedUpdateInput>
+    /**
+     * Choose, which RoommateDetails to update.
+     */
+    where: RoommateDetailsWhereUniqueInput
+  }
+
+  /**
+   * RoommateDetails updateMany
+   */
+  export type RoommateDetailsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RoommateDetails.
+     */
+    data: XOR<RoommateDetailsUpdateManyMutationInput, RoommateDetailsUncheckedUpdateManyInput>
+    /**
+     * Filter which RoommateDetails to update
+     */
+    where?: RoommateDetailsWhereInput
+    /**
+     * Limit how many RoommateDetails to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RoommateDetails upsert
+   */
+  export type RoommateDetailsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoommateDetails
+     */
+    select?: RoommateDetailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoommateDetails
+     */
+    omit?: RoommateDetailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoommateDetailsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RoommateDetails to update in case it exists.
+     */
+    where: RoommateDetailsWhereUniqueInput
+    /**
+     * In case the RoommateDetails found by the `where` argument doesn't exist, create a new RoommateDetails with this data.
+     */
+    create: XOR<RoommateDetailsCreateInput, RoommateDetailsUncheckedCreateInput>
+    /**
+     * In case the RoommateDetails was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RoommateDetailsUpdateInput, RoommateDetailsUncheckedUpdateInput>
+  }
+
+  /**
+   * RoommateDetails delete
+   */
+  export type RoommateDetailsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoommateDetails
+     */
+    select?: RoommateDetailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoommateDetails
+     */
+    omit?: RoommateDetailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoommateDetailsInclude<ExtArgs> | null
+    /**
+     * Filter which RoommateDetails to delete.
+     */
+    where: RoommateDetailsWhereUniqueInput
+  }
+
+  /**
+   * RoommateDetails deleteMany
+   */
+  export type RoommateDetailsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RoommateDetails to delete
+     */
+    where?: RoommateDetailsWhereInput
+    /**
+     * Limit how many RoommateDetails to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RoommateDetails without action
+   */
+  export type RoommateDetailsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoommateDetails
+     */
+    select?: RoommateDetailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoommateDetails
+     */
+    omit?: RoommateDetailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoommateDetailsInclude<ExtArgs> | null
   }
 
 
@@ -5674,6 +6800,21 @@ export namespace Prisma {
   export type PostsScalarFieldEnum = (typeof PostsScalarFieldEnum)[keyof typeof PostsScalarFieldEnum]
 
 
+  export const RoommateDetailsScalarFieldEnum: {
+    id: 'id',
+    post_id: 'post_id',
+    gender_partner: 'gender_partner',
+    age_range_min: 'age_range_min',
+    age_range_max: 'age_range_max',
+    career: 'career',
+    habits: 'habits',
+    hobbies: 'hobbies',
+    shared_cost: 'shared_cost'
+  };
+
+  export type RoommateDetailsScalarFieldEnum = (typeof RoommateDetailsScalarFieldEnum)[keyof typeof RoommateDetailsScalarFieldEnum]
+
+
   export const PostImagesScalarFieldEnum: {
     image_id: 'image_id',
     image_url: 'image_url',
@@ -5754,6 +6895,17 @@ export namespace Prisma {
   };
 
   export type PostsOrderByRelevanceFieldEnum = (typeof PostsOrderByRelevanceFieldEnum)[keyof typeof PostsOrderByRelevanceFieldEnum]
+
+
+  export const RoommateDetailsOrderByRelevanceFieldEnum: {
+    gender_partner: 'gender_partner',
+    career: 'career',
+    habits: 'habits',
+    hobbies: 'hobbies',
+    shared_cost: 'shared_cost'
+  };
+
+  export type RoommateDetailsOrderByRelevanceFieldEnum = (typeof RoommateDetailsOrderByRelevanceFieldEnum)[keyof typeof RoommateDetailsOrderByRelevanceFieldEnum]
 
 
   export const PostImagesOrderByRelevanceFieldEnum: {
@@ -6045,6 +7197,7 @@ export namespace Prisma {
     expired_at?: DateTimeNullableFilter<"Posts"> | Date | string | null
     user?: XOR<UsersScalarRelationFilter, UsersWhereInput>
     images?: PostImagesListRelationFilter
+    roommate_details?: XOR<RoommateDetailsNullableScalarRelationFilter, RoommateDetailsWhereInput> | null
   }
 
   export type PostsOrderByWithRelationInput = {
@@ -6067,6 +7220,7 @@ export namespace Prisma {
     expired_at?: SortOrderInput | SortOrder
     user?: UsersOrderByWithRelationInput
     images?: PostImagesOrderByRelationAggregateInput
+    roommate_details?: RoommateDetailsOrderByWithRelationInput
     _relevance?: PostsOrderByRelevanceInput
   }
 
@@ -6093,6 +7247,7 @@ export namespace Prisma {
     expired_at?: DateTimeNullableFilter<"Posts"> | Date | string | null
     user?: XOR<UsersScalarRelationFilter, UsersWhereInput>
     images?: PostImagesListRelationFilter
+    roommate_details?: XOR<RoommateDetailsNullableScalarRelationFilter, RoommateDetailsWhereInput> | null
   }, "post_id">
 
   export type PostsOrderByWithAggregationInput = {
@@ -6141,6 +7296,84 @@ export namespace Prisma {
     user_id?: BigIntWithAggregatesFilter<"Posts"> | bigint | number
     created_at?: DateTimeWithAggregatesFilter<"Posts"> | Date | string
     expired_at?: DateTimeNullableWithAggregatesFilter<"Posts"> | Date | string | null
+  }
+
+  export type RoommateDetailsWhereInput = {
+    AND?: RoommateDetailsWhereInput | RoommateDetailsWhereInput[]
+    OR?: RoommateDetailsWhereInput[]
+    NOT?: RoommateDetailsWhereInput | RoommateDetailsWhereInput[]
+    id?: IntFilter<"RoommateDetails"> | number
+    post_id?: IntFilter<"RoommateDetails"> | number
+    gender_partner?: StringNullableFilter<"RoommateDetails"> | string | null
+    age_range_min?: IntNullableFilter<"RoommateDetails"> | number | null
+    age_range_max?: IntNullableFilter<"RoommateDetails"> | number | null
+    career?: StringNullableFilter<"RoommateDetails"> | string | null
+    habits?: StringNullableFilter<"RoommateDetails"> | string | null
+    hobbies?: StringNullableFilter<"RoommateDetails"> | string | null
+    shared_cost?: StringNullableFilter<"RoommateDetails"> | string | null
+    post?: XOR<PostsScalarRelationFilter, PostsWhereInput>
+  }
+
+  export type RoommateDetailsOrderByWithRelationInput = {
+    id?: SortOrder
+    post_id?: SortOrder
+    gender_partner?: SortOrderInput | SortOrder
+    age_range_min?: SortOrderInput | SortOrder
+    age_range_max?: SortOrderInput | SortOrder
+    career?: SortOrderInput | SortOrder
+    habits?: SortOrderInput | SortOrder
+    hobbies?: SortOrderInput | SortOrder
+    shared_cost?: SortOrderInput | SortOrder
+    post?: PostsOrderByWithRelationInput
+    _relevance?: RoommateDetailsOrderByRelevanceInput
+  }
+
+  export type RoommateDetailsWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    post_id?: number
+    AND?: RoommateDetailsWhereInput | RoommateDetailsWhereInput[]
+    OR?: RoommateDetailsWhereInput[]
+    NOT?: RoommateDetailsWhereInput | RoommateDetailsWhereInput[]
+    gender_partner?: StringNullableFilter<"RoommateDetails"> | string | null
+    age_range_min?: IntNullableFilter<"RoommateDetails"> | number | null
+    age_range_max?: IntNullableFilter<"RoommateDetails"> | number | null
+    career?: StringNullableFilter<"RoommateDetails"> | string | null
+    habits?: StringNullableFilter<"RoommateDetails"> | string | null
+    hobbies?: StringNullableFilter<"RoommateDetails"> | string | null
+    shared_cost?: StringNullableFilter<"RoommateDetails"> | string | null
+    post?: XOR<PostsScalarRelationFilter, PostsWhereInput>
+  }, "id" | "post_id">
+
+  export type RoommateDetailsOrderByWithAggregationInput = {
+    id?: SortOrder
+    post_id?: SortOrder
+    gender_partner?: SortOrderInput | SortOrder
+    age_range_min?: SortOrderInput | SortOrder
+    age_range_max?: SortOrderInput | SortOrder
+    career?: SortOrderInput | SortOrder
+    habits?: SortOrderInput | SortOrder
+    hobbies?: SortOrderInput | SortOrder
+    shared_cost?: SortOrderInput | SortOrder
+    _count?: RoommateDetailsCountOrderByAggregateInput
+    _avg?: RoommateDetailsAvgOrderByAggregateInput
+    _max?: RoommateDetailsMaxOrderByAggregateInput
+    _min?: RoommateDetailsMinOrderByAggregateInput
+    _sum?: RoommateDetailsSumOrderByAggregateInput
+  }
+
+  export type RoommateDetailsScalarWhereWithAggregatesInput = {
+    AND?: RoommateDetailsScalarWhereWithAggregatesInput | RoommateDetailsScalarWhereWithAggregatesInput[]
+    OR?: RoommateDetailsScalarWhereWithAggregatesInput[]
+    NOT?: RoommateDetailsScalarWhereWithAggregatesInput | RoommateDetailsScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"RoommateDetails"> | number
+    post_id?: IntWithAggregatesFilter<"RoommateDetails"> | number
+    gender_partner?: StringNullableWithAggregatesFilter<"RoommateDetails"> | string | null
+    age_range_min?: IntNullableWithAggregatesFilter<"RoommateDetails"> | number | null
+    age_range_max?: IntNullableWithAggregatesFilter<"RoommateDetails"> | number | null
+    career?: StringNullableWithAggregatesFilter<"RoommateDetails"> | string | null
+    habits?: StringNullableWithAggregatesFilter<"RoommateDetails"> | string | null
+    hobbies?: StringNullableWithAggregatesFilter<"RoommateDetails"> | string | null
+    shared_cost?: StringNullableWithAggregatesFilter<"RoommateDetails"> | string | null
   }
 
   export type PostImagesWhereInput = {
@@ -6468,6 +7701,7 @@ export namespace Prisma {
     expired_at?: Date | string | null
     user: UsersCreateNestedOneWithoutPostsInput
     images?: PostImagesCreateNestedManyWithoutPostInput
+    roommate_details?: RoommateDetailsCreateNestedOneWithoutPostInput
   }
 
   export type PostsUncheckedCreateInput = {
@@ -6489,6 +7723,7 @@ export namespace Prisma {
     created_at?: Date | string
     expired_at?: Date | string | null
     images?: PostImagesUncheckedCreateNestedManyWithoutPostInput
+    roommate_details?: RoommateDetailsUncheckedCreateNestedOneWithoutPostInput
   }
 
   export type PostsUpdateInput = {
@@ -6509,6 +7744,7 @@ export namespace Prisma {
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UsersUpdateOneRequiredWithoutPostsNestedInput
     images?: PostImagesUpdateManyWithoutPostNestedInput
+    roommate_details?: RoommateDetailsUpdateOneWithoutPostNestedInput
   }
 
   export type PostsUncheckedUpdateInput = {
@@ -6530,6 +7766,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     images?: PostImagesUncheckedUpdateManyWithoutPostNestedInput
+    roommate_details?: RoommateDetailsUncheckedUpdateOneWithoutPostNestedInput
   }
 
   export type PostsCreateManyInput = {
@@ -6588,6 +7825,86 @@ export namespace Prisma {
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type RoommateDetailsCreateInput = {
+    gender_partner?: string | null
+    age_range_min?: number | null
+    age_range_max?: number | null
+    career?: string | null
+    habits?: string | null
+    hobbies?: string | null
+    shared_cost?: string | null
+    post: PostsCreateNestedOneWithoutRoommate_detailsInput
+  }
+
+  export type RoommateDetailsUncheckedCreateInput = {
+    id?: number
+    post_id: number
+    gender_partner?: string | null
+    age_range_min?: number | null
+    age_range_max?: number | null
+    career?: string | null
+    habits?: string | null
+    hobbies?: string | null
+    shared_cost?: string | null
+  }
+
+  export type RoommateDetailsUpdateInput = {
+    gender_partner?: NullableStringFieldUpdateOperationsInput | string | null
+    age_range_min?: NullableIntFieldUpdateOperationsInput | number | null
+    age_range_max?: NullableIntFieldUpdateOperationsInput | number | null
+    career?: NullableStringFieldUpdateOperationsInput | string | null
+    habits?: NullableStringFieldUpdateOperationsInput | string | null
+    hobbies?: NullableStringFieldUpdateOperationsInput | string | null
+    shared_cost?: NullableStringFieldUpdateOperationsInput | string | null
+    post?: PostsUpdateOneRequiredWithoutRoommate_detailsNestedInput
+  }
+
+  export type RoommateDetailsUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    post_id?: IntFieldUpdateOperationsInput | number
+    gender_partner?: NullableStringFieldUpdateOperationsInput | string | null
+    age_range_min?: NullableIntFieldUpdateOperationsInput | number | null
+    age_range_max?: NullableIntFieldUpdateOperationsInput | number | null
+    career?: NullableStringFieldUpdateOperationsInput | string | null
+    habits?: NullableStringFieldUpdateOperationsInput | string | null
+    hobbies?: NullableStringFieldUpdateOperationsInput | string | null
+    shared_cost?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RoommateDetailsCreateManyInput = {
+    id?: number
+    post_id: number
+    gender_partner?: string | null
+    age_range_min?: number | null
+    age_range_max?: number | null
+    career?: string | null
+    habits?: string | null
+    hobbies?: string | null
+    shared_cost?: string | null
+  }
+
+  export type RoommateDetailsUpdateManyMutationInput = {
+    gender_partner?: NullableStringFieldUpdateOperationsInput | string | null
+    age_range_min?: NullableIntFieldUpdateOperationsInput | number | null
+    age_range_max?: NullableIntFieldUpdateOperationsInput | number | null
+    career?: NullableStringFieldUpdateOperationsInput | string | null
+    habits?: NullableStringFieldUpdateOperationsInput | string | null
+    hobbies?: NullableStringFieldUpdateOperationsInput | string | null
+    shared_cost?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RoommateDetailsUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    post_id?: IntFieldUpdateOperationsInput | number
+    gender_partner?: NullableStringFieldUpdateOperationsInput | string | null
+    age_range_min?: NullableIntFieldUpdateOperationsInput | number | null
+    age_range_max?: NullableIntFieldUpdateOperationsInput | number | null
+    career?: NullableStringFieldUpdateOperationsInput | string | null
+    habits?: NullableStringFieldUpdateOperationsInput | string | null
+    hobbies?: NullableStringFieldUpdateOperationsInput | string | null
+    shared_cost?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PostImagesCreateInput = {
@@ -7159,6 +8476,11 @@ export namespace Prisma {
     none?: PostImagesWhereInput
   }
 
+  export type RoommateDetailsNullableScalarRelationFilter = {
+    is?: RoommateDetailsWhereInput | null
+    isNot?: RoommateDetailsWhereInput | null
+  }
+
   export type PostImagesOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -7304,6 +8626,62 @@ export namespace Prisma {
   export type PostsScalarRelationFilter = {
     is?: PostsWhereInput
     isNot?: PostsWhereInput
+  }
+
+  export type RoommateDetailsOrderByRelevanceInput = {
+    fields: RoommateDetailsOrderByRelevanceFieldEnum | RoommateDetailsOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type RoommateDetailsCountOrderByAggregateInput = {
+    id?: SortOrder
+    post_id?: SortOrder
+    gender_partner?: SortOrder
+    age_range_min?: SortOrder
+    age_range_max?: SortOrder
+    career?: SortOrder
+    habits?: SortOrder
+    hobbies?: SortOrder
+    shared_cost?: SortOrder
+  }
+
+  export type RoommateDetailsAvgOrderByAggregateInput = {
+    id?: SortOrder
+    post_id?: SortOrder
+    age_range_min?: SortOrder
+    age_range_max?: SortOrder
+  }
+
+  export type RoommateDetailsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    post_id?: SortOrder
+    gender_partner?: SortOrder
+    age_range_min?: SortOrder
+    age_range_max?: SortOrder
+    career?: SortOrder
+    habits?: SortOrder
+    hobbies?: SortOrder
+    shared_cost?: SortOrder
+  }
+
+  export type RoommateDetailsMinOrderByAggregateInput = {
+    id?: SortOrder
+    post_id?: SortOrder
+    gender_partner?: SortOrder
+    age_range_min?: SortOrder
+    age_range_max?: SortOrder
+    career?: SortOrder
+    habits?: SortOrder
+    hobbies?: SortOrder
+    shared_cost?: SortOrder
+  }
+
+  export type RoommateDetailsSumOrderByAggregateInput = {
+    id?: SortOrder
+    post_id?: SortOrder
+    age_range_min?: SortOrder
+    age_range_max?: SortOrder
   }
 
   export type PostImagesOrderByRelevanceInput = {
@@ -7652,11 +9030,23 @@ export namespace Prisma {
     connect?: PostImagesWhereUniqueInput | PostImagesWhereUniqueInput[]
   }
 
+  export type RoommateDetailsCreateNestedOneWithoutPostInput = {
+    create?: XOR<RoommateDetailsCreateWithoutPostInput, RoommateDetailsUncheckedCreateWithoutPostInput>
+    connectOrCreate?: RoommateDetailsCreateOrConnectWithoutPostInput
+    connect?: RoommateDetailsWhereUniqueInput
+  }
+
   export type PostImagesUncheckedCreateNestedManyWithoutPostInput = {
     create?: XOR<PostImagesCreateWithoutPostInput, PostImagesUncheckedCreateWithoutPostInput> | PostImagesCreateWithoutPostInput[] | PostImagesUncheckedCreateWithoutPostInput[]
     connectOrCreate?: PostImagesCreateOrConnectWithoutPostInput | PostImagesCreateOrConnectWithoutPostInput[]
     createMany?: PostImagesCreateManyPostInputEnvelope
     connect?: PostImagesWhereUniqueInput | PostImagesWhereUniqueInput[]
+  }
+
+  export type RoommateDetailsUncheckedCreateNestedOneWithoutPostInput = {
+    create?: XOR<RoommateDetailsCreateWithoutPostInput, RoommateDetailsUncheckedCreateWithoutPostInput>
+    connectOrCreate?: RoommateDetailsCreateOrConnectWithoutPostInput
+    connect?: RoommateDetailsWhereUniqueInput
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -7705,6 +9095,16 @@ export namespace Prisma {
     deleteMany?: PostImagesScalarWhereInput | PostImagesScalarWhereInput[]
   }
 
+  export type RoommateDetailsUpdateOneWithoutPostNestedInput = {
+    create?: XOR<RoommateDetailsCreateWithoutPostInput, RoommateDetailsUncheckedCreateWithoutPostInput>
+    connectOrCreate?: RoommateDetailsCreateOrConnectWithoutPostInput
+    upsert?: RoommateDetailsUpsertWithoutPostInput
+    disconnect?: RoommateDetailsWhereInput | boolean
+    delete?: RoommateDetailsWhereInput | boolean
+    connect?: RoommateDetailsWhereUniqueInput
+    update?: XOR<XOR<RoommateDetailsUpdateToOneWithWhereWithoutPostInput, RoommateDetailsUpdateWithoutPostInput>, RoommateDetailsUncheckedUpdateWithoutPostInput>
+  }
+
   export type PostImagesUncheckedUpdateManyWithoutPostNestedInput = {
     create?: XOR<PostImagesCreateWithoutPostInput, PostImagesUncheckedCreateWithoutPostInput> | PostImagesCreateWithoutPostInput[] | PostImagesUncheckedCreateWithoutPostInput[]
     connectOrCreate?: PostImagesCreateOrConnectWithoutPostInput | PostImagesCreateOrConnectWithoutPostInput[]
@@ -7717,6 +9117,30 @@ export namespace Prisma {
     update?: PostImagesUpdateWithWhereUniqueWithoutPostInput | PostImagesUpdateWithWhereUniqueWithoutPostInput[]
     updateMany?: PostImagesUpdateManyWithWhereWithoutPostInput | PostImagesUpdateManyWithWhereWithoutPostInput[]
     deleteMany?: PostImagesScalarWhereInput | PostImagesScalarWhereInput[]
+  }
+
+  export type RoommateDetailsUncheckedUpdateOneWithoutPostNestedInput = {
+    create?: XOR<RoommateDetailsCreateWithoutPostInput, RoommateDetailsUncheckedCreateWithoutPostInput>
+    connectOrCreate?: RoommateDetailsCreateOrConnectWithoutPostInput
+    upsert?: RoommateDetailsUpsertWithoutPostInput
+    disconnect?: RoommateDetailsWhereInput | boolean
+    delete?: RoommateDetailsWhereInput | boolean
+    connect?: RoommateDetailsWhereUniqueInput
+    update?: XOR<XOR<RoommateDetailsUpdateToOneWithWhereWithoutPostInput, RoommateDetailsUpdateWithoutPostInput>, RoommateDetailsUncheckedUpdateWithoutPostInput>
+  }
+
+  export type PostsCreateNestedOneWithoutRoommate_detailsInput = {
+    create?: XOR<PostsCreateWithoutRoommate_detailsInput, PostsUncheckedCreateWithoutRoommate_detailsInput>
+    connectOrCreate?: PostsCreateOrConnectWithoutRoommate_detailsInput
+    connect?: PostsWhereUniqueInput
+  }
+
+  export type PostsUpdateOneRequiredWithoutRoommate_detailsNestedInput = {
+    create?: XOR<PostsCreateWithoutRoommate_detailsInput, PostsUncheckedCreateWithoutRoommate_detailsInput>
+    connectOrCreate?: PostsCreateOrConnectWithoutRoommate_detailsInput
+    upsert?: PostsUpsertWithoutRoommate_detailsInput
+    connect?: PostsWhereUniqueInput
+    update?: XOR<XOR<PostsUpdateToOneWithWhereWithoutRoommate_detailsInput, PostsUpdateWithoutRoommate_detailsInput>, PostsUncheckedUpdateWithoutRoommate_detailsInput>
   }
 
   export type PostsCreateNestedOneWithoutImagesInput = {
@@ -8176,6 +9600,7 @@ export namespace Prisma {
     created_at?: Date | string
     expired_at?: Date | string | null
     images?: PostImagesCreateNestedManyWithoutPostInput
+    roommate_details?: RoommateDetailsCreateNestedOneWithoutPostInput
   }
 
   export type PostsUncheckedCreateWithoutUserInput = {
@@ -8196,6 +9621,7 @@ export namespace Prisma {
     created_at?: Date | string
     expired_at?: Date | string | null
     images?: PostImagesUncheckedCreateNestedManyWithoutPostInput
+    roommate_details?: RoommateDetailsUncheckedCreateNestedOneWithoutPostInput
   }
 
   export type PostsCreateOrConnectWithoutUserInput = {
@@ -8397,6 +9823,32 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type RoommateDetailsCreateWithoutPostInput = {
+    gender_partner?: string | null
+    age_range_min?: number | null
+    age_range_max?: number | null
+    career?: string | null
+    habits?: string | null
+    hobbies?: string | null
+    shared_cost?: string | null
+  }
+
+  export type RoommateDetailsUncheckedCreateWithoutPostInput = {
+    id?: number
+    gender_partner?: string | null
+    age_range_min?: number | null
+    age_range_max?: number | null
+    career?: string | null
+    habits?: string | null
+    hobbies?: string | null
+    shared_cost?: string | null
+  }
+
+  export type RoommateDetailsCreateOrConnectWithoutPostInput = {
+    where: RoommateDetailsWhereUniqueInput
+    create: XOR<RoommateDetailsCreateWithoutPostInput, RoommateDetailsUncheckedCreateWithoutPostInput>
+  }
+
   export type UsersUpsertWithoutPostsInput = {
     update: XOR<UsersUpdateWithoutPostsInput, UsersUncheckedUpdateWithoutPostsInput>
     create: XOR<UsersCreateWithoutPostsInput, UsersUncheckedCreateWithoutPostsInput>
@@ -8473,6 +9925,136 @@ export namespace Prisma {
     post_id?: IntFilter<"PostImages"> | number
   }
 
+  export type RoommateDetailsUpsertWithoutPostInput = {
+    update: XOR<RoommateDetailsUpdateWithoutPostInput, RoommateDetailsUncheckedUpdateWithoutPostInput>
+    create: XOR<RoommateDetailsCreateWithoutPostInput, RoommateDetailsUncheckedCreateWithoutPostInput>
+    where?: RoommateDetailsWhereInput
+  }
+
+  export type RoommateDetailsUpdateToOneWithWhereWithoutPostInput = {
+    where?: RoommateDetailsWhereInput
+    data: XOR<RoommateDetailsUpdateWithoutPostInput, RoommateDetailsUncheckedUpdateWithoutPostInput>
+  }
+
+  export type RoommateDetailsUpdateWithoutPostInput = {
+    gender_partner?: NullableStringFieldUpdateOperationsInput | string | null
+    age_range_min?: NullableIntFieldUpdateOperationsInput | number | null
+    age_range_max?: NullableIntFieldUpdateOperationsInput | number | null
+    career?: NullableStringFieldUpdateOperationsInput | string | null
+    habits?: NullableStringFieldUpdateOperationsInput | string | null
+    hobbies?: NullableStringFieldUpdateOperationsInput | string | null
+    shared_cost?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type RoommateDetailsUncheckedUpdateWithoutPostInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    gender_partner?: NullableStringFieldUpdateOperationsInput | string | null
+    age_range_min?: NullableIntFieldUpdateOperationsInput | number | null
+    age_range_max?: NullableIntFieldUpdateOperationsInput | number | null
+    career?: NullableStringFieldUpdateOperationsInput | string | null
+    habits?: NullableStringFieldUpdateOperationsInput | string | null
+    hobbies?: NullableStringFieldUpdateOperationsInput | string | null
+    shared_cost?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type PostsCreateWithoutRoommate_detailsInput = {
+    post_title: string
+    post_description: string
+    post_price: number
+    post_area: number
+    price_electricity?: number | null
+    price_water?: number | null
+    price_internet?: number | null
+    post_address: string
+    post_ward?: string | null
+    post_district: string
+    post_city: string
+    category?: $Enums.PostCategory
+    status?: $Enums.PostStatus
+    created_at?: Date | string
+    expired_at?: Date | string | null
+    user: UsersCreateNestedOneWithoutPostsInput
+    images?: PostImagesCreateNestedManyWithoutPostInput
+  }
+
+  export type PostsUncheckedCreateWithoutRoommate_detailsInput = {
+    post_id?: number
+    post_title: string
+    post_description: string
+    post_price: number
+    post_area: number
+    price_electricity?: number | null
+    price_water?: number | null
+    price_internet?: number | null
+    post_address: string
+    post_ward?: string | null
+    post_district: string
+    post_city: string
+    category?: $Enums.PostCategory
+    status?: $Enums.PostStatus
+    user_id: bigint | number
+    created_at?: Date | string
+    expired_at?: Date | string | null
+    images?: PostImagesUncheckedCreateNestedManyWithoutPostInput
+  }
+
+  export type PostsCreateOrConnectWithoutRoommate_detailsInput = {
+    where: PostsWhereUniqueInput
+    create: XOR<PostsCreateWithoutRoommate_detailsInput, PostsUncheckedCreateWithoutRoommate_detailsInput>
+  }
+
+  export type PostsUpsertWithoutRoommate_detailsInput = {
+    update: XOR<PostsUpdateWithoutRoommate_detailsInput, PostsUncheckedUpdateWithoutRoommate_detailsInput>
+    create: XOR<PostsCreateWithoutRoommate_detailsInput, PostsUncheckedCreateWithoutRoommate_detailsInput>
+    where?: PostsWhereInput
+  }
+
+  export type PostsUpdateToOneWithWhereWithoutRoommate_detailsInput = {
+    where?: PostsWhereInput
+    data: XOR<PostsUpdateWithoutRoommate_detailsInput, PostsUncheckedUpdateWithoutRoommate_detailsInput>
+  }
+
+  export type PostsUpdateWithoutRoommate_detailsInput = {
+    post_title?: StringFieldUpdateOperationsInput | string
+    post_description?: StringFieldUpdateOperationsInput | string
+    post_price?: IntFieldUpdateOperationsInput | number
+    post_area?: FloatFieldUpdateOperationsInput | number
+    price_electricity?: NullableIntFieldUpdateOperationsInput | number | null
+    price_water?: NullableIntFieldUpdateOperationsInput | number | null
+    price_internet?: NullableIntFieldUpdateOperationsInput | number | null
+    post_address?: StringFieldUpdateOperationsInput | string
+    post_ward?: NullableStringFieldUpdateOperationsInput | string | null
+    post_district?: StringFieldUpdateOperationsInput | string
+    post_city?: StringFieldUpdateOperationsInput | string
+    category?: EnumPostCategoryFieldUpdateOperationsInput | $Enums.PostCategory
+    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UsersUpdateOneRequiredWithoutPostsNestedInput
+    images?: PostImagesUpdateManyWithoutPostNestedInput
+  }
+
+  export type PostsUncheckedUpdateWithoutRoommate_detailsInput = {
+    post_id?: IntFieldUpdateOperationsInput | number
+    post_title?: StringFieldUpdateOperationsInput | string
+    post_description?: StringFieldUpdateOperationsInput | string
+    post_price?: IntFieldUpdateOperationsInput | number
+    post_area?: FloatFieldUpdateOperationsInput | number
+    price_electricity?: NullableIntFieldUpdateOperationsInput | number | null
+    price_water?: NullableIntFieldUpdateOperationsInput | number | null
+    price_internet?: NullableIntFieldUpdateOperationsInput | number | null
+    post_address?: StringFieldUpdateOperationsInput | string
+    post_ward?: NullableStringFieldUpdateOperationsInput | string | null
+    post_district?: StringFieldUpdateOperationsInput | string
+    post_city?: StringFieldUpdateOperationsInput | string
+    category?: EnumPostCategoryFieldUpdateOperationsInput | $Enums.PostCategory
+    status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    images?: PostImagesUncheckedUpdateManyWithoutPostNestedInput
+  }
+
   export type PostsCreateWithoutImagesInput = {
     post_title: string
     post_description: string
@@ -8490,6 +10072,7 @@ export namespace Prisma {
     created_at?: Date | string
     expired_at?: Date | string | null
     user: UsersCreateNestedOneWithoutPostsInput
+    roommate_details?: RoommateDetailsCreateNestedOneWithoutPostInput
   }
 
   export type PostsUncheckedCreateWithoutImagesInput = {
@@ -8510,6 +10093,7 @@ export namespace Prisma {
     user_id: bigint | number
     created_at?: Date | string
     expired_at?: Date | string | null
+    roommate_details?: RoommateDetailsUncheckedCreateNestedOneWithoutPostInput
   }
 
   export type PostsCreateOrConnectWithoutImagesInput = {
@@ -8545,6 +10129,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UsersUpdateOneRequiredWithoutPostsNestedInput
+    roommate_details?: RoommateDetailsUpdateOneWithoutPostNestedInput
   }
 
   export type PostsUncheckedUpdateWithoutImagesInput = {
@@ -8565,6 +10150,7 @@ export namespace Prisma {
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roommate_details?: RoommateDetailsUncheckedUpdateOneWithoutPostNestedInput
   }
 
   export type UsersCreateWithoutRoommate_postsInput = {
@@ -8718,6 +10304,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     images?: PostImagesUpdateManyWithoutPostNestedInput
+    roommate_details?: RoommateDetailsUpdateOneWithoutPostNestedInput
   }
 
   export type PostsUncheckedUpdateWithoutUserInput = {
@@ -8738,6 +10325,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     images?: PostImagesUncheckedUpdateManyWithoutPostNestedInput
+    roommate_details?: RoommateDetailsUncheckedUpdateOneWithoutPostNestedInput
   }
 
   export type PostsUncheckedUpdateManyWithoutUserInput = {

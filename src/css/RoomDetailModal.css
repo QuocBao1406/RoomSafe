@@ -1,103 +1,157 @@
-/* 1. Lớp phủ đen mờ phía sau */
-.modal-overlay {
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap');
+
+.rdm-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6); /* Đen mờ 60% */
-    z-index: 9999; /* Luôn nổi lên trên cùng */
-    display: flex;
-    align-items: center; /* Căn giữa dọc */
-    justify-content: center; /* Căn giữa ngang */
-    animation: fadeIn 0.2s ease-out;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999; padding: 20px;
+    animation: rdmFadeIn 0.25s ease-out;
 }
 
-/* 2. Cái hộp nội dung chính */
-.modal-content {
-    background: white;
-    width: 90%; /* Mobile: chiếm 90% màn hình */
-    max-width: 700px; /* PC: tối đa 700px */
-    max-height: 90vh; /* Không cao quá 90% màn hình */
+.rdm-container {
+    background: #fff;
+    width: 100%; max-width: 950px; max-height: 90vh;
+    border-radius: 16px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    animation: rdmSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* HEADER */
+.rdm-header {
+    padding: 16px 24px; border-bottom: 1px solid #f1f5f9;
+    display: flex; justify-content: space-between; align-items: center;
+    background: #fff;
+}
+.rdm-header h3 { margin: 0; font-size: 18px; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+
+.rdm-close-btn {
+    background: transparent; border: none; font-size: 28px;
+    color: #94a3b8; cursor: pointer; line-height: 1; transition: 0.2s;
+}
+.rdm-close-btn:hover { color: #ef4444; transform: rotate(90deg); }
+
+/* BODY */
+.rdm-body {
+    padding: 24px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 24px;
+}
+
+/* GALLERY ẢNH */
+.rdm-gallery {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 8px;
+    /* Thêm min-height và !important để chắc chắn khung cao lên */
+    height: 380px !important; 
+    min-height: 380px;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    overflow: hidden;
+    background: #f1f5f9;
+}
+
+.rdm-gallery.single {
+    grid-template-columns: 1fr;
+}
+
+.rdm-img-main {
+    width: 100%;
+    /* Ép ảnh phải cao bằng khung cha, bất chấp tỉ lệ gốc */
+    height: 100% !important; 
+    object-fit: cover !important; /* Cắt ảnh vừa khung, không bị méo */
+    cursor: pointer;
+    transition: filter 0.2s;
+    display: block; /* Đảm bảo không bị khoảng trắng inline */
+}
+
+.rdm-img-main:hover {
+    filter: brightness(0.9);
+}
+
+.rdm-img-col {
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Để bo góc không bị ảnh che mất */
-    animation: slideUp 0.3s ease-out;
+    gap: 8px;
+    height: 100% !important; /* Ép cột phụ cao full */
 }
 
-/* 3. Phần Header */
-.modal-header {
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #fff;
-    position: sticky;
-    top: 0;
-}
-
-.modal-header h3 {
-    margin: 0;
-    font-size: 18px;
-    color: #333;
-}
-
-.btn-close {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #999;
-    padding: 0 5px;
-}
-.btn-close:hover { color: #333; }
-
-/* 4. Phần Body (Nội dung cuộn được) */
-.modal-body {
-    padding: 20px;
-    overflow-y: auto; /* Cho phép cuộn dọc */
-}
-
-.modal-image {
+.rdm-img-sub {
     width: 100%;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 15px;
+    /* Chiều cao tính toán trừ đi khoảng hở gap */
+    height: calc(50% - 4px) !important; 
+    object-fit: cover !important;
+    cursor: pointer;
+    transition: filter 0.2s;
+    display: block;
 }
 
-.modal-title { margin: 0 0 5px; color: #3b82f6; font-size: 22px; }
-.modal-price { color: #dc2626; font-size: 20px; font-weight: bold; margin-bottom: 15px; }
-
-.modal-info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 20px;
-    background: #f8f9fa;
-    padding: 10px;
-    border-radius: 6px;
+.rdm-img-sub:hover {
+    filter: brightness(0.9);
 }
 
-/* 5. Phần Footer */
-.modal-footer {
-    padding: 15px 20px;
-    border-top: 1px solid #eee;
-    background: #fff;
-    display: flex;
-    gap: 10px;
+/* LAYOUT NỘI DUNG */
+.rdm-content-grid {
+    display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 30px;
 }
 
-/* Hiệu ứng Animation */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* CỘT TRÁI */
+.rdm-col-left h2 { font-size: 24px; font-weight: 700; color: #1e293b; margin: 10px 0 8px 0; }
+.rdm-category-badge {
+    background: #dbeafe; color: #1e40af; padding: 4px 10px;
+    border-radius: 6px; font-size: 12px; font-weight: 700; text-transform: uppercase;
+}
+.rdm-address { color: #64748b; font-size: 14px; display: flex; gap: 6px; margin-bottom: 20px; }
+.rdm-desc-box {
+    background: #f8fafc; padding: 20px; border-radius: 12px;
+    font-size: 15px; line-height: 1.6; color: #334155; white-space: pre-line;
+    border: 1px solid #e2e8f0;
 }
 
-@keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+/* CỘT PHẢI (INFO CARD) */
+.rdm-info-card {
+    background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+.rdm-price-row {
+    font-size: 24px; font-weight: 800; color: #00b98e; margin-bottom: 20px;
+    padding-bottom: 15px; border-bottom: 1px dashed #e2e8f0;
+}
+.rdm-status-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; }
+.rdm-status-row strong { color: #0f172a; }
+
+/* SERVICE GRID */
+.rdm-service-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px;
+}
+.rdm-sv-item {
+    text-align: center; border: 1px solid #f1f5f9; border-radius: 8px; padding: 10px 5px; background: #fafafa;
+}
+.rdm-sv-val { font-weight: 700; color: #333; font-size: 13px; display: block;}
+.rdm-sv-lbl { font-size: 11px; color: #94a3b8; display: block; margin-top: 2px;}
+
+/* FOOTER */
+.rdm-footer {
+    padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e5e7eb;
+    display: flex; justify-content: flex-end; gap: 12px;
+}
+.rdm-btn-sec {
+    padding: 10px 24px; border-radius: 8px; border: 1px solid #cbd5e1; background: white;
+    font-weight: 600; cursor: pointer; color: #475569;
+}
+.rdm-btn-pri {
+    padding: 10px 24px; border-radius: 8px; border: none; background: #2563eb;
+    font-weight: 600; cursor: pointer; color: white;
+}
+
+@keyframes rdmFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rdmSlideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* Mobile */
+@media (max-width: 768px) {
+    .rdm-content-grid { grid-template-columns: 1fr; }
+    .rdm-gallery { height: 220px; grid-template-columns: 1fr; }
+    .rdm-img-col { display: none; }
 }

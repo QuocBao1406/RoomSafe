@@ -42,7 +42,7 @@ const mobileItemVariants = {
 };
 
 const TENANT_LINKS = [
-  { path: '/find-room', label: 'Tìm trọ' },
+  { path: '/', label: 'Tìm trọ' },
   { path: '/roommate/list', label: 'Tìm bạn cùng phòng' },
   { path: '/roommate/manage', label: 'Bài đăng của tôi'},
 ];
@@ -122,7 +122,7 @@ const Navbar = () => {
     >
       <div className='navbar-container'>
         
-        <NavLink to={isLandlord ? '/dashboard' : '/find-room'} className='navbar-logo' onClick={closeMenu}>
+        <NavLink to={isLandlord ? '/dashboard' : '/'} className='navbar-logo' onClick={closeMenu}>
           RoomSafe
         </NavLink>
 
@@ -161,7 +161,7 @@ const Navbar = () => {
                   alt="Avatar"
                   className="user-avatar"
                 />
-                <span className="nav-user-name">{user.name || user.username}</span>
+                <span className="nav-user-name">{user.username}</span>
               </div>
 
               {/* Dropdown menu */}

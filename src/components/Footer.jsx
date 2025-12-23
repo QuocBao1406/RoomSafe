@@ -18,7 +18,7 @@ const Footer = () => {
 
           <div className='footer-column'>
             <h4>Khám phá</h4>
-            <Link to='/find-room'>Tìm phòng trọ</Link>
+            <Link to='/'>Tìm phòng trọ</Link>
             <Link to='find-roommate'>Tìm bạn cùng phòng</Link>
             <Link to='/post-room'>Đăng trọ</Link>
           </div>

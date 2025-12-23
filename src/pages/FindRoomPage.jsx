@@ -6,6 +6,7 @@ import {
 } from 'react-icons/fa';
 import '../css/FindRoomPage.css';
 import RoomDetailModal from '../components/RoomDetailModal.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const FindRoomPage = () => {
     // --- KHAI BÁO STATE ---
@@ -20,6 +21,8 @@ const FindRoomPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [favorites, setFavorites] = useState([]);
+
+    const navigate = useNavigate();
 
     // --- HELPER FUNCTIONS ---
     
@@ -50,6 +53,10 @@ const FindRoomPage = () => {
         interval = seconds / 60;
         if (interval > 1) return Math.floor(interval) + " phút trước";
         return "Vừa xong";
+    };
+
+    const handleCardClick = (postId) => {
+        navigate(`/room/${postId}`);
     };
 
     const toggleFavorite = (e, id) => {
@@ -225,7 +232,7 @@ const FindRoomPage = () => {
                 ) : (
                     <div className="room-grid">
                         {filteredPosts.map(post => (
-                            <div key={post.post_id} className="premium-card" onClick={() => openModal(post)}>
+                            <div key={post.post_id} className="premium-card" onClick={() => handleCardClick(post.post_id)}>
                                 
                                 {/* 1. ẢNH & BADGE */}
                                 <div className="card-img-container">
@@ -301,8 +308,6 @@ const FindRoomPage = () => {
                     </div>
                 )}
             </div>
-
-            <RoomDetailModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} roomData={selectedRoom} />
         </div>
     );
 };

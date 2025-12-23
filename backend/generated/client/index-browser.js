@@ -160,6 +160,18 @@ exports.Prisma.PostsScalarFieldEnum = {
   expired_at: 'expired_at'
 };
 
+exports.Prisma.RoommateDetailsScalarFieldEnum = {
+  id: 'id',
+  post_id: 'post_id',
+  gender_partner: 'gender_partner',
+  age_range_min: 'age_range_min',
+  age_range_max: 'age_range_max',
+  career: 'career',
+  habits: 'habits',
+  hobbies: 'hobbies',
+  shared_cost: 'shared_cost'
+};
+
 exports.Prisma.PostImagesScalarFieldEnum = {
   image_id: 'image_id',
   image_url: 'image_url',
@@ -221,6 +233,14 @@ exports.Prisma.PostsOrderByRelevanceFieldEnum = {
   post_city: 'post_city'
 };
 
+exports.Prisma.RoommateDetailsOrderByRelevanceFieldEnum = {
+  gender_partner: 'gender_partner',
+  career: 'career',
+  habits: 'habits',
+  hobbies: 'hobbies',
+  shared_cost: 'shared_cost'
+};
+
 exports.Prisma.PostImagesOrderByRelevanceFieldEnum = {
   image_url: 'image_url'
 };
@@ -266,7 +286,8 @@ exports.users_user_role = exports.$Enums.users_user_role = {
 exports.PostCategory = exports.$Enums.PostCategory = {
   PHONG_TRO: 'PHONG_TRO',
   CHUNG_CU: 'CHUNG_CU',
-  NHA_NGUYEN_CAN: 'NHA_NGUYEN_CAN'
+  NHA_NGUYEN_CAN: 'NHA_NGUYEN_CAN',
+  O_GHEP: 'O_GHEP'
 };
 
 exports.PostStatus = exports.$Enums.PostStatus = {
@@ -290,6 +311,7 @@ exports.RoommateStatus = exports.$Enums.RoommateStatus = {
 exports.Prisma.ModelName = {
   Users: 'Users',
   Posts: 'Posts',
+  RoommateDetails: 'RoommateDetails',
   PostImages: 'PostImages',
   RoommatePost: 'RoommatePost'
 };

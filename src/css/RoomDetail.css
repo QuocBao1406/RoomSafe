@@ -1,0 +1,225 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #00b98e; /* Màu chủ đạo */
+    --text-dark: #0e2e50;
+    --text-gray: #666565;
+    --bg-light: #f4f6f9;
+}
+
+.rd-wrapper {
+    background-color: var(--bg-light);
+    min-height: 100vh;
+    padding-bottom: 60px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    color: var(--text-dark);
+}
+
+.rd-container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* --- BREADCRUMB --- */
+.rd-breadcrumb {
+    font-size: 14px;
+    color: var(--text-gray);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.rd-breadcrumb span { cursor: pointer; transition: 0.2s; }
+.rd-breadcrumb span:hover { color: var(--primary-color); }
+.rd-breadcrumb .active { font-weight: 600; color: var(--text-dark); cursor: default;}
+
+/* --- GALLERY GRID PRO (Lưới ảnh thông minh) --- */
+.rd-gallery-container {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    height: 450px;
+    background: #e0e0e0;
+}
+
+.gallery-grid {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    gap: 8px;
+}
+
+/* Các layout tùy theo số lượng ảnh */
+.grid-1 { grid-template-columns: 1fr; }
+.grid-2 { grid-template-columns: 1fr 1fr; }
+.grid-3 { grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr; }
+
+/* Nếu có 3 ảnh trở lên: Ảnh 1 chiếm hết cột trái */
+.grid-3 .img-item:nth-child(1) {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+}
+
+.img-item {
+    width: 100%; height: 100%; object-fit: cover;
+    cursor: pointer; transition: filter 0.2s;
+}
+.img-item:hover { filter: brightness(0.85); }
+
+.btn-show-all {
+    position: absolute; bottom: 20px; right: 20px;
+    background: white; border: none; border-radius: 8px;
+    padding: 10px 18px; font-size: 14px; font-weight: 600;
+    cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex; align-items: center; gap: 8px;
+    transition: transform 0.2s; z-index: 10;
+}
+.btn-show-all:hover { transform: scale(1.05); }
+
+/* --- LIGHTBOX (Popup xem ảnh) --- */
+.lightbox-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.95); z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(5px);
+}
+.lightbox-content { position: relative; max-width: 90%; max-height: 90%; }
+.lightbox-img {
+    max-width: 100%; max-height: 85vh; object-fit: contain;
+    border-radius: 4px; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+.lb-btn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(255,255,255,0.15); color: white; border: none;
+    width: 50px; height: 50px; border-radius: 50%; cursor: pointer;
+    font-size: 24px; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+}
+.lb-btn:hover { background: rgba(255,255,255,0.4); }
+.lb-prev { left: -80px; }
+.lb-next { right: -80px; }
+.lb-close {
+    position: absolute; top: 20px; right: 20px;
+    background: rgba(255,255,255,0.1); color: white; border: none;
+    padding: 10px 20px; border-radius: 30px; cursor: pointer;
+    font-weight: 600; z-index: 10000;
+}
+.lb-close:hover { background: rgba(255,255,255,0.2); }
+.lb-counter {
+    position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%);
+    color: #ccc; font-size: 16px;
+}
+
+/* --- MAIN LAYOUT --- */
+.rd-body {
+    display: grid;
+    grid-template-columns: 2.2fr 1fr; /* Cột trái rộng hơn */
+    gap: 30px;
+}
+
+/* LEFT COLUMN */
+.rd-header h1 {
+    font-size: 26px; font-weight: 700; color: #1a1a1a;
+    margin-bottom: 12px; line-height: 1.3;
+}
+.rd-address {
+    display: flex; align-items: flex-start; gap: 8px;
+    color: var(--text-gray); font-size: 15px; margin-bottom: 25px;
+}
+
+/* Overview Box */
+.rd-overview {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 15px; background: white; padding: 20px;
+    border-radius: 12px; border: 1px solid #e0e0e0; margin-bottom: 24px;
+}
+.rd-ov-item { text-align: center; }
+.rd-ov-label { display: block; font-size: 13px; color: #888; margin-bottom: 6px; }
+.rd-ov-value { font-weight: 700; color: #333; font-size: 15px; }
+
+/* Sections */
+.rd-section {
+    background: white; padding: 30px;
+    border-radius: 16px; margin-bottom: 24px;
+    border: 1px solid #e0e0e0;
+}
+.rd-section h3 {
+    font-size: 19px; font-weight: 700; margin-bottom: 20px;
+    border-left: 4px solid var(--primary-color);
+    padding-left: 12px; color: #333;
+}
+.rd-desc-text {
+    white-space: pre-line; line-height: 1.7; color: #444; font-size: 15px; text-align: justify;
+}
+
+/* Service Grid */
+.rd-service-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;
+}
+.rd-service-card {
+    border: 1px solid #eee; border-radius: 12px; padding: 20px 10px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    background: #fdfdfd; transition: transform 0.2s;
+}
+.rd-service-card:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.rd-sv-price { font-weight: 700; color: var(--primary-color); font-size: 16px; }
+.rd-sv-unit { font-size: 13px; color: #999; }
+
+/* Map Placeholder */
+.rd-map-placeholder {
+    background-color: #e9ecef; height: 200px; border-radius: 12px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: #6c757d; font-weight: 600; gap: 10px;
+}
+
+/* --- RIGHT SIDEBAR (STICKY) --- */
+.rd-sidebar-inner { position: sticky; top: 20px; }
+
+.rd-host-card {
+    background: white; padding: 24px; border-radius: 16px;
+    border: 1px solid #e0e0e0; box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    text-align: center; margin-bottom: 20px;
+}
+.rd-host-info {
+    display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 20px;
+}
+.rd-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #f0f0f0; padding: 2px;}
+.rd-host-name { font-weight: 700; font-size: 18px; color: #333; }
+.rd-price-display {
+    background: #f0fff4; color: var(--primary-color);
+    padding: 12px; border-radius: 8px; font-size: 24px; font-weight: 800;
+    margin-bottom: 20px;
+}
+.rd-price-display span { font-size: 14px; font-weight: 500; color: #0e2e50; }
+
+.rd-btn-action {
+    width: 100%; padding: 14px; border-radius: 8px; border: none;
+    font-weight: 600; font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-bottom: 12px; transition: all 0.2s;
+}
+.btn-call { background: var(--primary-color); color: white; box-shadow: 0 4px 15px rgba(0, 185, 142, 0.3); }
+.btn-call:hover { background: #009f7a; transform: translateY(-2px); }
+.btn-zalo { background: white; border: 1px solid #0068ff; color: #0068ff; }
+.btn-zalo:hover { background: #e6f0ff; }
+
+.rd-safety-box {
+    background: #fff3cd; color: #856404; padding: 15px;
+    border-radius: 8px; font-size: 13px; line-height: 1.5;
+    display: flex; gap: 10px; align-items: start; border: 1px solid #ffeeba;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .rd-body { grid-template-columns: 1fr; }
+    .rd-gallery-container { height: 280px; }
+    .grid-3 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+    .img-item:not(:first-child) { display: none; } /* Mobile chỉ hiện 1 ảnh */
+    .rd-service-grid { grid-template-columns: 1fr; }
+    .rd-overview { grid-template-columns: repeat(2, 1fr); }
+    .lb-btn { width: 40px; height: 40px; }
+    .lb-prev { left: 10px; } .lb-next { right: 10px; }
+}

@@ -153,17 +153,18 @@ router.delete("/delete/:id", async (req, res) => {
 router.get("/detail/:id", async (req, res) => {
     try {
         const postId = parseInt(req.params.id);
-
-        if (isNaN(postId)) {
-            return res.status(400).json({message: "ID không hợp lệ"});
-        }
+        if (isNaN(postId)) return res.status(400).json({message: "ID không hợp lệ"});
 
         const post = await prisma.posts.findUnique({
             where: { post_id: postId },
-            include: {images: true}
+            include: {
+                images: true,
+                user: true
+            }
         });
 
         if (!post) return res.status(404).json({message: "Không tìm thấy bài viết"});
+        if (post.user) delete post.user.password;
 
         const safePost = {
             ...post,
@@ -172,7 +173,8 @@ router.get("/detail/:id", async (req, res) => {
 
         res.status(200).json({data: safePost});
     } catch (error) {
-        res.status(500).json({message: "Lỗi sever"});
+        console.error(error);
+        res.status(500).json({message: "Lỗi server"});
     }
 });
 
