@@ -123,9 +123,9 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.UsersScalarFieldEnum = {
   user_id: 'user_id',
-  user_name: 'user_name',
   user_password: 'user_password',
-  user_full_name: 'user_full_name',
+  user_first_name: 'user_first_name',
+  user_last_name: 'user_last_name',
   user_gender: 'user_gender',
   user_birthday: 'user_birthday',
   user_phone: 'user_phone',
@@ -137,7 +137,12 @@ exports.Prisma.UsersScalarFieldEnum = {
   user_bio: 'user_bio',
   user_created_at: 'user_created_at',
   user_verification: 'user_verification',
-  user_role: 'user_role'
+  user_role: 'user_role',
+  otp: 'otp',
+  otp_expiry_time: 'otp_expiry_time',
+  password_reset_token: 'password_reset_token',
+  password_reset_expires: 'password_reset_expires',
+  verified: 'verified'
 };
 
 exports.Prisma.PostsScalarFieldEnum = {
@@ -155,6 +160,8 @@ exports.Prisma.PostsScalarFieldEnum = {
   post_city: 'post_city',
   category: 'category',
   status: 'status',
+  post_latitude: 'post_latitude',
+  post_longitude: 'post_longitude',
   user_id: 'user_id',
   created_at: 'created_at',
   expired_at: 'expired_at'
@@ -178,34 +185,9 @@ exports.Prisma.PostImagesScalarFieldEnum = {
   post_id: 'post_id'
 };
 
-exports.Prisma.RoommatePostScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  description: 'description',
-  budget: 'budget',
-  preferred_area: 'preferred_area',
-  gender_preference: 'gender_preference',
-  age_min: 'age_min',
-  age_max: 'age_max',
-  habits: 'habits',
-  contact_zalo: 'contact_zalo',
-  contact_messenger: 'contact_messenger',
-  contact_phone: 'contact_phone',
-  photos: 'photos',
-  status: 'status',
-  user_id: 'user_id',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
-};
-
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.NullsOrder = {
@@ -214,14 +196,16 @@ exports.Prisma.NullsOrder = {
 };
 
 exports.Prisma.UsersOrderByRelevanceFieldEnum = {
-  user_name: 'user_name',
   user_password: 'user_password',
-  user_full_name: 'user_full_name',
+  user_first_name: 'user_first_name',
+  user_last_name: 'user_last_name',
   user_phone: 'user_phone',
   user_email: 'user_email',
   user_address: 'user_address',
   user_avatar: 'user_avatar',
-  user_bio: 'user_bio'
+  user_bio: 'user_bio',
+  otp: 'otp',
+  password_reset_token: 'password_reset_token'
 };
 
 exports.Prisma.PostsOrderByRelevanceFieldEnum = {
@@ -244,27 +228,6 @@ exports.Prisma.RoommateDetailsOrderByRelevanceFieldEnum = {
 exports.Prisma.PostImagesOrderByRelevanceFieldEnum = {
   image_url: 'image_url'
 };
-
-exports.Prisma.JsonNullValueFilter = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull,
-  AnyNull: Prisma.AnyNull
-};
-
-exports.Prisma.QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-};
-
-exports.Prisma.RoommatePostOrderByRelevanceFieldEnum = {
-  title: 'title',
-  description: 'description',
-  preferred_area: 'preferred_area',
-  habits: 'habits',
-  contact_zalo: 'contact_zalo',
-  contact_messenger: 'contact_messenger',
-  contact_phone: 'contact_phone'
-};
 exports.users_user_gender = exports.$Enums.users_user_gender = {
   MALE: 'MALE',
   FEMALE: 'FEMALE',
@@ -280,7 +243,8 @@ exports.users_user_verification = exports.$Enums.users_user_verification = {
 
 exports.users_user_role = exports.$Enums.users_user_role = {
   LANDLORD: 'LANDLORD',
-  TENANT: 'TENANT'
+  TENANT: 'TENANT',
+  ADMIN: 'ADMIN'
 };
 
 exports.PostCategory = exports.$Enums.PostCategory = {
@@ -296,24 +260,11 @@ exports.PostStatus = exports.$Enums.PostStatus = {
   HIDDEN: 'HIDDEN'
 };
 
-exports.RoommateGender = exports.$Enums.RoommateGender = {
-  MALE: 'MALE',
-  FEMALE: 'FEMALE',
-  ANY: 'ANY'
-};
-
-exports.RoommateStatus = exports.$Enums.RoommateStatus = {
-  ACTIVE: 'ACTIVE',
-  FOUND: 'FOUND',
-  CLOSED: 'CLOSED'
-};
-
 exports.Prisma.ModelName = {
   Users: 'Users',
   Posts: 'Posts',
   RoommateDetails: 'RoommateDetails',
-  PostImages: 'PostImages',
-  RoommatePost: 'RoommatePost'
+  PostImages: 'PostImages'
 };
 
 /**

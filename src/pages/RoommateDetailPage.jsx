@@ -9,8 +9,18 @@ import {
     FaVenusMars, FaBriefcase, FaHeart, FaGamepad, FaHandHoldingUsd, FaUserCircle,
     FaCalendarAlt, FaClock, FaCheckCircle
 } from 'react-icons/fa';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
 import '../css/RoommateDetail.css'; 
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 const RoommateDetailPage = () => {
     const { id } = useParams();
@@ -237,6 +247,46 @@ const RoommateDetailPage = () => {
                                 </div>
                             </div>
                         )}
+
+                        <div className="rmd-section">
+                            <h3>Vị trí</h3>
+                            {post.latitude && post.longitude ? (
+                                <div className="rmd-map-box">
+                                    <MapContainer 
+                                        center={[post.latitude, post.longitude]} 
+                                        zoom={15} 
+                                        scrollWheelZoom={false}
+                                        style={{ height: "100%", width: "100%" }}
+                                    >
+                                        <TileLayer
+                                            attribution='&copy; CARTO'
+                                            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                                        />
+                                        <Marker position={[post.latitude, post.longitude]}>
+                                            <Popup>
+                                                <div style={{fontWeight: '600', fontSize: '13px'}}>
+                                                    {post.title}
+                                                </div>
+                                                <div style={{fontSize: '11px', color: '#666'}}>
+                                                    {post.full_address}
+                                                </div>
+                                            </Popup>
+                                        </Marker>
+                                    </MapContainer>
+                                </div>
+                            ) : (
+                                <div className="rmd-map-placeholder">
+                                    <FaMapMarkerAlt size={40} style={{marginBottom: 10}}/>
+                                    <span>Chưa có dữ liệu bản đồ cho tin đăng này</span>
+                                    <span style={{fontSize: 13, fontWeight: 400}}>Vui lòng liên hệ chủ trọ để xem vị trí</span>
+                                </div>
+                            )}
+                            
+                            <div style={{marginTop: 15, display: 'flex', gap: 10, alignItems: 'center', color: '#475569', fontSize: '14px'}}>
+                                <FaMapMarkerAlt color="#ef4444"/>
+                                <span>{post.full_address}</span>
+                            </div>
+                        </div>
                     </div>
 
                     {/* CỘT PHẢI: SIDEBAR */}
@@ -247,7 +297,7 @@ const RoommateDetailPage = () => {
                                     src={post.user?.user_avatar || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} 
                                     alt="User" className="rmd-avatar"
                                 />
-                                <span className="rmd-host-name">{post.user?.user_full_name || 'Người tìm bạn'}</span>
+                                <span className="rmd-host-name">{`${post.user?.user_first_name || ""} ${post.user?.user_last_name || ""}`.trim() || 'Người tìm bạn'}</span>
                                 <span className="rmd-host-sub">
                                     Đã tham gia: {new Date(post.user?.user_joined || post.created_at).getFullYear()}
                                 </span>

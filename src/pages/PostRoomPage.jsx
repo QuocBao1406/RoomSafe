@@ -5,11 +5,21 @@ import { UserContext } from '../contexts/UserContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import { toast, Toaster } from 'react-hot-toast';
 import '../css/PostRoomPage.css';
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap, ZoomControl } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 import { 
             FaHome, FaMapMarked , FaImages, FaInfoCircle, FaDollarSign, FaCloudUploadAlt, 
             FaTrash, FaTags, FaMapPin, FaLightbulb,
             FaPaperPlane
         } from 'react-icons/fa';
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 const PostRoomPage = () => {
     const { user } = useContext(UserContext);
@@ -31,6 +41,39 @@ const PostRoomPage = () => {
     const [selectedProvince, setSelectedProvince] = useState(''); // ID tinh dang chon
     const [selectedDistrict, setSelectedDistrict] = useState(''); // ID huyen dang chon
 
+    const [coordinates, setCoordinates] = useState({ lat: 21.0285, lng: 105.8542 }); // toa do ban dau (Ha Noi)
+
+    const MapUpdater = ({ center }) => {
+        const map = useMap();
+        useEffect(() => {
+            if (center) {
+                map.flyTo(center, 13); // Zoom level 13
+            }
+        }, [center, map]);
+        return null;
+    };
+
+    // 3. COMPONENT CON ĐỂ KÉO THẢ MARKER
+    const DraggableMarker = () => {
+        const map = useMapEvents({
+            click(e) {
+                setCoordinates(e.latlng);
+            },
+        });
+
+        return (
+            <Marker
+                draggable={true}
+                eventHandlers={{
+                    dragend: (e) => {
+                        setCoordinates(e.target.getLatLng());
+                    },
+                }}
+                position={coordinates}
+            />
+        );
+    };
+
     useEffect(() => {
         const fetchProvinces = async () => {
             try {
@@ -44,6 +87,32 @@ const PostRoomPage = () => {
         };
         fetchProvinces();
     }, []);
+
+    useEffect(() => {
+        const fetchCoordinates = async () => {
+            const wardName = watchedValues.ward || '';
+            const districtName = watchedValues.district || '';
+            const cityName = watchedValues.city || '';
+
+            if (cityName && districtName) {
+                const query = `${wardName}, ${districtName}, ${cityName}`;
+                try {
+                    const res = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`);
+                    if (res.data && res.data.length > 0) {
+                        setCoordinates({
+                            lat: parseFloat(res.data[0].lat),
+                            lng: parseFloat(res.data[0].lon)
+                        });
+                    }
+                } catch (error) {
+                    console.error("Lỗi tìm tọa độ:", error);
+                }
+            }
+        };
+        // Debounce để không gọi API quá nhiều
+        const timeoutId = setTimeout(() => fetchCoordinates(), 1000);
+        return () => clearTimeout(timeoutId);
+    }, [watchedValues.city, watchedValues.district, watchedValues.ward]);
 
     // xu ly khi chon tinh/thanh pho
     const handleProvinceChange = async (e) => {
@@ -198,6 +267,9 @@ const PostRoomPage = () => {
             formData.append('price_water', data.price_water || 0);
             formData.append('price_internet', data.price_internet || 0);
             formData.append('expire_duration', data.duration || 7);
+
+            formData.append('latitude', coordinates.lat);
+            formData.append('longitude', coordinates.lng);
 
             // append du lieu k co trong data (user_id va anh)
             formData.append('user_id', Number(user.id));
@@ -459,6 +531,32 @@ const PostRoomPage = () => {
                                     placeholder="Hãy viết mô tả đầy đủ về: tiện ích, nội thất, giờ giấc, an ninh..."
                                 ></textarea>
                             </div>
+                        </div>
+
+                        <div className="map-container-box">
+                            <MapContainer 
+                                center={[coordinates.lat, coordinates.lng]} 
+                                zoom={13} 
+                                scrollWheelZoom={true} // Bật lăn chuột để zoom
+                                style={{ height: "100%", width: "100%" }}
+                                zoomControl={false} // Tắt nút zoom mặc định ở góc trái trên
+                            >
+                                {/* 1. Giao diện bản đồ đẹp hơn (CartoDB Voyager) */}
+                                <TileLayer
+                                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                                />
+
+                                <DraggableMarker />
+                                
+                                <MapUpdater center={[coordinates.lat, coordinates.lng]} />
+
+                                {/* 2. Đưa nút Zoom xuống góc phải dưới */}
+                                <ZoomControl position="bottomright" />
+                            </MapContainer>
+                            
+                            {/* Hiệu ứng bóng mờ đè lên map để tạo chiều sâu (Optional) */}
+                            <div className="map-overlay-gradient"></div>
                         </div>
                     </div>
 

@@ -52,6 +52,7 @@ router.post("/create", async (req, res) => {
                 address, district, city, ward,
                 category, user_id,
                 price_electricity, price_water, price_internet, expire_duration,
+                latitude, longitude
             } = req.body;
 
             const imageFiles = req.files;
@@ -91,6 +92,9 @@ router.post("/create", async (req, res) => {
                     price_internet: parseInt(price_internet) || 0,
                     expired_at: expiredDate,
 
+                    post_latitude: latitude ? parseFloat(latitude) : null,
+                    post_longitude: longitude ? parseFloat(longitude) : null,
+
                     user_id: BigInt(userIdNum),
 
                     images: {
@@ -119,7 +123,7 @@ router.post("/create", async (req, res) => {
             res.status(500).json({ message: "Lỗi server: " + error.message });
         }
     })
-})
+});
 
 router.delete("/delete/:id", async (req, res) => {
     try {
@@ -274,6 +278,13 @@ router.get("/public", async (req, res) => {
             },
             include: {
                 images: true,
+                user: {
+                    select: {
+                        user_first_name: true,
+                        user_last_name: true,
+                        user_avatar: true
+                    }
+                }
             },
             orderBy: {
                 created_at: 'desc'

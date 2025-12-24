@@ -232,6 +232,42 @@
 .rmd-lb-prev { left: 20px; }
 .rmd-lb-next { right: 20px; }
 
+.rmd-map-box {
+    height: 400px;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--rmd-border);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    z-index: 1;
+    position: relative;
+}
+
+.rmd-map-placeholder {
+    height: 200px;
+    background: #f1f5f9;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+/* Leaflet Popup overrides để khớp với style */
+.leaflet-popup-content-wrapper {
+    border-radius: 8px !important;
+    padding: 0 !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.leaflet-popup-content {
+    margin: 12px 16px !important;
+    line-height: 1.4 !important;
+    font-family: 'Be Vietnam Pro', sans-serif !important;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
     .rmd-body { grid-template-columns: 1fr; }

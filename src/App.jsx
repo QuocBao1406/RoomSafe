@@ -17,12 +17,21 @@ import ProfilePage from './pages/ProfilePage.jsx';
 import RoomDetailPage from './pages/RoomDetailPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import RoommateDetailPage from './pages/RoommateDetailPage.jsx';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage.jsx';
+import AdminUsersPage from './pages/admin/AdminUsersPage.jsx';
+import AdminPostsPage from './pages/admin/AdminPostsPage.jsx';
+import { useLocation } from 'react-router-dom';
+import SupportChat from './components/SupportChat.jsx';
 
-function App() {
+function AppContent() {
+
+  const location = useLocation();
+
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
   return (
-    <Router>
-
-      <Navbar />
+    <>
+      {!isAdminRoute && <Navbar />}
 
       <main className="main-content-wrapper">
         <Routes>
@@ -31,11 +40,17 @@ function App() {
           <Route path="/" element={<FindRoomPage />} />
           <Route path="/roommate/list" element={<RoommateListPage />} />
 
+          <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
+            <Route path="/admin" element={<AdminDashboardPage />} />
+            <Route path="/admin/users" element={<AdminUsersPage />} />
+            <Route path="/admin/posts" element={<AdminPostsPage />} />
+          </Route>
+
           {/* --- LOGGED IN USER --- */}
           {/* Bao gồm cả Chủ trọ và Người tìm trọ */}
           <Route element={<ProtectedRoute allowedRoles={['LANDLORD', 'TENANT']} />}>
              <Route path="/profile" element={<ProfilePage />} />
-             <Route path="/room/:id" element={<RoomDetailPage />} /> {/* Chi tiết phòng */}
+             <Route path="/room/:id" element={<RoomDetailPage />} />
           </Route>
 
           {/* --- LANDLORD ONLY --- */}
@@ -56,10 +71,19 @@ function App() {
         </Routes>
       </main>
 
-      <Footer />
-      
+      <SupportChat />
+
+      {!isAdminRoute && <Footer />}
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }
 
-export default App
+export default App;

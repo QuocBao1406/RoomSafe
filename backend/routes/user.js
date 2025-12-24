@@ -11,7 +11,7 @@ router.get('/profile', verifyToken, async (req, res) => {
         const user = await prisma.users.findUnique({
             where: { user_id: BigInt(userId) },
             select: {
-                user_id: true, user_name: true, user_email: true, user_full_name: true,
+                user_id: true, user_email: true, user_first_name: true, user_last_name: true,
                 user_phone: true, user_address: true, user_gender: true, user_birthday: true,
                 user_bio: true, user_avatar: true, user_role: true, user_created_at: true,
                 user_avg_rating: true
@@ -42,10 +42,11 @@ router.get('/profile', verifyToken, async (req, res) => {
 router.put('/profile', verifyToken, upload.single('avatar'), async (req, res) => {
     try {
         const userId = req.user.id;
-        const { fullName, phone, address, gender, birthday, bio } = req.body;
+        const { firstName, lastName, phone, address, gender, birthday, bio } = req.body;
         
         let updateData = {
-            user_full_name: fullName,
+            user_first_name: firstName,
+            user_last_name: lastName,
             user_phone: phone,
             user_address: address,
             user_gender: gender,

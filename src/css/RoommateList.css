@@ -1,58 +1,124 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+/* src/css/RoommateList.css */
+
+
+:root {
+    --primary: #4f46e5;
+    --bg-body: #f8fafc;
+    --text-main: #1e293b;
+    --radius-md: 12px;
+}
 
 .rl-wrapper {
-    /* NỀN XỊN: Mesh Gradient nhẹ giúp bớt trống trải */
-    background-color: #f8fafc;
+    background-color: var(--bg-body);
+    /* Giữ nền gradient nhẹ */
     background-image: 
-        radial-gradient(at 0% 0%, hsla(253,16%,7%,0) 0, transparent 50%), 
-        radial-gradient(at 50% 0%, hsla(225,39%,30%,0) 0, transparent 50%), 
-        radial-gradient(at 100% 0%, hsla(339,49%,30%,0) 0, transparent 50%);
-    background-attachment: fixed;
+        radial-gradient(at 0% 0%, hsla(253,16%,7%,0.02) 0, transparent 50%), 
+        radial-gradient(at 50% 0%, hsla(225,39%,30%,0.02) 0, transparent 50%);
     min-height: 100vh;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    color: #1e293b;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    color: var(--text-main);
     padding-top: 20px;
     padding-bottom: 60px;
 }
 
-/* LAYOUT 2 CỘT */
 .rl-container {
     max-width: 1280px; margin: 0 auto; padding: 0 20px;
-    display: grid; grid-template-columns: 300px 1fr; gap: 30px; align-items: start;
+    display: grid; grid-template-columns: 350px 1fr; gap: 20px; align-items: start;
 }
 
-/* --- SIDEBAR (Giữ nguyên cấu trúc, thêm shadow đậm hơn) --- */
 .rl-sidebar {
-    background: white; border-radius: 20px; padding: 24px;
-    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); /* Bóng đổ xịn hơn */
-    border: 1px solid rgba(255,255,255,0.5);
+    background: white; 
+    border-radius: 16px; 
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
     position: sticky; top: 90px;
-    max-height: calc(100vh - 110px); overflow-y: auto;
+    max-height: calc(100vh - 110px); 
+    overflow-y: auto;
+    /* Custom Scrollbar cho đẹp */
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
 }
-/* ... (Giữ các class input/select cũ của sidebar) ... */
-.rl-filter-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #e2e8f0; }
-.rl-filter-head h3 { font-size: 1.1rem; font-weight: 800; margin: 0; display: flex; align-items: center; gap: 8px; }
-.rl-reset-btn { background: none; border: none; color: #94a3b8; font-weight: 600; cursor: pointer; transition: 0.2s; }
+
+/* Header bộ lọc */
+.rl-filter-head { 
+    display: flex; justify-content: space-between; align-items: center; 
+    margin-bottom: 24px; padding-bottom: 16px; 
+    border-bottom: 1px solid #f1f5f9; 
+}
+.rl-filter-head h3 { 
+    font-size: 1.1rem; font-weight: 800; color: #1e293b; margin: 0; 
+    display: flex; align-items: center; gap: 8px; 
+}
+.rl-reset-btn { 
+    background: none; border: none; color: #94a3b8; font-weight: 600; font-size: 0.85rem;
+    cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 4px;
+}
 .rl-reset-btn:hover { color: #ef4444; }
+
+/* Các nhóm input */
 .rl-group { margin-bottom: 24px; }
-.rl-label { display: block; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-.rl-input, .rl-select { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 0.9rem; background: #f8fafc; outline: none; box-sizing: border-box; transition: 0.2s; }
-.rl-input:focus, .rl-select:focus { border-color: #6366f1; background: white; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+.rl-label { 
+    display: block; font-size: 0.8rem; font-weight: 700; color: #475569; 
+    margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; 
+}
+
+/* Input & Select hiện đại */
+.rl-input, .rl-select { 
+    width: 100%; padding: 12px; 
+    border: 1px solid #e2e8f0; border-radius: 10px; 
+    font-size: 0.9rem; background: #f8fafc; color: #334155;
+    outline: none; box-sizing: border-box; transition: 0.2s; 
+}
+.rl-input:focus, .rl-select:focus { 
+    border-color: var(--primary); background: white; 
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); 
+}
+
+/* Toggle chọn giới tính */
+.rl-toggle-group { display: flex; background: #f1f5f9; padding: 4px; border-radius: 10px; }
+.rl-toggle-item { 
+    flex: 1; text-align: center; padding: 8px; font-size: 0.85rem; font-weight: 600; 
+    color: #64748b; border-radius: 8px; cursor: pointer; transition: 0.2s; 
+}
+.rl-toggle-item.active { 
+    background: white; color: var(--primary); 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-weight: 700; 
+}
+
+/* Input khoảng giá */
 .rl-range-row { display: flex; align-items: center; gap: 8px; }
-.rl-range-row input { text-align: center; }
-.rl-toggle-group { display: flex; background: #f1f5f9; padding: 4px; border-radius: 12px; }
-.rl-toggle-item { flex: 1; text-align: center; padding: 8px; font-size: 0.85rem; font-weight: 600; color: #64748b; border-radius: 10px; cursor: pointer; transition: 0.2s; }
-.rl-toggle-item.active { background: white; color: #4f46e5; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 700; }
+.rl-range-row span { color: #cbd5e1; font-weight: bold; }
+
+/* Chips (Thẻ chọn habits/hobbies) */
 .rl-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-.rl-chip { font-size: 0.8rem; padding: 6px 12px; border-radius: 20px; background: white; border: 1px solid #e2e8f0; color: #64748b; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
-.rl-chip.active { background: #eff6ff; border-color: #4f46e5; color: #4f46e5; font-weight: 700; }
-.rl-btn-apply { width: 100%; padding: 14px; background: #1e293b; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(30, 41, 59, 0.2); transition: 0.2s; }
-.rl-btn-apply:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(30, 41, 59, 0.3); }
+.rl-chip { 
+    font-size: 0.75rem; padding: 6px 14px; border-radius: 20px; 
+    background: white; border: 1px solid #e2e8f0; color: #64748b; 
+    cursor: pointer; transition: all 0.2s; font-weight: 500; user-select: none;
+}
+.rl-chip:hover { border-color: #cbd5e1; background: #f8fafc; }
+.rl-chip.active { 
+    background: #eef2ff; border-color: var(--primary); 
+    color: var(--primary); font-weight: 700; 
+}
+
+/* Nút áp dụng */
+.rl-btn-apply { 
+    width: 100%; padding: 14px; 
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); 
+    color: white; border: none; border-radius: 12px; 
+    font-weight: 700; cursor: pointer; 
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2); transition: 0.2s; 
+}
+.rl-btn-apply:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(15, 23, 42, 0.3); }
 
 
-/* --- MAIN CONTENT --- */
+/* ==========================================================================
+   2. PHẦN MAIN CONTENT (GRID & CARD) - GIỮ NGUYÊN FILE GỐC CỦA BẠN
+   ========================================================================== */
 
-/* 1. SORT BAR (Thanh công cụ trên cùng) - Điểm nhấn mới */
+/* SORT BAR */
 .rl-sort-bar {
     background: white; border-radius: 16px; padding: 15px 20px;
     display: flex; justify-content: space-between; align-items: center;
@@ -62,7 +128,6 @@
 .rl-sb-left { display: flex; align-items: center; gap: 15px; }
 .rl-result-count { font-size: 1rem; color: #64748b; font-weight: 500; }
 .rl-result-count b { color: #1e293b; font-weight: 800; }
-
 .rl-sb-right { display: flex; align-items: center; gap: 15px; }
 .rl-sort-select {
     border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: 10px;
@@ -72,7 +137,7 @@
 .rl-vm-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer; color: #94a3b8; }
 .rl-vm-btn.active { background: white; color: #4f46e5; shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
-/* 2. GRID & CARD XỊN */
+/* GRID & CARD */
 .rl-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px;
 }
@@ -81,15 +146,14 @@
     background: white; border-radius: 20px; overflow: hidden;
     position: relative; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     border: 1px solid transparent; cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.03); /* Bóng mờ ban đầu */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03); 
 }
 .rl-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.12); /* Bóng đậm khi hover */
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.12);
     border-color: #e2e8f0;
 }
 
-/* Ảnh Card & Badge */
 .rl-card-thumb { height: 200px; position: relative; overflow: hidden; background: #cbd5e1; }
 .rl-card-thumb img { width: 100%; height: 100%; object-fit: cover; transition: 0.7s; }
 .rl-card:hover .rl-card-thumb img { transform: scale(1.08); }
@@ -122,9 +186,16 @@
 }
 .rl-card:hover .rl-card-title { color: #4f46e5; }
 
-.rl-card-meta { font-size: 0.85rem; color: #64748b; display: flex; align-items: center; gap: 5px; }
+.rl-card-meta { 
+    font-size: 0.85rem; 
+    color: #64748b; 
+    display: flex; 
+    align-items: flex-start;
+    gap: 5px; 
+}
+.rl-card-meta svg { flex-shrink: 0; margin-top: 3px; }
 
-/* Tags (Specs) - Làm nổi bật hơn */
+/* Tags */
 .rl-tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .rl-tag {
     font-size: 0.7rem; padding: 4px 10px; border-radius: 30px; font-weight: 600;
@@ -134,19 +205,19 @@
 .rl-tag.age { background: #f0fdf4; color: #16a34a; border: 1px solid #dcfce7; }
 .rl-tag.job { background: #fff7ed; color: #f97316; border: 1px solid #ffedd5; }
 
-/* Footer Card - User Info */
+/* Footer */
 .rl-card-foot {
     padding: 12px 18px; background: #fcfcfc; border-top: 1px dashed #e2e8f0;
     display: flex; justify-content: space-between; align-items: center;
 }
 .rl-user { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600; color: #475569; }
 .rl-avatar { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-.rl-verified { color: #3b82f6; margin-left: -2px; } /* Tích xanh */
+.rl-verified { color: #3b82f6; margin-left: -2px; }
 
 .rl-time { font-size: 0.75rem; color: #94a3b8; display: flex; align-items: center; gap: 4px; }
 
 /* Responsive */
 @media (max-width: 900px) {
     .rl-container { grid-template-columns: 1fr; }
-    .rl-sidebar { display: none; /* Mobile ẩn sidebar hoặc làm drawer */ }
+    .rl-sidebar { display: none; }
 }

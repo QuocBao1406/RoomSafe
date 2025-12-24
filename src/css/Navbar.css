@@ -305,3 +305,89 @@ nav-menu-mobile {
     text-align: center;
   }
 }
+
+
+/* Container bao ngoài để căn chỉnh */
+.nav-chat-btn-wrapper {
+  margin: 0 15px;
+  display: flex;
+  align-items: center;
+}
+
+/* Nút Chat chính */
+.nav-chat-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #007bff, #0056b3); /* Màu chủ đạo (Primary) */
+  color: white;
+  border: none;
+  border-radius: 25px; /* Bo tròn viên thuốc */
+  cursor: pointer;
+  font-family: 'Inter', sans-serif; /* Hoặc font chữ của web bạn */
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* Đổ bóng nhẹ */
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hiệu ứng Hover: Sáng hơn và bóng đậm hơn */
+.nav-chat-btn:hover {
+  background: linear-gradient(135deg, #218cff, #0069d9);
+  box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Label text (chữ "Tin nhắn") */
+.chat-label {
+  display: block;
+}
+
+/* Box chứa icon để xử lý dấu chấm đỏ */
+.chat-icon-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dấu chấm đỏ thông báo */
+.notification-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background-color: #ff3b30; /* Màu đỏ cảnh báo */
+  border-radius: 50%;
+  border: 1.5px solid #fff; /* Viền trắng để tách biệt */
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  animation: pulse-dot 2s infinite;
+}
+
+/* Hiệu ứng nhấp nháy cho dấu chấm đỏ */
+@keyframes pulse-dot {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 4px rgba(255, 59, 48, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+}
+
+/* --- RESPONSIVE MOBILE --- */
+@media screen and (max-width: 960px) {
+  /* Trên mobile có thể ẩn chữ đi cho gọn, chỉ hiện icon tròn */
+  .nav-chat-btn {
+    padding: 10px;
+    border-radius: 50%; /* Tròn xoe */
+  }
+  
+  .chat-label {
+    display: none; /* Ẩn chữ trên mobile */
+  }
+  
+  .nav-chat-btn-wrapper {
+    margin: 0 10px;
+  }
+}

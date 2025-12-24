@@ -4,13 +4,33 @@ import axios from 'axios';
 import { toast, Toaster } from 'react-hot-toast';
 import { UserContext } from '../contexts/UserContext.jsx';
 import '../css/RoommatePost.css';
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap, ZoomControl } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
 // Icons
 import { 
-    FaMapMarked, FaDollarSign, FaImages, FaInfoCircle, FaHome, FaCloudUploadAlt, FaTrash, 
+    FaMapMarkedAlt, FaDollarSign, FaImages, FaInfoCircle, FaHome, FaCloudUploadAlt, FaTrash, 
     FaVenusMars, FaBriefcase, FaHeart, FaPaperPlane, FaLightbulb, FaMapPin, FaRulerCombined,
-    FaGamepad, FaHandHoldingUsd, FaBolt, FaTint, FaWifi, FaClock, FaCheckCircle
+    FaGamepad, FaBolt, FaTint, FaWifi, FaClock, FaCheckCircle, FaStar
 } from 'react-icons/fa';
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+const HABITS_LIST = [
+    "Sạch sẽ", "Yên tĩnh", "Ngủ sớm", "Không hút thuốc", 
+    "Thân thiện", "Nuôi thú cưng", "Nấu ăn", "Gọn gàng"
+];
+
+const HOBBIES_LIST = [
+    "Game", "Thể thao", "Đọc sách", "Du lịch", 
+    "Âm nhạc", "Xem phim", "Công nghệ", "Vẽ tranh"
+];
 
 const RoommatePostPage = () => {
     const { user } = useContext(UserContext);
@@ -23,33 +43,49 @@ const RoommatePostPage = () => {
     const [previewImages, setPreviewImages] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
     
-    // Data Tỉnh/Huyện/Xã
     const [provinces, setProvinces] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [wards, setWards] = useState([]);
 
-    // Form Data (Full Option từ DB)
+    const [coordinates, setCoordinates] = useState({ lat: 21.0285, lng: 105.8542 }); // Mặc định Hà Nội
+
     const [formData, setFormData] = useState({
         title: '', description: '', price: '', area: '', 
-        
-        // Dịch vụ
         priceElectricity: '', priceWater: '', priceInternet: '',
-        
-        // Địa điểm
         city: '', district: '', ward: '', address: '',
-        
-        // Cấu hình tin
-        duration: '30', // Mặc định 30 ngày
-
-        // Chi tiết tìm bạn (Bảng RoommateDetails)
+        duration: '30', 
         genderPartner: 'ALL', ageMin: '', ageMax: '', career: '', 
         habits: '', hobbies: '', sharedCost: '',
-        
         contactName: user?.name || '', 
         contactPhone: user?.phone || '',
     });
 
-    // --- EFFECTS: LOAD LOCATION ---
+    const MapUpdater = ({ center }) => {
+        const map = useMap();
+        useEffect(() => {
+            if (center) {
+                map.flyTo(center, 13, { animate: true, duration: 1.5 });
+            }
+        }, [center, map]);
+        return null;
+    };
+
+    const DraggableMarker = () => {
+        const map = useMapEvents({
+            click(e) { setCoordinates(e.latlng); },
+        });
+        return (
+            <Marker
+                draggable={true}
+                eventHandlers={{
+                    dragend: (e) => { setCoordinates(e.target.getLatLng()); },
+                }}
+                position={coordinates}
+            />
+        );
+    };
+
+    // --- EFFECTS ---
     useEffect(() => {
         const fetchProvinces = async () => {
             try {
@@ -60,15 +96,33 @@ const RoommatePostPage = () => {
         fetchProvinces();
     }, []);
 
-    // --- HANDLERS: LOCATION ---
+    useEffect(() => {
+        const fetchCoordinates = async () => {
+            const { city, district, ward } = formData;
+            if (city && district) {
+                const query = `${ward ? ward + ',' : ''} ${district}, ${city}`;
+                try {
+                    const res = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${query}&countrycodes=vn&limit=1`);
+                    if (res.data && res.data.length > 0) {
+                        setCoordinates({
+                            lat: parseFloat(res.data[0].lat),
+                            lng: parseFloat(res.data[0].lon)
+                        });
+                    }
+                } catch (error) { console.error("Lỗi tìm tọa độ:", error); }
+            }
+        };
+        const timeoutId = setTimeout(() => fetchCoordinates(), 1000);
+        return () => clearTimeout(timeoutId);
+    }, [formData.city, formData.district, formData.ward]);
+
+    // --- HANDLERS ---
     const handleProvinceChange = async (e) => {
         const idx = e.target.selectedIndex;
         const pId = e.target.value;
         const pName = e.target.childNodes[idx].getAttribute('data-name');
-        
         setFormData(prev => ({ ...prev, city: pName, district: '', ward: '' }));
         setDistricts([]); setWards([]);
-
         if (pId) {
             try {
                 const res = await axios.get(`https://esgoo.net/api-tinhthanh/2/${pId}.htm`);
@@ -81,10 +135,8 @@ const RoommatePostPage = () => {
         const idx = e.target.selectedIndex;
         const dId = e.target.value;
         const dName = e.target.childNodes[idx].getAttribute('data-name');
-
         setFormData(prev => ({ ...prev, district: dName, ward: '' }));
         setWards([]);
-
         if (dId) {
             try {
                 const res = await axios.get(`https://esgoo.net/api-tinhthanh/3/${dId}.htm`);
@@ -99,9 +151,21 @@ const RoommatePostPage = () => {
         setFormData(prev => ({ ...prev, ward: wName }));
     };
 
-    // --- HANDLERS: FORM INPUT ---
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleToggleTag = (field, value) => {
+        const currentStr = formData[field] || '';
+        let items = currentStr ? currentStr.split(',') : [];
+        if (items.includes(value)) items = items.filter(item => item !== value);
+        else items.push(value);
+        setFormData({ ...formData, [field]: items.join(',') });
+    };
+
+    const isTagSelected = (field, value) => {
+        const currentStr = formData[field] || '';
+        return currentStr.split(',').includes(value);
     };
 
     const formatPrice = (price) => {
@@ -109,7 +173,6 @@ const RoommatePostPage = () => {
         return Number(price).toLocaleString('vi-VN');
     };
 
-    // --- HANDLERS: FILES (DRAG & DROP) ---
     const processFiles = (files) => {
         if (selectedFiles.length + files.length > 5) {
             toast.error("Chỉ được chọn tối đa 5 ảnh!");
@@ -142,15 +205,10 @@ const RoommatePostPage = () => {
         });
     };
 
-    // --- SUBMIT ---
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        // 1. Lấy Token chuẩn
         let token = localStorage.getItem('token');
-        if (token && token.startsWith('"') && token.endsWith('"')) {
-            token = token.slice(1, -1);
-        }
+        if (token && token.startsWith('"') && token.endsWith('"')) token = token.slice(1, -1);
 
         if (!user || !token) {
             toast.error("Vui lòng đăng nhập để đăng bài");
@@ -163,33 +221,21 @@ const RoommatePostPage = () => {
         }
 
         setLoading(true);
-
         try {
             const data = new FormData();
-            // Append User ID
             data.append("user_id", user.id);
-            
-            // Append Text Fields
-            Object.keys(formData).forEach(key => {
-                data.append(key, formData[key]);
-            });
+            Object.keys(formData).forEach(key => data.append(key, formData[key]));
 
-            // Append Files
-            selectedFiles.forEach(file => {
-                data.append('images', file);
-            });
+            data.append('latitude', coordinates.lat);
+            data.append('longitude', coordinates.lng);
 
-            // Gọi API (Direct Call)
+            selectedFiles.forEach(file => data.append('images', file));
+
             await axios.post('http://localhost:5000/api/roommates/create', data, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
             });
-
             toast.success("Đăng tin thành công!");
             setTimeout(() => navigate("/roommate/manage"), 1500);
-
         } catch (error) {
             console.error("Submit Error:", error);
             toast.error(error.response?.data?.message || "Lỗi khi đăng bài");
@@ -200,17 +246,17 @@ const RoommatePostPage = () => {
 
     return (
         <div className="rp-container">
-            <Toaster position="top-center" />
+            <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
             
             <div className="rp-content-width">
                 {/* HERO HEADER */}
                 <div className="rp-header">
-                    <h1>Tìm Bạn Cùng Phòng Lý Tưởng</h1>
-                    <p>Kết nối, chia sẻ không gian sống và giảm bớt gánh nặng chi phí cùng cộng đồng RoomSafe.</p>
+                    <h1>Đăng Tin Tìm Bạn Cùng Phòng</h1>
+                    <p>Kết nối nhanh chóng, chia sẻ không gian sống lý tưởng cùng cộng đồng RoomSafe.</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="rp-grid">
-                    {/* --- CỘT TRÁI: NHẬP LIỆU --- */}
+                    {/* --- CỘT TRÁI: INPUT --- */}
                     <div className="rp-col-left">
                         
                         {/* 1. THÔNG TIN CƠ BẢN */}
@@ -227,31 +273,90 @@ const RoommatePostPage = () => {
 
                             <div className="rp-row rp-cols-2">
                                 <div className="rp-group">
-                                    <label><FaDollarSign/> Giá thuê (VNĐ/tháng) <span className="rp-required">*</span></label>
-                                    <input type="number" className="rp-input" name="price" placeholder="1500000" value={formData.price} onChange={handleChange} required />
+                                    <label><FaDollarSign className="text-yellow-500"/> Giá thuê (VNĐ/tháng) <span className="rp-required">*</span></label>
+                                    <input type="number" className="rp-input" name="price" placeholder="Ví dụ: 1500000" value={formData.price} onChange={handleChange} required />
                                 </div>
                                 <div className="rp-group">
-                                    <label><FaRulerCombined/> Diện tích (m²) <span className="rp-required">*</span></label>
-                                    <input type="number" className="rp-input" name="area" placeholder="25" value={formData.area} onChange={handleChange} required />
+                                    <label><FaRulerCombined className="text-blue-500"/> Diện tích (m²) <span className="rp-required">*</span></label>
+                                    <input type="number" className="rp-input" name="area" placeholder="Ví dụ: 25" value={formData.area} onChange={handleChange} required />
                                 </div>
                             </div>
 
                             <div className="rp-group">
-                                <label><FaClock/> Thời hạn hiển thị tin</label>
+                                <label><FaClock className="text-gray-500"/> Thời hạn hiển thị tin</label>
                                 <select className="rp-select" name="duration" value={formData.duration} onChange={handleChange}>
                                     <option value="7">7 Ngày</option>
                                     <option value="15">15 Ngày</option>
-                                    <option value="30">30 Ngày</option>
+                                    <option value="30">30 Ngày (Khuyên dùng)</option>
                                     <option value="60">60 Ngày</option>
                                 </select>
                             </div>
                         </div>
 
-                        {/* 2. CHI PHÍ DỊCH VỤ */}
+                        {/* 2. ĐỊA ĐIỂM */}
                         <div className="rp-card">
                             <div className="rp-section-header">
-                                <div className="rp-icon-box"><FaHandHoldingUsd /></div>
-                                <h3>Chi phí dịch vụ (Bỏ trống nếu miễn phí)</h3>
+                                <div className="rp-icon-box"><FaMapMarkedAlt /></div>
+                                <h3>Địa điểm cho thuê</h3>
+                            </div>
+                            <div className="rp-row rp-cols-3">
+                                <div className="rp-group">
+                                    <label>Tỉnh / Thành phố <span className="rp-required">*</span></label>
+                                    <select className="rp-select" onChange={handleProvinceChange} required>
+                                        <option value="">-- Chọn Tỉnh --</option>
+                                        {provinces.map(p => <option key={p.id} value={p.id} data-name={p.full_name}>{p.full_name}</option>)}
+                                    </select>
+                                </div>
+                                <div className="rp-group">
+                                    <label>Quận / Huyện <span className="rp-required">*</span></label>
+                                    <select className="rp-select" onChange={handleDistrictChange} disabled={!districts.length} required>
+                                        <option value="">-- Chọn Quận --</option>
+                                        {districts.map(d => <option key={d.id} value={d.id} data-name={d.full_name}>{d.full_name}</option>)}
+                                    </select>
+                                </div>
+                                <div className="rp-group">
+                                    <label>Phường / Xã <span className="rp-required">*</span></label>
+                                    <select className="rp-select" onChange={handleWardChange} disabled={!wards.length} required>
+                                        <option value="">-- Chọn Phường --</option>
+                                        {wards.map(w => <option key={w.id} value={w.id} data-name={w.full_name}>{w.full_name}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="rp-group">
+                                <label>Địa chỉ cụ thể <span className="rp-required">*</span></label>
+                                <input className="rp-input" name="address" placeholder="Số nhà, tên đường, khu dân cư..." value={formData.address} onChange={handleChange} required />
+                            </div>
+
+                            <div style={{marginTop: '20px'}}>
+                                <label style={{marginBottom:'10px', display:'block', fontWeight:600}}>Ghim vị trí trên bản đồ <span className="rp-required">*</span></label>
+                                <div className="rp-map-box">
+                                    <MapContainer 
+                                        center={[coordinates.lat, coordinates.lng]} 
+                                        zoom={13} 
+                                        scrollWheelZoom={true} 
+                                        style={{ height: "100%", width: "100%" }}
+                                        zoomControl={false}
+                                    >
+                                        <TileLayer
+                                            attribution='&copy; CARTO'
+                                            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                                        />
+                                        <DraggableMarker />
+                                        <MapUpdater center={[coordinates.lat, coordinates.lng]} />
+                                        <ZoomControl position="bottomright" />
+                                    </MapContainer>
+                                </div>
+                                <small style={{color: '#64748b', marginTop: '5px', display:'block'}}>
+                                    * Kéo thả ghim đỏ để chọn vị trí chính xác.
+                                </small>
+                            </div>
+                        </div>
+
+                        {/* 3. CHI PHÍ DỊCH VỤ */}
+                        <div className="rp-card">
+                            <div className="rp-section-header">
+                                <div className="rp-icon-box"><FaBolt /></div>
+                                <h3>Chi phí dịch vụ</h3>
                             </div>
                             <div className="rp-row rp-cols-3">
                                 <div className="rp-group">
@@ -268,72 +373,26 @@ const RoommatePostPage = () => {
                                 </div>
                             </div>
                             <div className="rp-group">
-                                <label>Cách chia tiền (Ghi chú chi tiết)</label>
+                                <label>Ghi chú chia tiền</label>
                                 <input className="rp-input" name="sharedCost" placeholder="VD: Tiền phòng chia đôi, điện nước theo công tơ..." value={formData.sharedCost} onChange={handleChange} />
                             </div>
                         </div>
 
-                        {/* 3. ĐỊA ĐIỂM */}
-                        <div className="rp-card">
-                            <div className="rp-section-header">
-                                <div className="rp-icon-box"><FaMapMarked /></div>
-                                <h3>Địa điểm</h3>
-                            </div>
-                            <div className="rp-row rp-cols-3">
-                                <div className="rp-group">
-                                    <label>Tỉnh / Thành phố <span className="rp-required">*</span></label>
-                                    <select className="rp-select" onChange={handleProvinceChange} required>
-                                        <option value="">-- Chọn --</option>
-                                        {provinces.map(p => <option key={p.id} value={p.id} data-name={p.full_name}>{p.full_name}</option>)}
-                                    </select>
-                                </div>
-                                <div className="rp-group">
-                                    <label>Quận / Huyện <span className="rp-required">*</span></label>
-                                    <select className="rp-select" onChange={handleDistrictChange} disabled={!districts.length} required>
-                                        <option value="">-- Chọn --</option>
-                                        {districts.map(d => <option key={d.id} value={d.id} data-name={d.full_name}>{d.full_name}</option>)}
-                                    </select>
-                                </div>
-                                <div className="rp-group">
-                                    <label>Phường / Xã <span className="rp-required">*</span></label>
-                                    <select className="rp-select" onChange={handleWardChange} disabled={!wards.length} required>
-                                        <option value="">-- Chọn --</option>
-                                        {wards.map(w => <option key={w.id} value={w.id} data-name={w.full_name}>{w.full_name}</option>)}
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="rp-group">
-                                <label>Địa chỉ cụ thể (Số nhà, tên đường) <span className="rp-required">*</span></label>
-                                <input className="rp-input" name="address" placeholder="VD: Số 123 đường Nguyễn Văn Linh..." value={formData.address} onChange={handleChange} required />
-                            </div>
-                        </div>
-
-                        {/* 4. TIÊU CHÍ TÌM BẠN */}
+                        {/* 4. TIÊU CHÍ */}
                         <div className="rp-card">
                             <div className="rp-section-header">
                                 <div className="rp-icon-box"><FaVenusMars /></div>
                                 <h3>Yêu cầu người ở ghép</h3>
                             </div>
-                            <div className="rp-row rp-cols-3">
+                            <div className="rp-row rp-cols-2">
                                 <div className="rp-group">
-                                    <label>Giới tính</label>
+                                    <label>Giới tính mong muốn</label>
                                     <select className="rp-select" name="genderPartner" value={formData.genderPartner} onChange={handleChange}>
-                                        <option value="ALL">Tất cả</option>
+                                        <option value="ALL">Tất cả (Nam/Nữ)</option>
                                         <option value="MALE">Nam</option>
                                         <option value="FEMALE">Nữ</option>
                                     </select>
                                 </div>
-                                {/* 2 Ô NHẬP TUỔI RIÊNG BIỆT */}
-                                <div className="rp-group" style={{gridColumn: 'span 2'}}>
-                                    <label>Độ tuổi mong muốn</label>
-                                    <div style={{display:'flex', gap:'10px', alignItems:'center'}}>
-                                        <input className="rp-input" type="number" name="ageMin" placeholder="Từ (18)" value={formData.ageMin} onChange={handleChange} style={{flex:1}}/>
-                                        <span style={{fontWeight:'bold', color:'#94a3b8'}}>-</span>
-                                        <input className="rp-input" type="number" name="ageMax" placeholder="Đến (30)" value={formData.ageMax} onChange={handleChange} style={{flex:1}}/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="rp-row rp-cols-2">
                                 <div className="rp-group">
                                     <label>Nghề nghiệp</label>
                                     <select className="rp-select" name="career" value={formData.career} onChange={handleChange}>
@@ -342,14 +401,46 @@ const RoommatePostPage = () => {
                                         <option value="DA_DI_LAM">Người đi làm</option>
                                     </select>
                                 </div>
-                                <div className="rp-group">
-                                    <label><FaHeart/> Thói quen sinh hoạt</label>
-                                    <input className="rp-input" name="habits" placeholder="VD: Ngủ sớm, gọn gàng, không hút thuốc..." value={formData.habits} onChange={handleChange}/>
+                            </div>
+
+                            <div className="rp-group">
+                                <label>Độ tuổi (Min - Max)</label>
+                                <div className="rp-age-wrapper">
+                                    <input className="rp-input" type="number" name="ageMin" placeholder="18" value={formData.ageMin} onChange={handleChange} />
+                                    <span>—</span>
+                                    <input className="rp-input" type="number" name="ageMax" placeholder="30" value={formData.ageMax} onChange={handleChange} />
                                 </div>
                             </div>
-                            <div className="rp-group">
-                                <label><FaGamepad/> Sở thích cá nhân</label>
-                                <input className="rp-input" name="hobbies" placeholder="VD: Thích nấu ăn, yêu chó mèo, xem phim..." value={formData.hobbies} onChange={handleChange}/>
+
+                            <div className="rp-row rp-cols-1">
+                                <div className="rp-group">
+                                    <label><FaHeart className="text-pink-500"/> Thói quen sinh hoạt</label>
+                                    <div className="rp-tags-container">
+                                        {HABITS_LIST.map(habit => (
+                                            <div 
+                                                key={habit}
+                                                className={`rp-tag-item ${isTagSelected('habits', habit) ? 'active' : ''}`}
+                                                onClick={() => handleToggleTag('habits', habit)}
+                                            >
+                                                {habit}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="rp-group">
+                                    <label><FaGamepad className="text-purple-500"/> Sở thích cá nhân</label>
+                                    <div className="rp-tags-container">
+                                        {HOBBIES_LIST.map(hobby => (
+                                            <div 
+                                                key={hobby}
+                                                className={`rp-tag-item ${isTagSelected('hobbies', hobby) ? 'active' : ''}`}
+                                                onClick={() => handleToggleTag('hobbies', hobby)}
+                                            >
+                                                {hobby}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -357,7 +448,7 @@ const RoommatePostPage = () => {
                         <div className="rp-card">
                             <div className="rp-section-header">
                                 <div className="rp-icon-box"><FaImages /></div>
-                                <h3>Hình ảnh thực tế ({selectedFiles.length}/5)</h3>
+                                <h3>Hình ảnh phòng ({selectedFiles.length}/5)</h3>
                             </div>
                             
                             <div 
@@ -369,11 +460,11 @@ const RoommatePostPage = () => {
                                     type="file" multiple accept="image/*" 
                                     ref={fileInputRef} onChange={handleFileChange} hidden 
                                 />
-                                <div className="rp-upload-label">
-                                    <div className="rp-upload-icon"><FaCloudUploadAlt/></div>
-                                    <span style={{fontWeight: 700}}>Kéo thả ảnh vào đây hoặc Bấm để chọn</span>
-                                    <small style={{color: '#94a3b8'}}>Hỗ trợ JPG, PNG (Tối đa 5 ảnh)</small>
+                                <div className="rp-upload-icon"><FaCloudUploadAlt/></div>
+                                <div style={{fontSize:'1.1rem', fontWeight:'700', color:'#475569', marginBottom:'4px'}}>
+                                    Kéo thả ảnh hoặc bấm để chọn
                                 </div>
+                                <div style={{color: '#94a3b8', fontSize: '0.9rem'}}>Hỗ trợ JPG, PNG (Tối đa 5 ảnh)</div>
                             </div>
 
                             {previewImages.length > 0 && (
@@ -397,63 +488,68 @@ const RoommatePostPage = () => {
                                 <h3>Mô tả chi tiết</h3>
                             </div>
                             <textarea 
-                                className="rp-textarea" name="description" rows="5"
-                                placeholder="Mô tả kỹ hơn về phòng, nội thất có sẵn, an ninh khu vực, giờ giấc đi lại..." 
+                                className="rp-textarea" name="description" rows="6"
+                                placeholder="Hãy mô tả thật kỹ về phòng, tiện ích xung quanh, giờ giấc, an ninh để người xem dễ hình dung..." 
                                 value={formData.description} onChange={handleChange} required 
                             />
                         </div>
                     </div>
 
-                    {/* --- CỘT PHẢI: PREVIEW & ACTIONS --- */}
+                    {/* --- CỘT PHẢI: PREVIEW --- */}
                     <div className="rp-col-right">
-                        <div className="rp-preview-header">Xem trước tin đăng</div>
+                        <div className="rp-preview-label">Xem trước tin đăng</div>
                         
-                        {/* LIVE PREVIEW CARD */}
                         <div className="rp-live-card">
                             <div className="rp-live-img">
-                                {previewImages.length > 0 ? <img src={previewImages[0]} alt="cover" /> : <FaImages size={40}/>}
-                                <div className="rp-live-badge">Tìm người ở ghép</div>
+                                {previewImages.length > 0 ? <img src={previewImages[0]} alt="cover" /> : <FaImages size={48}/>}
+                                <div className="rp-live-badge">Đang tìm người</div>
                             </div>
                             <div className="rp-live-body">
-                                <h4 className="rp-live-title">{formData.title || 'Tiêu đề tin sẽ hiện ở đây...'}</h4>
-                                <div className="rp-live-price">{formatPrice(formData.price)} <span>VNĐ/tháng</span></div>
-                                <div className="rp-live-row">
-                                    <FaMapPin /> 
-                                    <span className="truncate">
-                                        {formData.district || 'Quận'}, {formData.city || 'Thành phố'}
-                                    </span>
+                                <h4 className="rp-live-title">{formData.title || 'Tiêu đề tin của bạn sẽ hiện ở đây...'}</h4>
+                                <div className="rp-live-price">
+                                    {formatPrice(formData.price)} <span>VNĐ/tháng</span>
                                 </div>
-                                <div className="rp-live-row">
-                                    <FaVenusMars /> 
-                                    <span>
-                                        {formData.genderPartner === 'MALE' ? 'Tìm Nam' : 
-                                         formData.genderPartner === 'FEMALE' ? 'Tìm Nữ' : 'Nam/Nữ'}
-                                    </span>
-                                </div>
-                                {(formData.ageMin || formData.ageMax) && (
-                                    <div className="rp-live-row" style={{color: '#6366f1'}}>
-                                        <FaCheckCircle size={12}/> Tuổi: {formData.ageMin || '..'} - {formData.ageMax || '..'}
+                                
+                                <div className="rp-live-info">
+                                    <div className="rp-live-item">
+                                        <FaMapPin className="text-blue-500"/>
+                                        <span className="truncate">{formData.district || 'Quận...'}</span>
                                     </div>
-                                )}
+                                    <div className="rp-live-item">
+                                        <FaVenusMars className="text-pink-500"/>
+                                        <span>
+                                            {formData.genderPartner === 'MALE' ? 'Nam' : 
+                                             formData.genderPartner === 'FEMALE' ? 'Nữ' : 'Nam/Nữ'}
+                                        </span>
+                                    </div>
+                                    <div className="rp-live-item">
+                                        <FaRulerCombined className="text-gray-500"/>
+                                        <span>{formData.area || '0'} m²</span>
+                                    </div>
+                                    {(formData.ageMin || formData.ageMax) && (
+                                        <div className="rp-live-item">
+                                            <FaStar className="text-yellow-500"/>
+                                            <span>{formData.ageMin}-{formData.ageMax} tuổi</span>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
-                        {/* TIPS WIDGET */}
                         <div className="rp-tips">
-                            <h4><FaLightbulb /> Mẹo đăng tin</h4>
+                            <h4><FaLightbulb /> Mẹo nhỏ</h4>
                             <ul>
-                                <li><FaCheckCircle size={10}/> Ảnh thật giúp tăng 40% độ tin cậy.</li>
-                                <li><FaCheckCircle size={10}/> Ghi rõ chi phí để tránh hiểu lầm.</li>
-                                <li><FaCheckCircle size={10}/> Nêu rõ thói quen để tìm người hợp cạ.</li>
+                                <li><FaCheckCircle size={12}/> Ảnh thật tăng 40% độ tin cậy.</li>
+                                <li><FaCheckCircle size={12}/> Ghi rõ chi phí để tránh hiểu lầm.</li>
+                                <li><FaCheckCircle size={12}/> Mô tả thói quen để tìm người hợp cạ.</li>
                             </ul>
                         </div>
 
-                        {/* ACTIONS BUTTONS */}
                         <div className="rp-actions">
                             <button type="submit" className="rp-btn-submit" disabled={loading}>
                                 {loading ? 'Đang xử lý...' : <><FaPaperPlane /> Đăng tin ngay</>}
                             </button>
-                            <button type="button" className="rp-btn-cancel" onClick={() => window.history.back()}>Hủy bỏ</button>
+                            <button type="button" className="rp-btn-cancel" onClick={() => window.history.back()}>Quay lại</button>
                         </div>
                     </div>
                 </form>

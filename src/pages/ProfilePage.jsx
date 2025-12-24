@@ -30,9 +30,10 @@ const ProfilePage = () => {
             });
             const data = res.data.data;
             const formatted = {
-                user_name: data.user_name,
                 email: data.user_email,
-                fullName: data.user_full_name || '',
+                firstName: data.user_first_name || '',
+                lastName: data.user_last_name || '',
+                fullName: ((data.user_last_name || '') + ' ' + (data.user_first_name || '')).trim(),
                 phone: data.user_phone || '',
                 address: data.user_address || '',
                 gender: data.user_gender || 'OTHER',
@@ -124,7 +125,7 @@ const ProfilePage = () => {
                             <input type="file" ref={fileInputRef} onChange={handleFileChange} hidden />
                         </div>
 
-                        <h2 className="user-name">{formData.fullName || formData.user_name}</h2>
+                        <h2 className="user-name">{formData.fullName}</h2>
                         <p className="user-email">{formData.email}</p>
                         
                         <div className={`user-badge ${formData.role === 'LANDLORD' ? 'badge-landlord' : 'badge-tenant'}`}>
@@ -167,11 +168,11 @@ const ProfilePage = () => {
 
                     <div className="form-grid">
                         <div className="form-section-title">Thông tin tài khoản</div>
-                        
+{/*                         
                         <div className="form-group">
                             <label><FaUser style={{color:'#94a3b8'}}/> Tên đăng nhập</label>
-                            <input className="form-input read-only" value={formData.user_name} disabled />
-                        </div>
+                            <input className="form-input read-only" value={formData.user_email} disabled />
+                        </div> */}
                         <div className="form-group">
                             <label><FaEnvelope style={{color:'#94a3b8'}}/> Email</label>
                             <input className="form-input read-only" value={formData.email} disabled />

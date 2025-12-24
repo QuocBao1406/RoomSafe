@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
-// Đảm bảo load biến môi trường ngay lập tức
 dotenv.config(); 
 
 export const verifyToken = (req, res, next) => {
@@ -16,13 +15,16 @@ export const verifyToken = (req, res, next) => {
         return res.status(500).json({ message: "Lỗi cấu hình Server" });
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
             console.log("=> Lỗi Verify:", err.message);
-            // Nếu lỗi là 'invalid signature' nghĩa là sai Secret
-            return res.status(403).json({ message: "Token không hợp lệ" });
+            return res.status(403).json({ message: "Token không hợp lệ hoặc hết hạn" });
         }
-        req.user = user;
+        
+        // DEBUG: In ra nội dung Token để kiểm tra
+        console.log("🔓 [Middleware] Decoded Token:", decoded);
+
+        req.user = decoded;
         next();
     });
 };

@@ -14,6 +14,7 @@
     "@fortawesome/free-brands-svg-icons": "^7.1.0",
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
     "@fortawesome/react-fontawesome": "^3.1.1",
+    "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.19.0",
     "axios": "^1.13.2",
@@ -27,6 +28,7 @@
     "express": "^5.1.0",
     "framer-motion": "^12.23.24",
     "jsonwebtoken": "^9.0.3",
+    "leaflet": "^1.9.4",
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
     "react": "^19.2.0",
@@ -35,7 +37,11 @@
     "react-hot-toast": "^2.6.0",
     "react-i18next": "^16.2.4",
     "react-icons": "^5.5.0",
+    "react-is": "^19.2.3",
+    "react-leaflet": "^5.0.0",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.9.6",
+    "recharts": "^3.6.0",
     "zod": "^4.1.13"
   },
   "devDependencies": {

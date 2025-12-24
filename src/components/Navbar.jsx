@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../css/Navbar.css';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import { FaBars, FaCommentDots, FaTimes } from 'react-icons/fa';
 import { GiHidden } from 'react-icons/gi';
 import AuthPage from '../pages/LoginPage.jsx';
 import { UserContext } from '../contexts/UserContext.jsx';
@@ -44,7 +44,7 @@ const mobileItemVariants = {
 const TENANT_LINKS = [
   { path: '/', label: 'Tìm trọ' },
   { path: '/roommate/list', label: 'Tìm bạn cùng phòng' },
-  { path: '/roommate/manage', label: 'Bài đăng của tôi'},
+  { path: '/roommate/manage', label: 'Bài đăng của tôi' },
 ];
 
 const LANDLORD_LINKS = [
@@ -85,10 +85,10 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   })
 
-  useEffect (() => {
+  useEffect(() => {
     const handleClickOutside = (event) => {
       // neu menu dang mo va click khong nam trong menu
-      if(isDropdownOpen && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (isDropdownOpen && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
     };
@@ -102,7 +102,7 @@ const Navbar = () => {
   const closeMenu = () => setIsOpen(false);
 
   // xu ly dang xuat
-  const handleLogout =() => {
+  const handleLogout = () => {
     // xoa user khoi context va localStorage
     localStorage.removeItem('user');
     setUser(null);
@@ -114,14 +114,30 @@ const Navbar = () => {
 
   const defaultAvatar = 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
 
+  const handleOpenChat = () => {
+    const userStr = localStorage.getItem("user");
+    const userObj = userStr ? JSON.parse(userStr) : null;
+    const token = userObj?.token;
+
+    const CHAT_APP_URL = "http://localhost:3000";
+
+    if (!token) {
+      alert("Bạn cần đăng nhập để nhắn tin!");
+      return;
+    }
+
+    // Mở tab mới kèm token trên URL
+    window.open(`${CHAT_APP_URL}?token=${token}`, "_blank");
+  };
+
   return (
     <motion.nav
       className={`navbar ${isOpen ? 'menu-open' : ''}`}
-      animate={{ y: isHidden ? '-100%' : '0%'}}
+      animate={{ y: isHidden ? '-100%' : '0%' }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
     >
       <div className='navbar-container'>
-        
+
         <NavLink to={isLandlord ? '/dashboard' : '/'} className='navbar-logo' onClick={closeMenu}>
           RoomSafe
         </NavLink>
@@ -150,9 +166,26 @@ const Navbar = () => {
             </li>
           ))}
         </ul>
-        
+
         {/* dang nhap / dang ky */}
         <div className='nav-auth-desktop'>
+
+          {/* chat */}
+          <motion.div
+            className="nav-chat-btn-wrapper"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <button onClick={handleOpenChat} className="nav-chat-btn">
+              <div className="chat-icon-box">
+                <FaCommentDots size={20} />
+                {/* Dấu chấm đỏ thông báo (Giả lập) - Có thể ẩn hiện theo logic unread */}
+                <span className="notification-dot"></span>
+              </div>
+              <span className="chat-label">Tin nhắn</span>
+            </button>
+          </motion.div>
+
           {user ? (
             <div className="user-dropdown-container" ref={dropdownRef}>
               <div className="nav-avatar-wrapper" onClick={toggleDropdown}>
@@ -187,7 +220,7 @@ const Navbar = () => {
             <NavLink to='/login' className='nav-button btn-login'>
               Đăng nhập
             </NavLink>
-          )} 
+          )}
         </div>
       </div>
 
@@ -212,20 +245,20 @@ const Navbar = () => {
 
             {/* login & logout*/}
             {user ? (
-            <>
-              <motion.li variants={mobileItemVariants}>
-                <div className="mobile-user-info">
-                  <img src={user.avatar || defaultAvatar} alt="Avatar" className="mobile-avatar" />
-                  <span>Xin chào, {user.username}</span>
-                </div>
-              </motion.li>
-              <motion.li variants="mobileItemVariants">
-                <NavLink to="/profile" className="nav-links" onClick={closeMenu}>Thông tin cá nhân</NavLink>
-              </motion.li>
-              <motion.li variants="mobileItemVariants">
-                <div className='nav-links' onClick={handleLogout} style={{ cursor: 'pointer'}}> Đăng xuất </div>
-              </motion.li>
-            </>
+              <>
+                <motion.li variants={mobileItemVariants}>
+                  <div className="mobile-user-info">
+                    <img src={user.avatar || defaultAvatar} alt="Avatar" className="mobile-avatar" />
+                    <span>Xin chào, {user.username}</span>
+                  </div>
+                </motion.li>
+                <motion.li variants="mobileItemVariants">
+                  <NavLink to="/profile" className="nav-links" onClick={closeMenu}>Thông tin cá nhân</NavLink>
+                </motion.li>
+                <motion.li variants="mobileItemVariants">
+                  <div className='nav-links' onClick={handleLogout} style={{ cursor: 'pointer' }}> Đăng xuất </div>
+                </motion.li>
+              </>
             ) : (
               <>
                 <motion.li variants={mobileItemVariants}>

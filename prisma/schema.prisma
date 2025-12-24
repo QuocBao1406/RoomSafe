@@ -10,23 +10,37 @@ datasource db {
 
 model Users {
   user_id           BigInt                  @id @default(autoincrement()) @db.UnsignedBigInt
-  user_name         String                  @unique(map: "user_name") @db.VarChar(100)
+
   user_password     String                  @db.VarChar(255)
-  user_full_name    String?                 @db.VarChar(255)
+  user_first_name   String?                 @db.VarChar(255)
+  user_last_name    String?                 @db.VarChar(255)
+
   user_gender       users_user_gender?
   user_birthday     DateTime?               @db.Date
   user_phone        String?                 @unique(map: "user_phone") @db.VarChar(20)
   user_email        String                  @unique(map: "user_email") @db.VarChar(100)
   user_address      String?                 @db.VarChar(255)
   user_avatar       String?                 @db.VarChar(255)
+
   user_avg_rating   Decimal?                @default(0.0) @db.Decimal(2, 1)
   user_review_count Int?                    @default(0)
   user_bio          String?                 @db.Text
+  
   user_created_at   DateTime                @default(now()) @db.Timestamp(0)
   user_verification users_user_verification @default(UNVERIFIED)
   user_role         users_user_role
   posts             Posts[]
-  roommate_posts RoommatePost[]
+
+  // -- OTP
+  otp               String?                 @db.VarChar(255)
+  otp_expiry_time   DateTime?               @db.Date
+
+  // -- Reset Password
+  password_reset_token  String?
+  password_reset_expires DateTime?
+
+  // -- Email Verification
+  verified          Boolean                 @default(false)
 }
 
 enum users_user_gender {
@@ -45,6 +59,7 @@ enum users_user_verification {
 enum users_user_role {
   LANDLORD
   TENANT
+  ADMIN
 }
 
 model Posts {
@@ -62,6 +77,9 @@ model Posts {
   post_city         String       @db.VarChar(100)
   category          PostCategory @default(PHONG_TRO)
   status            PostStatus   @default(AVAILABLE)
+
+  post_latitude     Float?       // Vĩ độ
+  post_longitude    Float?       // Kinh độ
 
   user_id BigInt @db.UnsignedBigInt
   user    Users  @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
@@ -134,29 +152,4 @@ enum RoommateStatus {
   ACTIVE
   FOUND
   CLOSED
-}
-
-model RoommatePost {
-  id                 Int             @id @default(autoincrement())
-  title              String          @db.VarChar(255)
-  description        String          @db.Text
-  budget             Int
-  preferred_area     String          @db.VarChar(255)
-  gender_preference  RoommateGender  @default(ANY)
-  age_min            Int?
-  age_max            Int?
-  habits             String?         @db.Text
-  contact_zalo       String?         @db.VarChar(255)
-  contact_messenger  String?         @db.VarChar(255)
-  contact_phone      String?         @db.VarChar(50)
-  photos             Json?
-  status             RoommateStatus  @default(ACTIVE)
-
-  user_id BigInt @db.UnsignedBigInt
-  user    Users  @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  @@map("roommate_posts")
 }

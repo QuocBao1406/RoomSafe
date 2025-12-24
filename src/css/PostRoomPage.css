@@ -4,7 +4,7 @@
     background-color: linear-gradient(120deg, #f3f4f6 0%, #e0e7ff 100%);
     min-height: 100vh;
     padding: 40px 20px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: 'Be Vietnam Pro', sans-serif;
     color: #1e293b;
     display: flex;
     justify-content: center;
@@ -475,6 +475,63 @@ textarea {
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+.map-container-box {
+    height: 400px; /* Tăng chiều cao thêm chút cho thoáng */
+    width: 100%;
+    border-radius: 16px; /* Bo góc tròn hơn */
+    overflow: hidden;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); /* Bóng đổ xịn */
+    position: relative;
+    z-index: 1;
+}
+
+/* Tùy chỉnh nút Zoom Leaflet cho đẹp hơn */
+.leaflet-bar {
+    border: none !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.leaflet-bar a {
+    background-color: white !important;
+    color: #4f46e5 !important; /* Màu tím chủ đạo */
+    width: 36px !important;
+    height: 36px !important;
+    line-height: 36px !important;
+    border-radius: 8px !important;
+    margin-bottom: 5px !important;
+    font-weight: bold;
+    border-bottom: none !important;
+    transition: all 0.2s;
+}
+
+.leaflet-bar a:hover {
+    background-color: #4f46e5 !important;
+    color: white !important;
+}
+
+.leaflet-bar a:first-child {
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+}
+
+.leaflet-bar a:last-child {
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+}
+
+/* Lớp phủ gradient nhẹ ở đáy map để icon không bị chìm */
+.map-overlay-gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to top, rgba(255,255,255,0.8), transparent);
+    pointer-events: none; /* Để vẫn click xuyên qua được */
+    z-index: 400;
+}
 
 @media (max-width: 900px) {
     .post-grid-layout { grid-template-columns: 1fr; }

@@ -1,0 +1,156 @@
+.db-container {
+    padding: 24px 32px 40px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    color: #1e293b;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* --- HEADER --- */
+.db-header {
+    display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px;
+}
+.db-title { font-size: 28px; font-weight: 700; margin: 0 0 6px 0; color: #0f172a; letter-spacing: -0.5px; }
+.db-subtitle { margin: 0; color: #64748b; font-size: 14px; }
+.db-date-badge {
+    background: #ffffff; padding: 10px 16px; border-radius: 12px; font-size: 13px; font-weight: 600;
+    color: #475569; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    display: flex; align-items: center; gap: 8px;
+}
+.icon-cal { color: #6366f1; font-size: 16px; }
+
+/* --- STATS CARDS --- */
+.db-stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 32px;
+}
+.db-card {
+    background: #ffffff; border-radius: 16px; border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    overflow: hidden; transition: all 0.2s ease;
+}
+.db-card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08); transform: translateY(-2px); }
+
+.stat-card {
+    padding: 24px; display: flex; align-items: center; gap: 20px;
+    position: relative; border-left: 4px solid transparent;
+}
+.stat-card.border-blue { border-left-color: #3b82f6; }
+.stat-card.border-green { border-left-color: #22c55e; }
+.stat-card.border-orange { border-left-color: #f97316; }
+
+.stat-icon-wrapper {
+    width: 64px; height: 64px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+    font-size: 28px; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.gradient-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.gradient-green { background: linear-gradient(135deg, #22c55e, #16a34a); }
+.gradient-orange { background: linear-gradient(135deg, #f97316, #ea580c); }
+
+.stat-content { 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center;
+}
+.stat-label { 
+    font-size: 13px; 
+    font-weight: 700; color: #94a3b8;
+    text-transform: uppercase; 
+    letter-spacing: 0.5px; 
+    margin-bottom: 4px; 
+    margin: 0 auto;
+}
+
+.stat-value { 
+    font-size: 32px; 
+    font-weight: 800; 
+    color: #0f172a; 
+    margin: 0 0 4px 0; 
+    line-height: 1;
+    margin: 0 auto;
+}
+
+.stat-desc { font-size: 13px; color: #64748b; margin: 0; }
+
+/* --- CONTENT GRID --- */
+.db-content-grid {
+    display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 24px; align-items: start;
+}
+.content-card { min-height: 400px; }
+.card-header {
+    padding: 18px 24px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #ffffff;
+}
+.card-header h3 { margin: 0; font-size: 16px; font-weight: 700; color: #1e293b; }
+.btn-link {
+    background: none; border: none; color: #4f46e5; font-size: 13px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;
+}
+.btn-link:hover { color: #3730a3; transform: translateX(3px); }
+
+/* --- TABLE --- */
+.table-responsive { overflow-x: auto; width: 100%; }
+.db-table { width: 100%; border-collapse: collapse; }
+.db-table th {
+    text-align: left; padding: 14px 24px; font-size: 12px; font-weight: 700;
+    color: #64748b; background: #f8fafc; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+}
+.db-table td {
+    padding: 16px 24px; border-bottom: 1px dashed #e2e8f0; font-size: 14px; vertical-align: middle;
+}
+.db-table tr:last-child td { border-bottom: none; }
+.db-table tbody tr:hover { background-color: #f8fafc; }
+
+.post-cell { display: flex; flex-direction: column; gap: 2px; }
+.post-title { font-weight: 600; color: #1e293b; display: block; font-size: 14px; max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.post-author { font-size: 12px; color: #94a3b8; font-style: italic;}
+.price-text { font-weight: 700; color: #0f172a; font-size: 14px; white-space: nowrap;}
+.date-text { font-size: 13px; color: #64748b; white-space: nowrap;}
+
+.db-cat-badge {
+    padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; white-space: nowrap;
+}
+.db-cat-badge.rental { background: #e0e7ff; color: #4338ca; }
+.db-cat-badge.roommate { background: #ffedd5; color: #c2410c; }
+
+/* --- USER LIST FIX (CHỐNG TRÙNG CSS) --- */
+.db-user-list { padding: 0; }
+
+.db-user-item {
+    display: flex; align-items: center; gap: 14px; padding: 16px 24px;
+    border-bottom: 1px dashed #e2e8f0; transition: background 0.2s;
+}
+.db-user-item:hover { background: #fcfcfc; }
+.db-user-item:last-child { border-bottom: none; }
+
+.db-user-avatar-box { position: relative; flex-shrink: 0; }
+
+/* QUAN TRỌNG: Fix kích thước ảnh */
+.db-user-avatar-img {
+    width: 42px; height: 42px; border-radius: 50%; object-fit: cover;
+    border: 1px solid #e2e8f0; display: block;
+}
+
+.db-admin-icon {
+    position: absolute; bottom: -2px; right: -4px; background: #3b82f6; color: white;
+    width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 9px; border: 2px solid white;
+}
+
+.db-user-info { flex: 1; min-width: 0; }
+.db-user-name { font-size: 14px; font-weight: 700; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.db-user-email { font-size: 12px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+
+.db-role-badge {
+    font-size: 10px; padding: 4px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; white-space: nowrap;
+}
+.db-role-badge.admin { background: #1e293b; color: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+.db-role-badge.landlord { background: #dcfce7; color: #15803d; }
+.db-role-badge.tenant { background: #f1f5f9; color: #64748b; }
+
+.text-center { text-align: center; color: #94a3b8; }
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .db-content-grid { grid-template-columns: 1fr; }
+    .db-stats-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .post-title { max-width: 100%; white-space: normal; }
+}

@@ -4,10 +4,22 @@ import { toast, Toaster } from "react-hot-toast";
 import axios from "axios";
 import { 
     FaSearch, FaMapMarkerAlt, FaFilter, FaVenusMars, FaUserFriends, FaBriefcase, 
-    FaClock, FaUndo, FaHeart, FaPaw, FaSmokingBan, FaMoon, FaGamepad, FaCheckCircle, FaThLarge, FaList
+    FaClock, FaUndo, FaHeart, FaGamepad, 
+    FaCheckCircle, FaThLarge, FaList
 } from "react-icons/fa";
 import roommateApi from "../services/roommateApi.js";
 import "../css/RoommateList.css";
+
+// --- DỮ LIỆU CỐ ĐỊNH CHO BỘ LỌC ---
+const HABITS_LIST = [
+    "Sạch sẽ", "Yên tĩnh", "Ngủ sớm", "Không hút thuốc", 
+    "Thân thiện", "Nuôi thú cưng", "Nấu ăn", "Gọn gàng"
+];
+
+const HOBBIES_LIST = [
+    "Game", "Thể thao", "Đọc sách", "Du lịch", 
+    "Âm nhạc", "Phim ảnh", "Công nghệ", "Vẽ tranh"
+];
 
 const RoommateListPage = () => {
     const navigate = useNavigate();
@@ -15,20 +27,19 @@ const RoommateListPage = () => {
     const [loading, setLoading] = useState(true);
     const [provinces, setProvinces] = useState([]);
 
-    // --- STATES ---
+    // --- STATES BỘ LỌC ---
     const [filters, setFilters] = useState({
-        keyword: "", city: "", priceMin: "", priceMax: "",
-        gender: "", career: "", ageMin: "", ageMax: "", habits: []
+        keyword: "", 
+        city: "", 
+        priceMin: "", 
+        priceMax: "",
+        gender: "", 
+        career: "", 
+        ageMin: "", 
+        ageMax: "", 
+        habits: [], 
+        hobbies: [] 
     });
-
-    const HABIT_TAGS = [
-        { label: "Sạch sẽ", icon: <FaHeart/> },
-        { label: "Yên tĩnh", icon: <FaMoon/> },
-        { label: "Ko hút thuốc", icon: <FaSmokingBan/> },
-        { label: "Thú cưng", icon: <FaPaw/> },
-        { label: "Game", icon: <FaGamepad/> },
-        { label: "Ngủ sớm", icon: <FaClock/> }
-    ];
 
     useEffect(() => {
         axios.get('https://esgoo.net/api-tinhthanh/1/0.htm')
@@ -38,7 +49,11 @@ const RoommateListPage = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const params = { ...filters, habits: filters.habits.join(',') };
+            const params = { 
+                ...filters, 
+                habits: filters.habits.join(','),
+                hobbies: filters.hobbies.join(',')
+            };
             const res = await roommateApi.listPublic(params); 
             setItems(res.data.data || []);
         } catch (error) {
@@ -50,17 +65,23 @@ const RoommateListPage = () => {
     useEffect(() => { fetchData(); }, []);
 
     // --- HANDLERS ---
-    const handleSearch = () => fetchData();
-
-    const toggleHabit = (tag) => {
+    const toggleArrayFilter = (field, value) => {
         setFilters(prev => {
-            const exists = prev.habits.includes(tag);
-            return { ...prev, habits: exists ? prev.habits.filter(h => h !== tag) : [...prev.habits, tag] };
+            const list = prev[field];
+            const exists = list.includes(value);
+            return {
+                ...prev,
+                [field]: exists ? list.filter(item => item !== value) : [...list, value]
+            };
         });
     };
 
     const clearFilters = () => {
-        setFilters({ keyword: "", city: "", priceMin: "", priceMax: "", gender: "", career: "", ageMin: "", ageMax: "", habits: [] });
+        setFilters({ 
+            keyword: "", city: "", priceMin: "", priceMax: "", 
+            gender: "", career: "", ageMin: "", ageMax: "", 
+            habits: [], hobbies: [] 
+        });
         setTimeout(fetchData, 100);
     };
 
@@ -71,27 +92,29 @@ const RoommateListPage = () => {
     };
 
     const timeAgo = (date) => {
+        if(!date) return "Mới đăng";
         const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-        if (seconds < 86400) return "Mới đăng";
+        if (seconds < 60) return "Vừa xong";
+        if (seconds < 3600) return Math.floor(seconds/60) + " phút trước";
+        if (seconds < 86400) return Math.floor(seconds/3600) + " giờ trước";
         return Math.floor(seconds/86400) + " ngày trước";
     };
 
     return (
         <div className="rl-wrapper">
             <Toaster position="top-center" />
-
             <div className="rl-container">
                 
-                {/* --- 1. SIDEBAR BỘ LỌC --- */}
+                {/* --- SIDEBAR BỘ LỌC --- */}
                 <aside className="rl-sidebar">
                     <div className="rl-filter-head">
                         <h3><FaFilter style={{color:'#4f46e5'}}/> Bộ lọc</h3>
-                        <button className="rl-reset-btn" onClick={clearFilters}><FaUndo/> Xóa</button>
+                        <button className="rl-reset-btn" onClick={clearFilters}><FaUndo/> Đặt lại</button>
                     </div>
 
                     <div className="rl-group">
                         <label className="rl-label">Tìm theo từ khóa</label>
-                        <input className="rl-input" placeholder="nhập tên đường..." value={filters.keyword} onChange={e => setFilters({...filters, keyword: e.target.value})}/>
+                        <input className="rl-input" placeholder="Nhập tên đường..." value={filters.keyword} onChange={e => setFilters({...filters, keyword: e.target.value})}/>
                     </div>
 
                     <div className="rl-group">
@@ -126,17 +149,22 @@ const RoommateListPage = () => {
                         </div>
                     </div>
 
+                    {/* THÓI QUEN SINH HOẠT */}
                     <div className="rl-group">
-                        <label className="rl-label">Tiện ích / Thói quen</label>
+                        <label className="rl-label"><FaHeart style={{color:'#ec4899', marginRight:4}}/> Thói quen sinh hoạt</label>
                         <div className="rl-tags">
-                            {HABIT_TAGS.map((tag, idx) => (
-                                <div 
-                                    key={idx} 
-                                    className={`rl-chip ${filters.habits.includes(tag.label) ? 'active' : ''}`}
-                                    onClick={() => toggleHabit(tag.label)}
-                                >
-                                    {tag.icon} {tag.label}
-                                </div>
+                            {HABITS_LIST.map((habit, idx) => (
+                                <div key={idx} className={`rl-chip ${filters.habits.includes(habit) ? 'active' : ''}`} onClick={() => toggleArrayFilter('habits', habit)}>{habit}</div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* SỞ THÍCH */}
+                    <div className="rl-group">
+                        <label className="rl-label"><FaGamepad style={{color:'#8b5cf6', marginRight:4}}/> Sở thích cá nhân</label>
+                        <div className="rl-tags">
+                            {HOBBIES_LIST.map((hobby, idx) => (
+                                <div key={idx} className={`rl-chip ${filters.hobbies.includes(hobby) ? 'active' : ''}`} onClick={() => toggleArrayFilter('hobbies', hobby)}>{hobby}</div>
                             ))}
                         </div>
                     </div>
@@ -144,10 +172,8 @@ const RoommateListPage = () => {
                     <button className="rl-btn-apply" onClick={fetchData}>Áp dụng</button>
                 </aside>
 
-                {/* --- 2. MAIN CONTENT --- */}
+                {/* --- MAIN CONTENT --- */}
                 <main className="rl-main">
-                    
-                    {/* SORT BAR - Thanh công cụ lấp khoảng trống */}
                     <div className="rl-sort-bar">
                         <div className="rl-sb-left">
                             <span className="rl-result-count">Tìm thấy <b>{items.length}</b> tin đăng</span>
@@ -177,6 +203,14 @@ const RoommateListPage = () => {
                             {items.map(item => {
                                 const details = item.roommate_details || {};
                                 const image = item.images?.[0]?.image_url || "https://via.placeholder.com/400x300?text=RoomSafe";
+                                
+                                // === LOGIC LẤY THÔNG TIN USER (GIỐNG FINDROOMPAGE) ===
+                                // Ưu tiên 1: Lấy từ item.user (nếu API giống trang tìm trọ)
+                                // Ưu tiên 2: Lấy từ item.users (trường hợp API join bảng users)
+                                // Ưu tiên 3: Lấy từ item.contact_name (trường hợp form đăng tin)
+                                const user = item.user || item.users || {};
+                                const hostName = `${user.user_first_name || ""} ${user.user_last_name || ""}`.trim() || "Người đăng";
+                                const hostAvatar = user.user_avatar || user.avatar || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
                                 return (
                                     <div key={item.post_id} className="rl-card" onClick={() => navigate(`/roommate/${item.post_id}`)}>
@@ -184,11 +218,10 @@ const RoommateListPage = () => {
                                         {/* IMAGE */}
                                         <div className="rl-card-thumb">
                                             <img src={image} alt={item.post_title} />
-                                            {/* Nút thả tim giả */}
                                             <div className="rl-btn-heart" onClick={(e) => {e.stopPropagation(); toast.success("Đã lưu tin!")}}>
                                                 <FaHeart/>
                                             </div>
-                                            <div className="rl-price-badge">{formatPrice(item.post_price)}</div>
+                                            <div className="rl-badge-price">{formatPrice(item.post_price)}</div>
                                         </div>
                                         
                                         {/* BODY */}
@@ -197,10 +230,9 @@ const RoommateListPage = () => {
                                             
                                             <div className="rl-card-meta">
                                                 <FaMapMarkerAlt style={{color:'#64748b'}}/> 
-                                                <span className="truncate">{item.post_address}, {item.post_ward},{item.post_district}, {item.post_city}</span>
+                                                <span className="truncate">{item.post_address}, {item.post_district}, {item.post_city}</span>
                                             </div>
 
-                                            {/* TAGS NỔI BẬT */}
                                             <div className="rl-tags-row">
                                                 <span className="rl-tag gender">
                                                     <FaVenusMars/> {details.gender_partner === 'MALE' ? 'Tìm Nam' : details.gender_partner === 'FEMALE' ? 'Tìm Nữ' : 'Nam/Nữ'}
@@ -218,12 +250,17 @@ const RoommateListPage = () => {
                                             </div>
                                         </div>
 
-                                        {/* FOOTER */}
+                                        {/* FOOTER (USER INFO - GIỐNG FIND ROOM) */}
                                         <div className="rl-card-foot">
                                             <div className="rl-user">
-                                                <img className="rl-avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="user"/>
-                                                <span>Người đăng</span>
-                                                <FaCheckCircle className="rl-verified" title="Đã xác thực"/>
+                                                <img 
+                                                    className="rl-avatar" 
+                                                    src={hostAvatar} 
+                                                    alt={hostName}
+                                                    onError={(e) => {e.target.src = "https://cdn-icons-png.flaticon.com/512/149/149071.png"}}
+                                                />
+                                                <span className="rl-username">{hostName}</span>
+                                                <FaCheckCircle className="rl-verified" title="Đã xác thực" style={{color: '#3b82f6', marginLeft: 4}}/>
                                             </div>
                                             <span className="rl-time"><FaClock style={{marginRight:4}}/> {timeAgo(item.created_at)}</span>
                                         </div>

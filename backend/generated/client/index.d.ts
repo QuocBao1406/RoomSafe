@@ -33,11 +33,6 @@ export type RoommateDetails = $Result.DefaultSelection<Prisma.$RoommateDetailsPa
  * 
  */
 export type PostImages = $Result.DefaultSelection<Prisma.$PostImagesPayload>
-/**
- * Model RoommatePost
- * 
- */
-export type RoommatePost = $Result.DefaultSelection<Prisma.$RoommatePostPayload>
 
 /**
  * Enums
@@ -64,7 +59,8 @@ export type users_user_verification = (typeof users_user_verification)[keyof typ
 
 export const users_user_role: {
   LANDLORD: 'LANDLORD',
-  TENANT: 'TENANT'
+  TENANT: 'TENANT',
+  ADMIN: 'ADMIN'
 };
 
 export type users_user_role = (typeof users_user_role)[keyof typeof users_user_role]
@@ -293,16 +289,6 @@ export class PrismaClient<
     * ```
     */
   get postImages(): Prisma.PostImagesDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.roommatePost`: Exposes CRUD operations for the **RoommatePost** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more RoommatePosts
-    * const roommatePosts = await prisma.roommatePost.findMany()
-    * ```
-    */
-  get roommatePost(): Prisma.RoommatePostDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -747,8 +733,7 @@ export namespace Prisma {
     Users: 'Users',
     Posts: 'Posts',
     RoommateDetails: 'RoommateDetails',
-    PostImages: 'PostImages',
-    RoommatePost: 'RoommatePost'
+    PostImages: 'PostImages'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -767,7 +752,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "users" | "posts" | "roommateDetails" | "postImages" | "roommatePost"
+      modelProps: "users" | "posts" | "roommateDetails" | "postImages"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1035,72 +1020,6 @@ export namespace Prisma {
           }
         }
       }
-      RoommatePost: {
-        payload: Prisma.$RoommatePostPayload<ExtArgs>
-        fields: Prisma.RoommatePostFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.RoommatePostFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RoommatePostPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.RoommatePostFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RoommatePostPayload>
-          }
-          findFirst: {
-            args: Prisma.RoommatePostFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RoommatePostPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.RoommatePostFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RoommatePostPayload>
-          }
-          findMany: {
-            args: Prisma.RoommatePostFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RoommatePostPayload>[]
-          }
-          create: {
-            args: Prisma.RoommatePostCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RoommatePostPayload>
-          }
-          createMany: {
-            args: Prisma.RoommatePostCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.RoommatePostDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RoommatePostPayload>
-          }
-          update: {
-            args: Prisma.RoommatePostUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RoommatePostPayload>
-          }
-          deleteMany: {
-            args: Prisma.RoommatePostDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.RoommatePostUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.RoommatePostUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$RoommatePostPayload>
-          }
-          aggregate: {
-            args: Prisma.RoommatePostAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateRoommatePost>
-          }
-          groupBy: {
-            args: Prisma.RoommatePostGroupByArgs<ExtArgs>
-            result: $Utils.Optional<RoommatePostGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.RoommatePostCountArgs<ExtArgs>
-            result: $Utils.Optional<RoommatePostCountAggregateOutputType> | number
-          }
-        }
-      }
     }
   } & {
     other: {
@@ -1201,7 +1120,6 @@ export namespace Prisma {
     posts?: PostsOmit
     roommateDetails?: RoommateDetailsOmit
     postImages?: PostImagesOmit
-    roommatePost?: RoommatePostOmit
   }
 
   /* Types for Logging */
@@ -1283,12 +1201,10 @@ export namespace Prisma {
 
   export type UsersCountOutputType = {
     posts: number
-    roommate_posts: number
   }
 
   export type UsersCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     posts?: boolean | UsersCountOutputTypeCountPostsArgs
-    roommate_posts?: boolean | UsersCountOutputTypeCountRoommate_postsArgs
   }
 
   // Custom InputTypes
@@ -1307,13 +1223,6 @@ export namespace Prisma {
    */
   export type UsersCountOutputTypeCountPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PostsWhereInput
-  }
-
-  /**
-   * UsersCountOutputType without action
-   */
-  export type UsersCountOutputTypeCountRoommate_postsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RoommatePostWhereInput
   }
 
 
@@ -1378,9 +1287,9 @@ export namespace Prisma {
 
   export type UsersMinAggregateOutputType = {
     user_id: bigint | null
-    user_name: string | null
     user_password: string | null
-    user_full_name: string | null
+    user_first_name: string | null
+    user_last_name: string | null
     user_gender: $Enums.users_user_gender | null
     user_birthday: Date | null
     user_phone: string | null
@@ -1393,13 +1302,18 @@ export namespace Prisma {
     user_created_at: Date | null
     user_verification: $Enums.users_user_verification | null
     user_role: $Enums.users_user_role | null
+    otp: string | null
+    otp_expiry_time: Date | null
+    password_reset_token: string | null
+    password_reset_expires: Date | null
+    verified: boolean | null
   }
 
   export type UsersMaxAggregateOutputType = {
     user_id: bigint | null
-    user_name: string | null
     user_password: string | null
-    user_full_name: string | null
+    user_first_name: string | null
+    user_last_name: string | null
     user_gender: $Enums.users_user_gender | null
     user_birthday: Date | null
     user_phone: string | null
@@ -1412,13 +1326,18 @@ export namespace Prisma {
     user_created_at: Date | null
     user_verification: $Enums.users_user_verification | null
     user_role: $Enums.users_user_role | null
+    otp: string | null
+    otp_expiry_time: Date | null
+    password_reset_token: string | null
+    password_reset_expires: Date | null
+    verified: boolean | null
   }
 
   export type UsersCountAggregateOutputType = {
     user_id: number
-    user_name: number
     user_password: number
-    user_full_name: number
+    user_first_name: number
+    user_last_name: number
     user_gender: number
     user_birthday: number
     user_phone: number
@@ -1431,6 +1350,11 @@ export namespace Prisma {
     user_created_at: number
     user_verification: number
     user_role: number
+    otp: number
+    otp_expiry_time: number
+    password_reset_token: number
+    password_reset_expires: number
+    verified: number
     _all: number
   }
 
@@ -1449,9 +1373,9 @@ export namespace Prisma {
 
   export type UsersMinAggregateInputType = {
     user_id?: true
-    user_name?: true
     user_password?: true
-    user_full_name?: true
+    user_first_name?: true
+    user_last_name?: true
     user_gender?: true
     user_birthday?: true
     user_phone?: true
@@ -1464,13 +1388,18 @@ export namespace Prisma {
     user_created_at?: true
     user_verification?: true
     user_role?: true
+    otp?: true
+    otp_expiry_time?: true
+    password_reset_token?: true
+    password_reset_expires?: true
+    verified?: true
   }
 
   export type UsersMaxAggregateInputType = {
     user_id?: true
-    user_name?: true
     user_password?: true
-    user_full_name?: true
+    user_first_name?: true
+    user_last_name?: true
     user_gender?: true
     user_birthday?: true
     user_phone?: true
@@ -1483,13 +1412,18 @@ export namespace Prisma {
     user_created_at?: true
     user_verification?: true
     user_role?: true
+    otp?: true
+    otp_expiry_time?: true
+    password_reset_token?: true
+    password_reset_expires?: true
+    verified?: true
   }
 
   export type UsersCountAggregateInputType = {
     user_id?: true
-    user_name?: true
     user_password?: true
-    user_full_name?: true
+    user_first_name?: true
+    user_last_name?: true
     user_gender?: true
     user_birthday?: true
     user_phone?: true
@@ -1502,6 +1436,11 @@ export namespace Prisma {
     user_created_at?: true
     user_verification?: true
     user_role?: true
+    otp?: true
+    otp_expiry_time?: true
+    password_reset_token?: true
+    password_reset_expires?: true
+    verified?: true
     _all?: true
   }
 
@@ -1593,9 +1532,9 @@ export namespace Prisma {
 
   export type UsersGroupByOutputType = {
     user_id: bigint
-    user_name: string
     user_password: string
-    user_full_name: string | null
+    user_first_name: string | null
+    user_last_name: string | null
     user_gender: $Enums.users_user_gender | null
     user_birthday: Date | null
     user_phone: string | null
@@ -1608,6 +1547,11 @@ export namespace Prisma {
     user_created_at: Date
     user_verification: $Enums.users_user_verification
     user_role: $Enums.users_user_role
+    otp: string | null
+    otp_expiry_time: Date | null
+    password_reset_token: string | null
+    password_reset_expires: Date | null
+    verified: boolean
     _count: UsersCountAggregateOutputType | null
     _avg: UsersAvgAggregateOutputType | null
     _sum: UsersSumAggregateOutputType | null
@@ -1631,9 +1575,9 @@ export namespace Prisma {
 
   export type UsersSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     user_id?: boolean
-    user_name?: boolean
     user_password?: boolean
-    user_full_name?: boolean
+    user_first_name?: boolean
+    user_last_name?: boolean
     user_gender?: boolean
     user_birthday?: boolean
     user_phone?: boolean
@@ -1646,8 +1590,12 @@ export namespace Prisma {
     user_created_at?: boolean
     user_verification?: boolean
     user_role?: boolean
+    otp?: boolean
+    otp_expiry_time?: boolean
+    password_reset_token?: boolean
+    password_reset_expires?: boolean
+    verified?: boolean
     posts?: boolean | Users$postsArgs<ExtArgs>
-    roommate_posts?: boolean | Users$roommate_postsArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["users"]>
 
@@ -1655,9 +1603,9 @@ export namespace Prisma {
 
   export type UsersSelectScalar = {
     user_id?: boolean
-    user_name?: boolean
     user_password?: boolean
-    user_full_name?: boolean
+    user_first_name?: boolean
+    user_last_name?: boolean
     user_gender?: boolean
     user_birthday?: boolean
     user_phone?: boolean
@@ -1670,12 +1618,16 @@ export namespace Prisma {
     user_created_at?: boolean
     user_verification?: boolean
     user_role?: boolean
+    otp?: boolean
+    otp_expiry_time?: boolean
+    password_reset_token?: boolean
+    password_reset_expires?: boolean
+    verified?: boolean
   }
 
-  export type UsersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "user_name" | "user_password" | "user_full_name" | "user_gender" | "user_birthday" | "user_phone" | "user_email" | "user_address" | "user_avatar" | "user_avg_rating" | "user_review_count" | "user_bio" | "user_created_at" | "user_verification" | "user_role", ExtArgs["result"]["users"]>
+  export type UsersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "user_password" | "user_first_name" | "user_last_name" | "user_gender" | "user_birthday" | "user_phone" | "user_email" | "user_address" | "user_avatar" | "user_avg_rating" | "user_review_count" | "user_bio" | "user_created_at" | "user_verification" | "user_role" | "otp" | "otp_expiry_time" | "password_reset_token" | "password_reset_expires" | "verified", ExtArgs["result"]["users"]>
   export type UsersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     posts?: boolean | Users$postsArgs<ExtArgs>
-    roommate_posts?: boolean | Users$roommate_postsArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -1683,13 +1635,12 @@ export namespace Prisma {
     name: "Users"
     objects: {
       posts: Prisma.$PostsPayload<ExtArgs>[]
-      roommate_posts: Prisma.$RoommatePostPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       user_id: bigint
-      user_name: string
       user_password: string
-      user_full_name: string | null
+      user_first_name: string | null
+      user_last_name: string | null
       user_gender: $Enums.users_user_gender | null
       user_birthday: Date | null
       user_phone: string | null
@@ -1702,6 +1653,11 @@ export namespace Prisma {
       user_created_at: Date
       user_verification: $Enums.users_user_verification
       user_role: $Enums.users_user_role
+      otp: string | null
+      otp_expiry_time: Date | null
+      password_reset_token: string | null
+      password_reset_expires: Date | null
+      verified: boolean
     }, ExtArgs["result"]["users"]>
     composites: {}
   }
@@ -2043,7 +1999,6 @@ export namespace Prisma {
   export interface Prisma__UsersClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     posts<T extends Users$postsArgs<ExtArgs> = {}>(args?: Subset<T, Users$postsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    roommate_posts<T extends Users$roommate_postsArgs<ExtArgs> = {}>(args?: Subset<T, Users$roommate_postsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoommatePostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2074,9 +2029,9 @@ export namespace Prisma {
    */
   interface UsersFieldRefs {
     readonly user_id: FieldRef<"Users", 'BigInt'>
-    readonly user_name: FieldRef<"Users", 'String'>
     readonly user_password: FieldRef<"Users", 'String'>
-    readonly user_full_name: FieldRef<"Users", 'String'>
+    readonly user_first_name: FieldRef<"Users", 'String'>
+    readonly user_last_name: FieldRef<"Users", 'String'>
     readonly user_gender: FieldRef<"Users", 'users_user_gender'>
     readonly user_birthday: FieldRef<"Users", 'DateTime'>
     readonly user_phone: FieldRef<"Users", 'String'>
@@ -2089,6 +2044,11 @@ export namespace Prisma {
     readonly user_created_at: FieldRef<"Users", 'DateTime'>
     readonly user_verification: FieldRef<"Users", 'users_user_verification'>
     readonly user_role: FieldRef<"Users", 'users_user_role'>
+    readonly otp: FieldRef<"Users", 'String'>
+    readonly otp_expiry_time: FieldRef<"Users", 'DateTime'>
+    readonly password_reset_token: FieldRef<"Users", 'String'>
+    readonly password_reset_expires: FieldRef<"Users", 'DateTime'>
+    readonly verified: FieldRef<"Users", 'Boolean'>
   }
     
 
@@ -2456,30 +2416,6 @@ export namespace Prisma {
   }
 
   /**
-   * Users.roommate_posts
-   */
-  export type Users$roommate_postsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RoommatePost
-     */
-    select?: RoommatePostSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RoommatePost
-     */
-    omit?: RoommatePostOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoommatePostInclude<ExtArgs> | null
-    where?: RoommatePostWhereInput
-    orderBy?: RoommatePostOrderByWithRelationInput | RoommatePostOrderByWithRelationInput[]
-    cursor?: RoommatePostWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: RoommatePostScalarFieldEnum | RoommatePostScalarFieldEnum[]
-  }
-
-  /**
    * Users without action
    */
   export type UsersDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2517,6 +2453,8 @@ export namespace Prisma {
     price_electricity: number | null
     price_water: number | null
     price_internet: number | null
+    post_latitude: number | null
+    post_longitude: number | null
     user_id: number | null
   }
 
@@ -2527,6 +2465,8 @@ export namespace Prisma {
     price_electricity: number | null
     price_water: number | null
     price_internet: number | null
+    post_latitude: number | null
+    post_longitude: number | null
     user_id: bigint | null
   }
 
@@ -2545,6 +2485,8 @@ export namespace Prisma {
     post_city: string | null
     category: $Enums.PostCategory | null
     status: $Enums.PostStatus | null
+    post_latitude: number | null
+    post_longitude: number | null
     user_id: bigint | null
     created_at: Date | null
     expired_at: Date | null
@@ -2565,6 +2507,8 @@ export namespace Prisma {
     post_city: string | null
     category: $Enums.PostCategory | null
     status: $Enums.PostStatus | null
+    post_latitude: number | null
+    post_longitude: number | null
     user_id: bigint | null
     created_at: Date | null
     expired_at: Date | null
@@ -2585,6 +2529,8 @@ export namespace Prisma {
     post_city: number
     category: number
     status: number
+    post_latitude: number
+    post_longitude: number
     user_id: number
     created_at: number
     expired_at: number
@@ -2599,6 +2545,8 @@ export namespace Prisma {
     price_electricity?: true
     price_water?: true
     price_internet?: true
+    post_latitude?: true
+    post_longitude?: true
     user_id?: true
   }
 
@@ -2609,6 +2557,8 @@ export namespace Prisma {
     price_electricity?: true
     price_water?: true
     price_internet?: true
+    post_latitude?: true
+    post_longitude?: true
     user_id?: true
   }
 
@@ -2627,6 +2577,8 @@ export namespace Prisma {
     post_city?: true
     category?: true
     status?: true
+    post_latitude?: true
+    post_longitude?: true
     user_id?: true
     created_at?: true
     expired_at?: true
@@ -2647,6 +2599,8 @@ export namespace Prisma {
     post_city?: true
     category?: true
     status?: true
+    post_latitude?: true
+    post_longitude?: true
     user_id?: true
     created_at?: true
     expired_at?: true
@@ -2667,6 +2621,8 @@ export namespace Prisma {
     post_city?: true
     category?: true
     status?: true
+    post_latitude?: true
+    post_longitude?: true
     user_id?: true
     created_at?: true
     expired_at?: true
@@ -2774,6 +2730,8 @@ export namespace Prisma {
     post_city: string
     category: $Enums.PostCategory
     status: $Enums.PostStatus
+    post_latitude: number | null
+    post_longitude: number | null
     user_id: bigint
     created_at: Date
     expired_at: Date | null
@@ -2813,6 +2771,8 @@ export namespace Prisma {
     post_city?: boolean
     category?: boolean
     status?: boolean
+    post_latitude?: boolean
+    post_longitude?: boolean
     user_id?: boolean
     created_at?: boolean
     expired_at?: boolean
@@ -2839,12 +2799,14 @@ export namespace Prisma {
     post_city?: boolean
     category?: boolean
     status?: boolean
+    post_latitude?: boolean
+    post_longitude?: boolean
     user_id?: boolean
     created_at?: boolean
     expired_at?: boolean
   }
 
-  export type PostsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"post_id" | "post_title" | "post_description" | "post_price" | "post_area" | "price_electricity" | "price_water" | "price_internet" | "post_address" | "post_ward" | "post_district" | "post_city" | "category" | "status" | "user_id" | "created_at" | "expired_at", ExtArgs["result"]["posts"]>
+  export type PostsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"post_id" | "post_title" | "post_description" | "post_price" | "post_area" | "price_electricity" | "price_water" | "price_internet" | "post_address" | "post_ward" | "post_district" | "post_city" | "category" | "status" | "post_latitude" | "post_longitude" | "user_id" | "created_at" | "expired_at", ExtArgs["result"]["posts"]>
   export type PostsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UsersDefaultArgs<ExtArgs>
     images?: boolean | Posts$imagesArgs<ExtArgs>
@@ -2874,6 +2836,8 @@ export namespace Prisma {
       post_city: string
       category: $Enums.PostCategory
       status: $Enums.PostStatus
+      post_latitude: number | null
+      post_longitude: number | null
       user_id: bigint
       created_at: Date
       expired_at: Date | null
@@ -3263,6 +3227,8 @@ export namespace Prisma {
     readonly post_city: FieldRef<"Posts", 'String'>
     readonly category: FieldRef<"Posts", 'PostCategory'>
     readonly status: FieldRef<"Posts", 'PostStatus'>
+    readonly post_latitude: FieldRef<"Posts", 'Float'>
+    readonly post_longitude: FieldRef<"Posts", 'Float'>
     readonly user_id: FieldRef<"Posts", 'BigInt'>
     readonly created_at: FieldRef<"Posts", 'DateTime'>
     readonly expired_at: FieldRef<"Posts", 'DateTime'>
@@ -5635,1113 +5601,6 @@ export namespace Prisma {
 
 
   /**
-   * Model RoommatePost
-   */
-
-  export type AggregateRoommatePost = {
-    _count: RoommatePostCountAggregateOutputType | null
-    _avg: RoommatePostAvgAggregateOutputType | null
-    _sum: RoommatePostSumAggregateOutputType | null
-    _min: RoommatePostMinAggregateOutputType | null
-    _max: RoommatePostMaxAggregateOutputType | null
-  }
-
-  export type RoommatePostAvgAggregateOutputType = {
-    id: number | null
-    budget: number | null
-    age_min: number | null
-    age_max: number | null
-    user_id: number | null
-  }
-
-  export type RoommatePostSumAggregateOutputType = {
-    id: number | null
-    budget: number | null
-    age_min: number | null
-    age_max: number | null
-    user_id: bigint | null
-  }
-
-  export type RoommatePostMinAggregateOutputType = {
-    id: number | null
-    title: string | null
-    description: string | null
-    budget: number | null
-    preferred_area: string | null
-    gender_preference: $Enums.RoommateGender | null
-    age_min: number | null
-    age_max: number | null
-    habits: string | null
-    contact_zalo: string | null
-    contact_messenger: string | null
-    contact_phone: string | null
-    status: $Enums.RoommateStatus | null
-    user_id: bigint | null
-    created_at: Date | null
-    updated_at: Date | null
-  }
-
-  export type RoommatePostMaxAggregateOutputType = {
-    id: number | null
-    title: string | null
-    description: string | null
-    budget: number | null
-    preferred_area: string | null
-    gender_preference: $Enums.RoommateGender | null
-    age_min: number | null
-    age_max: number | null
-    habits: string | null
-    contact_zalo: string | null
-    contact_messenger: string | null
-    contact_phone: string | null
-    status: $Enums.RoommateStatus | null
-    user_id: bigint | null
-    created_at: Date | null
-    updated_at: Date | null
-  }
-
-  export type RoommatePostCountAggregateOutputType = {
-    id: number
-    title: number
-    description: number
-    budget: number
-    preferred_area: number
-    gender_preference: number
-    age_min: number
-    age_max: number
-    habits: number
-    contact_zalo: number
-    contact_messenger: number
-    contact_phone: number
-    photos: number
-    status: number
-    user_id: number
-    created_at: number
-    updated_at: number
-    _all: number
-  }
-
-
-  export type RoommatePostAvgAggregateInputType = {
-    id?: true
-    budget?: true
-    age_min?: true
-    age_max?: true
-    user_id?: true
-  }
-
-  export type RoommatePostSumAggregateInputType = {
-    id?: true
-    budget?: true
-    age_min?: true
-    age_max?: true
-    user_id?: true
-  }
-
-  export type RoommatePostMinAggregateInputType = {
-    id?: true
-    title?: true
-    description?: true
-    budget?: true
-    preferred_area?: true
-    gender_preference?: true
-    age_min?: true
-    age_max?: true
-    habits?: true
-    contact_zalo?: true
-    contact_messenger?: true
-    contact_phone?: true
-    status?: true
-    user_id?: true
-    created_at?: true
-    updated_at?: true
-  }
-
-  export type RoommatePostMaxAggregateInputType = {
-    id?: true
-    title?: true
-    description?: true
-    budget?: true
-    preferred_area?: true
-    gender_preference?: true
-    age_min?: true
-    age_max?: true
-    habits?: true
-    contact_zalo?: true
-    contact_messenger?: true
-    contact_phone?: true
-    status?: true
-    user_id?: true
-    created_at?: true
-    updated_at?: true
-  }
-
-  export type RoommatePostCountAggregateInputType = {
-    id?: true
-    title?: true
-    description?: true
-    budget?: true
-    preferred_area?: true
-    gender_preference?: true
-    age_min?: true
-    age_max?: true
-    habits?: true
-    contact_zalo?: true
-    contact_messenger?: true
-    contact_phone?: true
-    photos?: true
-    status?: true
-    user_id?: true
-    created_at?: true
-    updated_at?: true
-    _all?: true
-  }
-
-  export type RoommatePostAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which RoommatePost to aggregate.
-     */
-    where?: RoommatePostWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RoommatePosts to fetch.
-     */
-    orderBy?: RoommatePostOrderByWithRelationInput | RoommatePostOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: RoommatePostWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RoommatePosts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RoommatePosts.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned RoommatePosts
-    **/
-    _count?: true | RoommatePostCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: RoommatePostAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: RoommatePostSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: RoommatePostMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: RoommatePostMaxAggregateInputType
-  }
-
-  export type GetRoommatePostAggregateType<T extends RoommatePostAggregateArgs> = {
-        [P in keyof T & keyof AggregateRoommatePost]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateRoommatePost[P]>
-      : GetScalarType<T[P], AggregateRoommatePost[P]>
-  }
-
-
-
-
-  export type RoommatePostGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RoommatePostWhereInput
-    orderBy?: RoommatePostOrderByWithAggregationInput | RoommatePostOrderByWithAggregationInput[]
-    by: RoommatePostScalarFieldEnum[] | RoommatePostScalarFieldEnum
-    having?: RoommatePostScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: RoommatePostCountAggregateInputType | true
-    _avg?: RoommatePostAvgAggregateInputType
-    _sum?: RoommatePostSumAggregateInputType
-    _min?: RoommatePostMinAggregateInputType
-    _max?: RoommatePostMaxAggregateInputType
-  }
-
-  export type RoommatePostGroupByOutputType = {
-    id: number
-    title: string
-    description: string
-    budget: number
-    preferred_area: string
-    gender_preference: $Enums.RoommateGender
-    age_min: number | null
-    age_max: number | null
-    habits: string | null
-    contact_zalo: string | null
-    contact_messenger: string | null
-    contact_phone: string | null
-    photos: JsonValue | null
-    status: $Enums.RoommateStatus
-    user_id: bigint
-    created_at: Date
-    updated_at: Date
-    _count: RoommatePostCountAggregateOutputType | null
-    _avg: RoommatePostAvgAggregateOutputType | null
-    _sum: RoommatePostSumAggregateOutputType | null
-    _min: RoommatePostMinAggregateOutputType | null
-    _max: RoommatePostMaxAggregateOutputType | null
-  }
-
-  type GetRoommatePostGroupByPayload<T extends RoommatePostGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<RoommatePostGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof RoommatePostGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], RoommatePostGroupByOutputType[P]>
-            : GetScalarType<T[P], RoommatePostGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type RoommatePostSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    title?: boolean
-    description?: boolean
-    budget?: boolean
-    preferred_area?: boolean
-    gender_preference?: boolean
-    age_min?: boolean
-    age_max?: boolean
-    habits?: boolean
-    contact_zalo?: boolean
-    contact_messenger?: boolean
-    contact_phone?: boolean
-    photos?: boolean
-    status?: boolean
-    user_id?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    user?: boolean | UsersDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["roommatePost"]>
-
-
-
-  export type RoommatePostSelectScalar = {
-    id?: boolean
-    title?: boolean
-    description?: boolean
-    budget?: boolean
-    preferred_area?: boolean
-    gender_preference?: boolean
-    age_min?: boolean
-    age_max?: boolean
-    habits?: boolean
-    contact_zalo?: boolean
-    contact_messenger?: boolean
-    contact_phone?: boolean
-    photos?: boolean
-    status?: boolean
-    user_id?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-  }
-
-  export type RoommatePostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "budget" | "preferred_area" | "gender_preference" | "age_min" | "age_max" | "habits" | "contact_zalo" | "contact_messenger" | "contact_phone" | "photos" | "status" | "user_id" | "created_at" | "updated_at", ExtArgs["result"]["roommatePost"]>
-  export type RoommatePostInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UsersDefaultArgs<ExtArgs>
-  }
-
-  export type $RoommatePostPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "RoommatePost"
-    objects: {
-      user: Prisma.$UsersPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      title: string
-      description: string
-      budget: number
-      preferred_area: string
-      gender_preference: $Enums.RoommateGender
-      age_min: number | null
-      age_max: number | null
-      habits: string | null
-      contact_zalo: string | null
-      contact_messenger: string | null
-      contact_phone: string | null
-      photos: Prisma.JsonValue | null
-      status: $Enums.RoommateStatus
-      user_id: bigint
-      created_at: Date
-      updated_at: Date
-    }, ExtArgs["result"]["roommatePost"]>
-    composites: {}
-  }
-
-  type RoommatePostGetPayload<S extends boolean | null | undefined | RoommatePostDefaultArgs> = $Result.GetResult<Prisma.$RoommatePostPayload, S>
-
-  type RoommatePostCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<RoommatePostFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: RoommatePostCountAggregateInputType | true
-    }
-
-  export interface RoommatePostDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RoommatePost'], meta: { name: 'RoommatePost' } }
-    /**
-     * Find zero or one RoommatePost that matches the filter.
-     * @param {RoommatePostFindUniqueArgs} args - Arguments to find a RoommatePost
-     * @example
-     * // Get one RoommatePost
-     * const roommatePost = await prisma.roommatePost.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends RoommatePostFindUniqueArgs>(args: SelectSubset<T, RoommatePostFindUniqueArgs<ExtArgs>>): Prisma__RoommatePostClient<$Result.GetResult<Prisma.$RoommatePostPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one RoommatePost that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {RoommatePostFindUniqueOrThrowArgs} args - Arguments to find a RoommatePost
-     * @example
-     * // Get one RoommatePost
-     * const roommatePost = await prisma.roommatePost.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends RoommatePostFindUniqueOrThrowArgs>(args: SelectSubset<T, RoommatePostFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RoommatePostClient<$Result.GetResult<Prisma.$RoommatePostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first RoommatePost that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RoommatePostFindFirstArgs} args - Arguments to find a RoommatePost
-     * @example
-     * // Get one RoommatePost
-     * const roommatePost = await prisma.roommatePost.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends RoommatePostFindFirstArgs>(args?: SelectSubset<T, RoommatePostFindFirstArgs<ExtArgs>>): Prisma__RoommatePostClient<$Result.GetResult<Prisma.$RoommatePostPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first RoommatePost that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RoommatePostFindFirstOrThrowArgs} args - Arguments to find a RoommatePost
-     * @example
-     * // Get one RoommatePost
-     * const roommatePost = await prisma.roommatePost.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends RoommatePostFindFirstOrThrowArgs>(args?: SelectSubset<T, RoommatePostFindFirstOrThrowArgs<ExtArgs>>): Prisma__RoommatePostClient<$Result.GetResult<Prisma.$RoommatePostPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more RoommatePosts that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RoommatePostFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all RoommatePosts
-     * const roommatePosts = await prisma.roommatePost.findMany()
-     * 
-     * // Get first 10 RoommatePosts
-     * const roommatePosts = await prisma.roommatePost.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const roommatePostWithIdOnly = await prisma.roommatePost.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends RoommatePostFindManyArgs>(args?: SelectSubset<T, RoommatePostFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoommatePostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a RoommatePost.
-     * @param {RoommatePostCreateArgs} args - Arguments to create a RoommatePost.
-     * @example
-     * // Create one RoommatePost
-     * const RoommatePost = await prisma.roommatePost.create({
-     *   data: {
-     *     // ... data to create a RoommatePost
-     *   }
-     * })
-     * 
-     */
-    create<T extends RoommatePostCreateArgs>(args: SelectSubset<T, RoommatePostCreateArgs<ExtArgs>>): Prisma__RoommatePostClient<$Result.GetResult<Prisma.$RoommatePostPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many RoommatePosts.
-     * @param {RoommatePostCreateManyArgs} args - Arguments to create many RoommatePosts.
-     * @example
-     * // Create many RoommatePosts
-     * const roommatePost = await prisma.roommatePost.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends RoommatePostCreateManyArgs>(args?: SelectSubset<T, RoommatePostCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a RoommatePost.
-     * @param {RoommatePostDeleteArgs} args - Arguments to delete one RoommatePost.
-     * @example
-     * // Delete one RoommatePost
-     * const RoommatePost = await prisma.roommatePost.delete({
-     *   where: {
-     *     // ... filter to delete one RoommatePost
-     *   }
-     * })
-     * 
-     */
-    delete<T extends RoommatePostDeleteArgs>(args: SelectSubset<T, RoommatePostDeleteArgs<ExtArgs>>): Prisma__RoommatePostClient<$Result.GetResult<Prisma.$RoommatePostPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one RoommatePost.
-     * @param {RoommatePostUpdateArgs} args - Arguments to update one RoommatePost.
-     * @example
-     * // Update one RoommatePost
-     * const roommatePost = await prisma.roommatePost.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends RoommatePostUpdateArgs>(args: SelectSubset<T, RoommatePostUpdateArgs<ExtArgs>>): Prisma__RoommatePostClient<$Result.GetResult<Prisma.$RoommatePostPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more RoommatePosts.
-     * @param {RoommatePostDeleteManyArgs} args - Arguments to filter RoommatePosts to delete.
-     * @example
-     * // Delete a few RoommatePosts
-     * const { count } = await prisma.roommatePost.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends RoommatePostDeleteManyArgs>(args?: SelectSubset<T, RoommatePostDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more RoommatePosts.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RoommatePostUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many RoommatePosts
-     * const roommatePost = await prisma.roommatePost.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends RoommatePostUpdateManyArgs>(args: SelectSubset<T, RoommatePostUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one RoommatePost.
-     * @param {RoommatePostUpsertArgs} args - Arguments to update or create a RoommatePost.
-     * @example
-     * // Update or create a RoommatePost
-     * const roommatePost = await prisma.roommatePost.upsert({
-     *   create: {
-     *     // ... data to create a RoommatePost
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the RoommatePost we want to update
-     *   }
-     * })
-     */
-    upsert<T extends RoommatePostUpsertArgs>(args: SelectSubset<T, RoommatePostUpsertArgs<ExtArgs>>): Prisma__RoommatePostClient<$Result.GetResult<Prisma.$RoommatePostPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of RoommatePosts.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RoommatePostCountArgs} args - Arguments to filter RoommatePosts to count.
-     * @example
-     * // Count the number of RoommatePosts
-     * const count = await prisma.roommatePost.count({
-     *   where: {
-     *     // ... the filter for the RoommatePosts we want to count
-     *   }
-     * })
-    **/
-    count<T extends RoommatePostCountArgs>(
-      args?: Subset<T, RoommatePostCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], RoommatePostCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a RoommatePost.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RoommatePostAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends RoommatePostAggregateArgs>(args: Subset<T, RoommatePostAggregateArgs>): Prisma.PrismaPromise<GetRoommatePostAggregateType<T>>
-
-    /**
-     * Group by RoommatePost.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {RoommatePostGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends RoommatePostGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: RoommatePostGroupByArgs['orderBy'] }
-        : { orderBy?: RoommatePostGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, RoommatePostGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRoommatePostGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the RoommatePost model
-   */
-  readonly fields: RoommatePostFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for RoommatePost.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__RoommatePostClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UsersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UsersDefaultArgs<ExtArgs>>): Prisma__UsersClient<$Result.GetResult<Prisma.$UsersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the RoommatePost model
-   */
-  interface RoommatePostFieldRefs {
-    readonly id: FieldRef<"RoommatePost", 'Int'>
-    readonly title: FieldRef<"RoommatePost", 'String'>
-    readonly description: FieldRef<"RoommatePost", 'String'>
-    readonly budget: FieldRef<"RoommatePost", 'Int'>
-    readonly preferred_area: FieldRef<"RoommatePost", 'String'>
-    readonly gender_preference: FieldRef<"RoommatePost", 'RoommateGender'>
-    readonly age_min: FieldRef<"RoommatePost", 'Int'>
-    readonly age_max: FieldRef<"RoommatePost", 'Int'>
-    readonly habits: FieldRef<"RoommatePost", 'String'>
-    readonly contact_zalo: FieldRef<"RoommatePost", 'String'>
-    readonly contact_messenger: FieldRef<"RoommatePost", 'String'>
-    readonly contact_phone: FieldRef<"RoommatePost", 'String'>
-    readonly photos: FieldRef<"RoommatePost", 'Json'>
-    readonly status: FieldRef<"RoommatePost", 'RoommateStatus'>
-    readonly user_id: FieldRef<"RoommatePost", 'BigInt'>
-    readonly created_at: FieldRef<"RoommatePost", 'DateTime'>
-    readonly updated_at: FieldRef<"RoommatePost", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * RoommatePost findUnique
-   */
-  export type RoommatePostFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RoommatePost
-     */
-    select?: RoommatePostSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RoommatePost
-     */
-    omit?: RoommatePostOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoommatePostInclude<ExtArgs> | null
-    /**
-     * Filter, which RoommatePost to fetch.
-     */
-    where: RoommatePostWhereUniqueInput
-  }
-
-  /**
-   * RoommatePost findUniqueOrThrow
-   */
-  export type RoommatePostFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RoommatePost
-     */
-    select?: RoommatePostSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RoommatePost
-     */
-    omit?: RoommatePostOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoommatePostInclude<ExtArgs> | null
-    /**
-     * Filter, which RoommatePost to fetch.
-     */
-    where: RoommatePostWhereUniqueInput
-  }
-
-  /**
-   * RoommatePost findFirst
-   */
-  export type RoommatePostFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RoommatePost
-     */
-    select?: RoommatePostSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RoommatePost
-     */
-    omit?: RoommatePostOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoommatePostInclude<ExtArgs> | null
-    /**
-     * Filter, which RoommatePost to fetch.
-     */
-    where?: RoommatePostWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RoommatePosts to fetch.
-     */
-    orderBy?: RoommatePostOrderByWithRelationInput | RoommatePostOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for RoommatePosts.
-     */
-    cursor?: RoommatePostWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RoommatePosts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RoommatePosts.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of RoommatePosts.
-     */
-    distinct?: RoommatePostScalarFieldEnum | RoommatePostScalarFieldEnum[]
-  }
-
-  /**
-   * RoommatePost findFirstOrThrow
-   */
-  export type RoommatePostFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RoommatePost
-     */
-    select?: RoommatePostSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RoommatePost
-     */
-    omit?: RoommatePostOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoommatePostInclude<ExtArgs> | null
-    /**
-     * Filter, which RoommatePost to fetch.
-     */
-    where?: RoommatePostWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RoommatePosts to fetch.
-     */
-    orderBy?: RoommatePostOrderByWithRelationInput | RoommatePostOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for RoommatePosts.
-     */
-    cursor?: RoommatePostWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RoommatePosts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RoommatePosts.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of RoommatePosts.
-     */
-    distinct?: RoommatePostScalarFieldEnum | RoommatePostScalarFieldEnum[]
-  }
-
-  /**
-   * RoommatePost findMany
-   */
-  export type RoommatePostFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RoommatePost
-     */
-    select?: RoommatePostSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RoommatePost
-     */
-    omit?: RoommatePostOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoommatePostInclude<ExtArgs> | null
-    /**
-     * Filter, which RoommatePosts to fetch.
-     */
-    where?: RoommatePostWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of RoommatePosts to fetch.
-     */
-    orderBy?: RoommatePostOrderByWithRelationInput | RoommatePostOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing RoommatePosts.
-     */
-    cursor?: RoommatePostWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` RoommatePosts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` RoommatePosts.
-     */
-    skip?: number
-    distinct?: RoommatePostScalarFieldEnum | RoommatePostScalarFieldEnum[]
-  }
-
-  /**
-   * RoommatePost create
-   */
-  export type RoommatePostCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RoommatePost
-     */
-    select?: RoommatePostSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RoommatePost
-     */
-    omit?: RoommatePostOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoommatePostInclude<ExtArgs> | null
-    /**
-     * The data needed to create a RoommatePost.
-     */
-    data: XOR<RoommatePostCreateInput, RoommatePostUncheckedCreateInput>
-  }
-
-  /**
-   * RoommatePost createMany
-   */
-  export type RoommatePostCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many RoommatePosts.
-     */
-    data: RoommatePostCreateManyInput | RoommatePostCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * RoommatePost update
-   */
-  export type RoommatePostUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RoommatePost
-     */
-    select?: RoommatePostSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RoommatePost
-     */
-    omit?: RoommatePostOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoommatePostInclude<ExtArgs> | null
-    /**
-     * The data needed to update a RoommatePost.
-     */
-    data: XOR<RoommatePostUpdateInput, RoommatePostUncheckedUpdateInput>
-    /**
-     * Choose, which RoommatePost to update.
-     */
-    where: RoommatePostWhereUniqueInput
-  }
-
-  /**
-   * RoommatePost updateMany
-   */
-  export type RoommatePostUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update RoommatePosts.
-     */
-    data: XOR<RoommatePostUpdateManyMutationInput, RoommatePostUncheckedUpdateManyInput>
-    /**
-     * Filter which RoommatePosts to update
-     */
-    where?: RoommatePostWhereInput
-    /**
-     * Limit how many RoommatePosts to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * RoommatePost upsert
-   */
-  export type RoommatePostUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RoommatePost
-     */
-    select?: RoommatePostSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RoommatePost
-     */
-    omit?: RoommatePostOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoommatePostInclude<ExtArgs> | null
-    /**
-     * The filter to search for the RoommatePost to update in case it exists.
-     */
-    where: RoommatePostWhereUniqueInput
-    /**
-     * In case the RoommatePost found by the `where` argument doesn't exist, create a new RoommatePost with this data.
-     */
-    create: XOR<RoommatePostCreateInput, RoommatePostUncheckedCreateInput>
-    /**
-     * In case the RoommatePost was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<RoommatePostUpdateInput, RoommatePostUncheckedUpdateInput>
-  }
-
-  /**
-   * RoommatePost delete
-   */
-  export type RoommatePostDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RoommatePost
-     */
-    select?: RoommatePostSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RoommatePost
-     */
-    omit?: RoommatePostOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoommatePostInclude<ExtArgs> | null
-    /**
-     * Filter which RoommatePost to delete.
-     */
-    where: RoommatePostWhereUniqueInput
-  }
-
-  /**
-   * RoommatePost deleteMany
-   */
-  export type RoommatePostDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which RoommatePosts to delete
-     */
-    where?: RoommatePostWhereInput
-    /**
-     * Limit how many RoommatePosts to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * RoommatePost without action
-   */
-  export type RoommatePostDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the RoommatePost
-     */
-    select?: RoommatePostSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the RoommatePost
-     */
-    omit?: RoommatePostOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: RoommatePostInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Enums
    */
 
@@ -6757,9 +5616,9 @@ export namespace Prisma {
 
   export const UsersScalarFieldEnum: {
     user_id: 'user_id',
-    user_name: 'user_name',
     user_password: 'user_password',
-    user_full_name: 'user_full_name',
+    user_first_name: 'user_first_name',
+    user_last_name: 'user_last_name',
     user_gender: 'user_gender',
     user_birthday: 'user_birthday',
     user_phone: 'user_phone',
@@ -6771,7 +5630,12 @@ export namespace Prisma {
     user_bio: 'user_bio',
     user_created_at: 'user_created_at',
     user_verification: 'user_verification',
-    user_role: 'user_role'
+    user_role: 'user_role',
+    otp: 'otp',
+    otp_expiry_time: 'otp_expiry_time',
+    password_reset_token: 'password_reset_token',
+    password_reset_expires: 'password_reset_expires',
+    verified: 'verified'
   };
 
   export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
@@ -6792,6 +5656,8 @@ export namespace Prisma {
     post_city: 'post_city',
     category: 'category',
     status: 'status',
+    post_latitude: 'post_latitude',
+    post_longitude: 'post_longitude',
     user_id: 'user_id',
     created_at: 'created_at',
     expired_at: 'expired_at'
@@ -6824,43 +5690,12 @@ export namespace Prisma {
   export type PostImagesScalarFieldEnum = (typeof PostImagesScalarFieldEnum)[keyof typeof PostImagesScalarFieldEnum]
 
 
-  export const RoommatePostScalarFieldEnum: {
-    id: 'id',
-    title: 'title',
-    description: 'description',
-    budget: 'budget',
-    preferred_area: 'preferred_area',
-    gender_preference: 'gender_preference',
-    age_min: 'age_min',
-    age_max: 'age_max',
-    habits: 'habits',
-    contact_zalo: 'contact_zalo',
-    contact_messenger: 'contact_messenger',
-    contact_phone: 'contact_phone',
-    photos: 'photos',
-    status: 'status',
-    user_id: 'user_id',
-    created_at: 'created_at',
-    updated_at: 'updated_at'
-  };
-
-  export type RoommatePostScalarFieldEnum = (typeof RoommatePostScalarFieldEnum)[keyof typeof RoommatePostScalarFieldEnum]
-
-
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
-
-
-  export const NullableJsonNullValueInput: {
-    DbNull: typeof DbNull,
-    JsonNull: typeof JsonNull
-  };
-
-  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const NullsOrder: {
@@ -6872,14 +5707,16 @@ export namespace Prisma {
 
 
   export const UsersOrderByRelevanceFieldEnum: {
-    user_name: 'user_name',
     user_password: 'user_password',
-    user_full_name: 'user_full_name',
+    user_first_name: 'user_first_name',
+    user_last_name: 'user_last_name',
     user_phone: 'user_phone',
     user_email: 'user_email',
     user_address: 'user_address',
     user_avatar: 'user_avatar',
-    user_bio: 'user_bio'
+    user_bio: 'user_bio',
+    otp: 'otp',
+    password_reset_token: 'password_reset_token'
   };
 
   export type UsersOrderByRelevanceFieldEnum = (typeof UsersOrderByRelevanceFieldEnum)[keyof typeof UsersOrderByRelevanceFieldEnum]
@@ -6913,36 +5750,6 @@ export namespace Prisma {
   };
 
   export type PostImagesOrderByRelevanceFieldEnum = (typeof PostImagesOrderByRelevanceFieldEnum)[keyof typeof PostImagesOrderByRelevanceFieldEnum]
-
-
-  export const JsonNullValueFilter: {
-    DbNull: typeof DbNull,
-    JsonNull: typeof JsonNull,
-    AnyNull: typeof AnyNull
-  };
-
-  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-  export const QueryMode: {
-    default: 'default',
-    insensitive: 'insensitive'
-  };
-
-  export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
-  export const RoommatePostOrderByRelevanceFieldEnum: {
-    title: 'title',
-    description: 'description',
-    preferred_area: 'preferred_area',
-    habits: 'habits',
-    contact_zalo: 'contact_zalo',
-    contact_messenger: 'contact_messenger',
-    contact_phone: 'contact_phone'
-  };
-
-  export type RoommatePostOrderByRelevanceFieldEnum = (typeof RoommatePostOrderByRelevanceFieldEnum)[keyof typeof RoommatePostOrderByRelevanceFieldEnum]
 
 
   /**
@@ -7007,6 +5814,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -7025,34 +5839,6 @@ export namespace Prisma {
    */
   export type EnumPostStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PostStatus'>
     
-
-
-  /**
-   * Reference to a field of type 'RoommateGender'
-   */
-  export type EnumRoommateGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RoommateGender'>
-    
-
-
-  /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
-   * Reference to a field of type 'RoommateStatus'
-   */
-  export type EnumRoommateStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RoommateStatus'>
-    
   /**
    * Deep Input Types
    */
@@ -7063,9 +5849,9 @@ export namespace Prisma {
     OR?: UsersWhereInput[]
     NOT?: UsersWhereInput | UsersWhereInput[]
     user_id?: BigIntFilter<"Users"> | bigint | number
-    user_name?: StringFilter<"Users"> | string
     user_password?: StringFilter<"Users"> | string
-    user_full_name?: StringNullableFilter<"Users"> | string | null
+    user_first_name?: StringNullableFilter<"Users"> | string | null
+    user_last_name?: StringNullableFilter<"Users"> | string | null
     user_gender?: Enumusers_user_genderNullableFilter<"Users"> | $Enums.users_user_gender | null
     user_birthday?: DateTimeNullableFilter<"Users"> | Date | string | null
     user_phone?: StringNullableFilter<"Users"> | string | null
@@ -7078,15 +5864,19 @@ export namespace Prisma {
     user_created_at?: DateTimeFilter<"Users"> | Date | string
     user_verification?: Enumusers_user_verificationFilter<"Users"> | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFilter<"Users"> | $Enums.users_user_role
+    otp?: StringNullableFilter<"Users"> | string | null
+    otp_expiry_time?: DateTimeNullableFilter<"Users"> | Date | string | null
+    password_reset_token?: StringNullableFilter<"Users"> | string | null
+    password_reset_expires?: DateTimeNullableFilter<"Users"> | Date | string | null
+    verified?: BoolFilter<"Users"> | boolean
     posts?: PostsListRelationFilter
-    roommate_posts?: RoommatePostListRelationFilter
   }
 
   export type UsersOrderByWithRelationInput = {
     user_id?: SortOrder
-    user_name?: SortOrder
     user_password?: SortOrder
-    user_full_name?: SortOrderInput | SortOrder
+    user_first_name?: SortOrderInput | SortOrder
+    user_last_name?: SortOrderInput | SortOrder
     user_gender?: SortOrderInput | SortOrder
     user_birthday?: SortOrderInput | SortOrder
     user_phone?: SortOrderInput | SortOrder
@@ -7099,21 +5889,25 @@ export namespace Prisma {
     user_created_at?: SortOrder
     user_verification?: SortOrder
     user_role?: SortOrder
+    otp?: SortOrderInput | SortOrder
+    otp_expiry_time?: SortOrderInput | SortOrder
+    password_reset_token?: SortOrderInput | SortOrder
+    password_reset_expires?: SortOrderInput | SortOrder
+    verified?: SortOrder
     posts?: PostsOrderByRelationAggregateInput
-    roommate_posts?: RoommatePostOrderByRelationAggregateInput
     _relevance?: UsersOrderByRelevanceInput
   }
 
   export type UsersWhereUniqueInput = Prisma.AtLeast<{
     user_id?: bigint | number
-    user_name?: string
     user_phone?: string
     user_email?: string
     AND?: UsersWhereInput | UsersWhereInput[]
     OR?: UsersWhereInput[]
     NOT?: UsersWhereInput | UsersWhereInput[]
     user_password?: StringFilter<"Users"> | string
-    user_full_name?: StringNullableFilter<"Users"> | string | null
+    user_first_name?: StringNullableFilter<"Users"> | string | null
+    user_last_name?: StringNullableFilter<"Users"> | string | null
     user_gender?: Enumusers_user_genderNullableFilter<"Users"> | $Enums.users_user_gender | null
     user_birthday?: DateTimeNullableFilter<"Users"> | Date | string | null
     user_address?: StringNullableFilter<"Users"> | string | null
@@ -7124,15 +5918,19 @@ export namespace Prisma {
     user_created_at?: DateTimeFilter<"Users"> | Date | string
     user_verification?: Enumusers_user_verificationFilter<"Users"> | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFilter<"Users"> | $Enums.users_user_role
+    otp?: StringNullableFilter<"Users"> | string | null
+    otp_expiry_time?: DateTimeNullableFilter<"Users"> | Date | string | null
+    password_reset_token?: StringNullableFilter<"Users"> | string | null
+    password_reset_expires?: DateTimeNullableFilter<"Users"> | Date | string | null
+    verified?: BoolFilter<"Users"> | boolean
     posts?: PostsListRelationFilter
-    roommate_posts?: RoommatePostListRelationFilter
-  }, "user_id" | "user_name" | "user_phone" | "user_email">
+  }, "user_id" | "user_phone" | "user_email">
 
   export type UsersOrderByWithAggregationInput = {
     user_id?: SortOrder
-    user_name?: SortOrder
     user_password?: SortOrder
-    user_full_name?: SortOrderInput | SortOrder
+    user_first_name?: SortOrderInput | SortOrder
+    user_last_name?: SortOrderInput | SortOrder
     user_gender?: SortOrderInput | SortOrder
     user_birthday?: SortOrderInput | SortOrder
     user_phone?: SortOrderInput | SortOrder
@@ -7145,6 +5943,11 @@ export namespace Prisma {
     user_created_at?: SortOrder
     user_verification?: SortOrder
     user_role?: SortOrder
+    otp?: SortOrderInput | SortOrder
+    otp_expiry_time?: SortOrderInput | SortOrder
+    password_reset_token?: SortOrderInput | SortOrder
+    password_reset_expires?: SortOrderInput | SortOrder
+    verified?: SortOrder
     _count?: UsersCountOrderByAggregateInput
     _avg?: UsersAvgOrderByAggregateInput
     _max?: UsersMaxOrderByAggregateInput
@@ -7157,9 +5960,9 @@ export namespace Prisma {
     OR?: UsersScalarWhereWithAggregatesInput[]
     NOT?: UsersScalarWhereWithAggregatesInput | UsersScalarWhereWithAggregatesInput[]
     user_id?: BigIntWithAggregatesFilter<"Users"> | bigint | number
-    user_name?: StringWithAggregatesFilter<"Users"> | string
     user_password?: StringWithAggregatesFilter<"Users"> | string
-    user_full_name?: StringNullableWithAggregatesFilter<"Users"> | string | null
+    user_first_name?: StringNullableWithAggregatesFilter<"Users"> | string | null
+    user_last_name?: StringNullableWithAggregatesFilter<"Users"> | string | null
     user_gender?: Enumusers_user_genderNullableWithAggregatesFilter<"Users"> | $Enums.users_user_gender | null
     user_birthday?: DateTimeNullableWithAggregatesFilter<"Users"> | Date | string | null
     user_phone?: StringNullableWithAggregatesFilter<"Users"> | string | null
@@ -7172,6 +5975,11 @@ export namespace Prisma {
     user_created_at?: DateTimeWithAggregatesFilter<"Users"> | Date | string
     user_verification?: Enumusers_user_verificationWithAggregatesFilter<"Users"> | $Enums.users_user_verification
     user_role?: Enumusers_user_roleWithAggregatesFilter<"Users"> | $Enums.users_user_role
+    otp?: StringNullableWithAggregatesFilter<"Users"> | string | null
+    otp_expiry_time?: DateTimeNullableWithAggregatesFilter<"Users"> | Date | string | null
+    password_reset_token?: StringNullableWithAggregatesFilter<"Users"> | string | null
+    password_reset_expires?: DateTimeNullableWithAggregatesFilter<"Users"> | Date | string | null
+    verified?: BoolWithAggregatesFilter<"Users"> | boolean
   }
 
   export type PostsWhereInput = {
@@ -7192,6 +6000,8 @@ export namespace Prisma {
     post_city?: StringFilter<"Posts"> | string
     category?: EnumPostCategoryFilter<"Posts"> | $Enums.PostCategory
     status?: EnumPostStatusFilter<"Posts"> | $Enums.PostStatus
+    post_latitude?: FloatNullableFilter<"Posts"> | number | null
+    post_longitude?: FloatNullableFilter<"Posts"> | number | null
     user_id?: BigIntFilter<"Posts"> | bigint | number
     created_at?: DateTimeFilter<"Posts"> | Date | string
     expired_at?: DateTimeNullableFilter<"Posts"> | Date | string | null
@@ -7215,6 +6025,8 @@ export namespace Prisma {
     post_city?: SortOrder
     category?: SortOrder
     status?: SortOrder
+    post_latitude?: SortOrderInput | SortOrder
+    post_longitude?: SortOrderInput | SortOrder
     user_id?: SortOrder
     created_at?: SortOrder
     expired_at?: SortOrderInput | SortOrder
@@ -7242,6 +6054,8 @@ export namespace Prisma {
     post_city?: StringFilter<"Posts"> | string
     category?: EnumPostCategoryFilter<"Posts"> | $Enums.PostCategory
     status?: EnumPostStatusFilter<"Posts"> | $Enums.PostStatus
+    post_latitude?: FloatNullableFilter<"Posts"> | number | null
+    post_longitude?: FloatNullableFilter<"Posts"> | number | null
     user_id?: BigIntFilter<"Posts"> | bigint | number
     created_at?: DateTimeFilter<"Posts"> | Date | string
     expired_at?: DateTimeNullableFilter<"Posts"> | Date | string | null
@@ -7265,6 +6079,8 @@ export namespace Prisma {
     post_city?: SortOrder
     category?: SortOrder
     status?: SortOrder
+    post_latitude?: SortOrderInput | SortOrder
+    post_longitude?: SortOrderInput | SortOrder
     user_id?: SortOrder
     created_at?: SortOrder
     expired_at?: SortOrderInput | SortOrder
@@ -7293,6 +6109,8 @@ export namespace Prisma {
     post_city?: StringWithAggregatesFilter<"Posts"> | string
     category?: EnumPostCategoryWithAggregatesFilter<"Posts"> | $Enums.PostCategory
     status?: EnumPostStatusWithAggregatesFilter<"Posts"> | $Enums.PostStatus
+    post_latitude?: FloatNullableWithAggregatesFilter<"Posts"> | number | null
+    post_longitude?: FloatNullableWithAggregatesFilter<"Posts"> | number | null
     user_id?: BigIntWithAggregatesFilter<"Posts"> | bigint | number
     created_at?: DateTimeWithAggregatesFilter<"Posts"> | Date | string
     expired_at?: DateTimeNullableWithAggregatesFilter<"Posts"> | Date | string | null
@@ -7424,129 +6242,11 @@ export namespace Prisma {
     post_id?: IntWithAggregatesFilter<"PostImages"> | number
   }
 
-  export type RoommatePostWhereInput = {
-    AND?: RoommatePostWhereInput | RoommatePostWhereInput[]
-    OR?: RoommatePostWhereInput[]
-    NOT?: RoommatePostWhereInput | RoommatePostWhereInput[]
-    id?: IntFilter<"RoommatePost"> | number
-    title?: StringFilter<"RoommatePost"> | string
-    description?: StringFilter<"RoommatePost"> | string
-    budget?: IntFilter<"RoommatePost"> | number
-    preferred_area?: StringFilter<"RoommatePost"> | string
-    gender_preference?: EnumRoommateGenderFilter<"RoommatePost"> | $Enums.RoommateGender
-    age_min?: IntNullableFilter<"RoommatePost"> | number | null
-    age_max?: IntNullableFilter<"RoommatePost"> | number | null
-    habits?: StringNullableFilter<"RoommatePost"> | string | null
-    contact_zalo?: StringNullableFilter<"RoommatePost"> | string | null
-    contact_messenger?: StringNullableFilter<"RoommatePost"> | string | null
-    contact_phone?: StringNullableFilter<"RoommatePost"> | string | null
-    photos?: JsonNullableFilter<"RoommatePost">
-    status?: EnumRoommateStatusFilter<"RoommatePost"> | $Enums.RoommateStatus
-    user_id?: BigIntFilter<"RoommatePost"> | bigint | number
-    created_at?: DateTimeFilter<"RoommatePost"> | Date | string
-    updated_at?: DateTimeFilter<"RoommatePost"> | Date | string
-    user?: XOR<UsersScalarRelationFilter, UsersWhereInput>
-  }
-
-  export type RoommatePostOrderByWithRelationInput = {
-    id?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    budget?: SortOrder
-    preferred_area?: SortOrder
-    gender_preference?: SortOrder
-    age_min?: SortOrderInput | SortOrder
-    age_max?: SortOrderInput | SortOrder
-    habits?: SortOrderInput | SortOrder
-    contact_zalo?: SortOrderInput | SortOrder
-    contact_messenger?: SortOrderInput | SortOrder
-    contact_phone?: SortOrderInput | SortOrder
-    photos?: SortOrderInput | SortOrder
-    status?: SortOrder
-    user_id?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    user?: UsersOrderByWithRelationInput
-    _relevance?: RoommatePostOrderByRelevanceInput
-  }
-
-  export type RoommatePostWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: RoommatePostWhereInput | RoommatePostWhereInput[]
-    OR?: RoommatePostWhereInput[]
-    NOT?: RoommatePostWhereInput | RoommatePostWhereInput[]
-    title?: StringFilter<"RoommatePost"> | string
-    description?: StringFilter<"RoommatePost"> | string
-    budget?: IntFilter<"RoommatePost"> | number
-    preferred_area?: StringFilter<"RoommatePost"> | string
-    gender_preference?: EnumRoommateGenderFilter<"RoommatePost"> | $Enums.RoommateGender
-    age_min?: IntNullableFilter<"RoommatePost"> | number | null
-    age_max?: IntNullableFilter<"RoommatePost"> | number | null
-    habits?: StringNullableFilter<"RoommatePost"> | string | null
-    contact_zalo?: StringNullableFilter<"RoommatePost"> | string | null
-    contact_messenger?: StringNullableFilter<"RoommatePost"> | string | null
-    contact_phone?: StringNullableFilter<"RoommatePost"> | string | null
-    photos?: JsonNullableFilter<"RoommatePost">
-    status?: EnumRoommateStatusFilter<"RoommatePost"> | $Enums.RoommateStatus
-    user_id?: BigIntFilter<"RoommatePost"> | bigint | number
-    created_at?: DateTimeFilter<"RoommatePost"> | Date | string
-    updated_at?: DateTimeFilter<"RoommatePost"> | Date | string
-    user?: XOR<UsersScalarRelationFilter, UsersWhereInput>
-  }, "id">
-
-  export type RoommatePostOrderByWithAggregationInput = {
-    id?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    budget?: SortOrder
-    preferred_area?: SortOrder
-    gender_preference?: SortOrder
-    age_min?: SortOrderInput | SortOrder
-    age_max?: SortOrderInput | SortOrder
-    habits?: SortOrderInput | SortOrder
-    contact_zalo?: SortOrderInput | SortOrder
-    contact_messenger?: SortOrderInput | SortOrder
-    contact_phone?: SortOrderInput | SortOrder
-    photos?: SortOrderInput | SortOrder
-    status?: SortOrder
-    user_id?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-    _count?: RoommatePostCountOrderByAggregateInput
-    _avg?: RoommatePostAvgOrderByAggregateInput
-    _max?: RoommatePostMaxOrderByAggregateInput
-    _min?: RoommatePostMinOrderByAggregateInput
-    _sum?: RoommatePostSumOrderByAggregateInput
-  }
-
-  export type RoommatePostScalarWhereWithAggregatesInput = {
-    AND?: RoommatePostScalarWhereWithAggregatesInput | RoommatePostScalarWhereWithAggregatesInput[]
-    OR?: RoommatePostScalarWhereWithAggregatesInput[]
-    NOT?: RoommatePostScalarWhereWithAggregatesInput | RoommatePostScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"RoommatePost"> | number
-    title?: StringWithAggregatesFilter<"RoommatePost"> | string
-    description?: StringWithAggregatesFilter<"RoommatePost"> | string
-    budget?: IntWithAggregatesFilter<"RoommatePost"> | number
-    preferred_area?: StringWithAggregatesFilter<"RoommatePost"> | string
-    gender_preference?: EnumRoommateGenderWithAggregatesFilter<"RoommatePost"> | $Enums.RoommateGender
-    age_min?: IntNullableWithAggregatesFilter<"RoommatePost"> | number | null
-    age_max?: IntNullableWithAggregatesFilter<"RoommatePost"> | number | null
-    habits?: StringNullableWithAggregatesFilter<"RoommatePost"> | string | null
-    contact_zalo?: StringNullableWithAggregatesFilter<"RoommatePost"> | string | null
-    contact_messenger?: StringNullableWithAggregatesFilter<"RoommatePost"> | string | null
-    contact_phone?: StringNullableWithAggregatesFilter<"RoommatePost"> | string | null
-    photos?: JsonNullableWithAggregatesFilter<"RoommatePost">
-    status?: EnumRoommateStatusWithAggregatesFilter<"RoommatePost"> | $Enums.RoommateStatus
-    user_id?: BigIntWithAggregatesFilter<"RoommatePost"> | bigint | number
-    created_at?: DateTimeWithAggregatesFilter<"RoommatePost"> | Date | string
-    updated_at?: DateTimeWithAggregatesFilter<"RoommatePost"> | Date | string
-  }
-
   export type UsersCreateInput = {
     user_id?: bigint | number
-    user_name: string
     user_password: string
-    user_full_name?: string | null
+    user_first_name?: string | null
+    user_last_name?: string | null
     user_gender?: $Enums.users_user_gender | null
     user_birthday?: Date | string | null
     user_phone?: string | null
@@ -7559,15 +6259,19 @@ export namespace Prisma {
     user_created_at?: Date | string
     user_verification?: $Enums.users_user_verification
     user_role: $Enums.users_user_role
+    otp?: string | null
+    otp_expiry_time?: Date | string | null
+    password_reset_token?: string | null
+    password_reset_expires?: Date | string | null
+    verified?: boolean
     posts?: PostsCreateNestedManyWithoutUserInput
-    roommate_posts?: RoommatePostCreateNestedManyWithoutUserInput
   }
 
   export type UsersUncheckedCreateInput = {
     user_id?: bigint | number
-    user_name: string
     user_password: string
-    user_full_name?: string | null
+    user_first_name?: string | null
+    user_last_name?: string | null
     user_gender?: $Enums.users_user_gender | null
     user_birthday?: Date | string | null
     user_phone?: string | null
@@ -7580,15 +6284,19 @@ export namespace Prisma {
     user_created_at?: Date | string
     user_verification?: $Enums.users_user_verification
     user_role: $Enums.users_user_role
+    otp?: string | null
+    otp_expiry_time?: Date | string | null
+    password_reset_token?: string | null
+    password_reset_expires?: Date | string | null
+    verified?: boolean
     posts?: PostsUncheckedCreateNestedManyWithoutUserInput
-    roommate_posts?: RoommatePostUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UsersUpdateInput = {
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    user_name?: StringFieldUpdateOperationsInput | string
     user_password?: StringFieldUpdateOperationsInput | string
-    user_full_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_last_name?: NullableStringFieldUpdateOperationsInput | string | null
     user_gender?: NullableEnumusers_user_genderFieldUpdateOperationsInput | $Enums.users_user_gender | null
     user_birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -7601,15 +6309,19 @@ export namespace Prisma {
     user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
+    otp?: NullableStringFieldUpdateOperationsInput | string | null
+    otp_expiry_time?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    password_reset_token?: NullableStringFieldUpdateOperationsInput | string | null
+    password_reset_expires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
     posts?: PostsUpdateManyWithoutUserNestedInput
-    roommate_posts?: RoommatePostUpdateManyWithoutUserNestedInput
   }
 
   export type UsersUncheckedUpdateInput = {
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    user_name?: StringFieldUpdateOperationsInput | string
     user_password?: StringFieldUpdateOperationsInput | string
-    user_full_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_last_name?: NullableStringFieldUpdateOperationsInput | string | null
     user_gender?: NullableEnumusers_user_genderFieldUpdateOperationsInput | $Enums.users_user_gender | null
     user_birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -7622,15 +6334,19 @@ export namespace Prisma {
     user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
+    otp?: NullableStringFieldUpdateOperationsInput | string | null
+    otp_expiry_time?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    password_reset_token?: NullableStringFieldUpdateOperationsInput | string | null
+    password_reset_expires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
     posts?: PostsUncheckedUpdateManyWithoutUserNestedInput
-    roommate_posts?: RoommatePostUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UsersCreateManyInput = {
     user_id?: bigint | number
-    user_name: string
     user_password: string
-    user_full_name?: string | null
+    user_first_name?: string | null
+    user_last_name?: string | null
     user_gender?: $Enums.users_user_gender | null
     user_birthday?: Date | string | null
     user_phone?: string | null
@@ -7643,13 +6359,18 @@ export namespace Prisma {
     user_created_at?: Date | string
     user_verification?: $Enums.users_user_verification
     user_role: $Enums.users_user_role
+    otp?: string | null
+    otp_expiry_time?: Date | string | null
+    password_reset_token?: string | null
+    password_reset_expires?: Date | string | null
+    verified?: boolean
   }
 
   export type UsersUpdateManyMutationInput = {
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    user_name?: StringFieldUpdateOperationsInput | string
     user_password?: StringFieldUpdateOperationsInput | string
-    user_full_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_last_name?: NullableStringFieldUpdateOperationsInput | string | null
     user_gender?: NullableEnumusers_user_genderFieldUpdateOperationsInput | $Enums.users_user_gender | null
     user_birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -7662,13 +6383,18 @@ export namespace Prisma {
     user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
+    otp?: NullableStringFieldUpdateOperationsInput | string | null
+    otp_expiry_time?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    password_reset_token?: NullableStringFieldUpdateOperationsInput | string | null
+    password_reset_expires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UsersUncheckedUpdateManyInput = {
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    user_name?: StringFieldUpdateOperationsInput | string
     user_password?: StringFieldUpdateOperationsInput | string
-    user_full_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_last_name?: NullableStringFieldUpdateOperationsInput | string | null
     user_gender?: NullableEnumusers_user_genderFieldUpdateOperationsInput | $Enums.users_user_gender | null
     user_birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -7681,6 +6407,11 @@ export namespace Prisma {
     user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
+    otp?: NullableStringFieldUpdateOperationsInput | string | null
+    otp_expiry_time?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    password_reset_token?: NullableStringFieldUpdateOperationsInput | string | null
+    password_reset_expires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PostsCreateInput = {
@@ -7697,6 +6428,8 @@ export namespace Prisma {
     post_city: string
     category?: $Enums.PostCategory
     status?: $Enums.PostStatus
+    post_latitude?: number | null
+    post_longitude?: number | null
     created_at?: Date | string
     expired_at?: Date | string | null
     user: UsersCreateNestedOneWithoutPostsInput
@@ -7719,6 +6452,8 @@ export namespace Prisma {
     post_city: string
     category?: $Enums.PostCategory
     status?: $Enums.PostStatus
+    post_latitude?: number | null
+    post_longitude?: number | null
     user_id: bigint | number
     created_at?: Date | string
     expired_at?: Date | string | null
@@ -7740,6 +6475,8 @@ export namespace Prisma {
     post_city?: StringFieldUpdateOperationsInput | string
     category?: EnumPostCategoryFieldUpdateOperationsInput | $Enums.PostCategory
     status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    post_latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    post_longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UsersUpdateOneRequiredWithoutPostsNestedInput
@@ -7762,6 +6499,8 @@ export namespace Prisma {
     post_city?: StringFieldUpdateOperationsInput | string
     category?: EnumPostCategoryFieldUpdateOperationsInput | $Enums.PostCategory
     status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    post_latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    post_longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7784,6 +6523,8 @@ export namespace Prisma {
     post_city: string
     category?: $Enums.PostCategory
     status?: $Enums.PostStatus
+    post_latitude?: number | null
+    post_longitude?: number | null
     user_id: bigint | number
     created_at?: Date | string
     expired_at?: Date | string | null
@@ -7803,6 +6544,8 @@ export namespace Prisma {
     post_city?: StringFieldUpdateOperationsInput | string
     category?: EnumPostCategoryFieldUpdateOperationsInput | $Enums.PostCategory
     status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    post_latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    post_longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -7822,6 +6565,8 @@ export namespace Prisma {
     post_city?: StringFieldUpdateOperationsInput | string
     category?: EnumPostCategoryFieldUpdateOperationsInput | $Enums.PostCategory
     status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    post_latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    post_longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -7945,142 +6690,6 @@ export namespace Prisma {
     post_id?: IntFieldUpdateOperationsInput | number
   }
 
-  export type RoommatePostCreateInput = {
-    title: string
-    description: string
-    budget: number
-    preferred_area: string
-    gender_preference?: $Enums.RoommateGender
-    age_min?: number | null
-    age_max?: number | null
-    habits?: string | null
-    contact_zalo?: string | null
-    contact_messenger?: string | null
-    contact_phone?: string | null
-    photos?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.RoommateStatus
-    created_at?: Date | string
-    updated_at?: Date | string
-    user: UsersCreateNestedOneWithoutRoommate_postsInput
-  }
-
-  export type RoommatePostUncheckedCreateInput = {
-    id?: number
-    title: string
-    description: string
-    budget: number
-    preferred_area: string
-    gender_preference?: $Enums.RoommateGender
-    age_min?: number | null
-    age_max?: number | null
-    habits?: string | null
-    contact_zalo?: string | null
-    contact_messenger?: string | null
-    contact_phone?: string | null
-    photos?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.RoommateStatus
-    user_id: bigint | number
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type RoommatePostUpdateInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    budget?: IntFieldUpdateOperationsInput | number
-    preferred_area?: StringFieldUpdateOperationsInput | string
-    gender_preference?: EnumRoommateGenderFieldUpdateOperationsInput | $Enums.RoommateGender
-    age_min?: NullableIntFieldUpdateOperationsInput | number | null
-    age_max?: NullableIntFieldUpdateOperationsInput | number | null
-    habits?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_zalo?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_messenger?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    photos?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumRoommateStatusFieldUpdateOperationsInput | $Enums.RoommateStatus
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UsersUpdateOneRequiredWithoutRoommate_postsNestedInput
-  }
-
-  export type RoommatePostUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    budget?: IntFieldUpdateOperationsInput | number
-    preferred_area?: StringFieldUpdateOperationsInput | string
-    gender_preference?: EnumRoommateGenderFieldUpdateOperationsInput | $Enums.RoommateGender
-    age_min?: NullableIntFieldUpdateOperationsInput | number | null
-    age_max?: NullableIntFieldUpdateOperationsInput | number | null
-    habits?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_zalo?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_messenger?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    photos?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumRoommateStatusFieldUpdateOperationsInput | $Enums.RoommateStatus
-    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RoommatePostCreateManyInput = {
-    id?: number
-    title: string
-    description: string
-    budget: number
-    preferred_area: string
-    gender_preference?: $Enums.RoommateGender
-    age_min?: number | null
-    age_max?: number | null
-    habits?: string | null
-    contact_zalo?: string | null
-    contact_messenger?: string | null
-    contact_phone?: string | null
-    photos?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.RoommateStatus
-    user_id: bigint | number
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type RoommatePostUpdateManyMutationInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    budget?: IntFieldUpdateOperationsInput | number
-    preferred_area?: StringFieldUpdateOperationsInput | string
-    gender_preference?: EnumRoommateGenderFieldUpdateOperationsInput | $Enums.RoommateGender
-    age_min?: NullableIntFieldUpdateOperationsInput | number | null
-    age_max?: NullableIntFieldUpdateOperationsInput | number | null
-    habits?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_zalo?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_messenger?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    photos?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumRoommateStatusFieldUpdateOperationsInput | $Enums.RoommateStatus
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RoommatePostUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    budget?: IntFieldUpdateOperationsInput | number
-    preferred_area?: StringFieldUpdateOperationsInput | string
-    gender_preference?: EnumRoommateGenderFieldUpdateOperationsInput | $Enums.RoommateGender
-    age_min?: NullableIntFieldUpdateOperationsInput | number | null
-    age_max?: NullableIntFieldUpdateOperationsInput | number | null
-    habits?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_zalo?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_messenger?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    photos?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumRoommateStatusFieldUpdateOperationsInput | $Enums.RoommateStatus
-    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type BigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[]
@@ -8187,16 +6796,15 @@ export namespace Prisma {
     not?: NestedEnumusers_user_roleFilter<$PrismaModel> | $Enums.users_user_role
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type PostsListRelationFilter = {
     every?: PostsWhereInput
     some?: PostsWhereInput
     none?: PostsWhereInput
-  }
-
-  export type RoommatePostListRelationFilter = {
-    every?: RoommatePostWhereInput
-    some?: RoommatePostWhereInput
-    none?: RoommatePostWhereInput
   }
 
   export type SortOrderInput = {
@@ -8208,10 +6816,6 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type RoommatePostOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type UsersOrderByRelevanceInput = {
     fields: UsersOrderByRelevanceFieldEnum | UsersOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -8220,9 +6824,9 @@ export namespace Prisma {
 
   export type UsersCountOrderByAggregateInput = {
     user_id?: SortOrder
-    user_name?: SortOrder
     user_password?: SortOrder
-    user_full_name?: SortOrder
+    user_first_name?: SortOrder
+    user_last_name?: SortOrder
     user_gender?: SortOrder
     user_birthday?: SortOrder
     user_phone?: SortOrder
@@ -8235,6 +6839,11 @@ export namespace Prisma {
     user_created_at?: SortOrder
     user_verification?: SortOrder
     user_role?: SortOrder
+    otp?: SortOrder
+    otp_expiry_time?: SortOrder
+    password_reset_token?: SortOrder
+    password_reset_expires?: SortOrder
+    verified?: SortOrder
   }
 
   export type UsersAvgOrderByAggregateInput = {
@@ -8245,9 +6854,9 @@ export namespace Prisma {
 
   export type UsersMaxOrderByAggregateInput = {
     user_id?: SortOrder
-    user_name?: SortOrder
     user_password?: SortOrder
-    user_full_name?: SortOrder
+    user_first_name?: SortOrder
+    user_last_name?: SortOrder
     user_gender?: SortOrder
     user_birthday?: SortOrder
     user_phone?: SortOrder
@@ -8260,13 +6869,18 @@ export namespace Prisma {
     user_created_at?: SortOrder
     user_verification?: SortOrder
     user_role?: SortOrder
+    otp?: SortOrder
+    otp_expiry_time?: SortOrder
+    password_reset_token?: SortOrder
+    password_reset_expires?: SortOrder
+    verified?: SortOrder
   }
 
   export type UsersMinOrderByAggregateInput = {
     user_id?: SortOrder
-    user_name?: SortOrder
     user_password?: SortOrder
-    user_full_name?: SortOrder
+    user_first_name?: SortOrder
+    user_last_name?: SortOrder
     user_gender?: SortOrder
     user_birthday?: SortOrder
     user_phone?: SortOrder
@@ -8279,6 +6893,11 @@ export namespace Prisma {
     user_created_at?: SortOrder
     user_verification?: SortOrder
     user_role?: SortOrder
+    otp?: SortOrder
+    otp_expiry_time?: SortOrder
+    password_reset_token?: SortOrder
+    password_reset_expires?: SortOrder
+    verified?: SortOrder
   }
 
   export type UsersSumOrderByAggregateInput = {
@@ -8429,6 +7048,14 @@ export namespace Prisma {
     _max?: NestedEnumusers_user_roleFilter<$PrismaModel>
   }
 
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -8463,6 +7090,17 @@ export namespace Prisma {
     in?: $Enums.PostStatus[]
     notIn?: $Enums.PostStatus[]
     not?: NestedEnumPostStatusFilter<$PrismaModel> | $Enums.PostStatus
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type UsersScalarRelationFilter = {
@@ -8506,6 +7144,8 @@ export namespace Prisma {
     post_city?: SortOrder
     category?: SortOrder
     status?: SortOrder
+    post_latitude?: SortOrder
+    post_longitude?: SortOrder
     user_id?: SortOrder
     created_at?: SortOrder
     expired_at?: SortOrder
@@ -8518,6 +7158,8 @@ export namespace Prisma {
     price_electricity?: SortOrder
     price_water?: SortOrder
     price_internet?: SortOrder
+    post_latitude?: SortOrder
+    post_longitude?: SortOrder
     user_id?: SortOrder
   }
 
@@ -8536,6 +7178,8 @@ export namespace Prisma {
     post_city?: SortOrder
     category?: SortOrder
     status?: SortOrder
+    post_latitude?: SortOrder
+    post_longitude?: SortOrder
     user_id?: SortOrder
     created_at?: SortOrder
     expired_at?: SortOrder
@@ -8556,6 +7200,8 @@ export namespace Prisma {
     post_city?: SortOrder
     category?: SortOrder
     status?: SortOrder
+    post_latitude?: SortOrder
+    post_longitude?: SortOrder
     user_id?: SortOrder
     created_at?: SortOrder
     expired_at?: SortOrder
@@ -8568,6 +7214,8 @@ export namespace Prisma {
     price_electricity?: SortOrder
     price_water?: SortOrder
     price_internet?: SortOrder
+    post_latitude?: SortOrder
+    post_longitude?: SortOrder
     user_id?: SortOrder
   }
 
@@ -8621,6 +7269,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPostStatusFilter<$PrismaModel>
     _max?: NestedEnumPostStatusFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type PostsScalarRelationFilter = {
@@ -8718,169 +7382,6 @@ export namespace Prisma {
     post_id?: SortOrder
   }
 
-  export type EnumRoommateGenderFilter<$PrismaModel = never> = {
-    equals?: $Enums.RoommateGender | EnumRoommateGenderFieldRefInput<$PrismaModel>
-    in?: $Enums.RoommateGender[]
-    notIn?: $Enums.RoommateGender[]
-    not?: NestedEnumRoommateGenderFilter<$PrismaModel> | $Enums.RoommateGender
-  }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue
-    lte?: InputJsonValue
-    gt?: InputJsonValue
-    gte?: InputJsonValue
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type EnumRoommateStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.RoommateStatus | EnumRoommateStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RoommateStatus[]
-    notIn?: $Enums.RoommateStatus[]
-    not?: NestedEnumRoommateStatusFilter<$PrismaModel> | $Enums.RoommateStatus
-  }
-
-  export type RoommatePostOrderByRelevanceInput = {
-    fields: RoommatePostOrderByRelevanceFieldEnum | RoommatePostOrderByRelevanceFieldEnum[]
-    sort: SortOrder
-    search: string
-  }
-
-  export type RoommatePostCountOrderByAggregateInput = {
-    id?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    budget?: SortOrder
-    preferred_area?: SortOrder
-    gender_preference?: SortOrder
-    age_min?: SortOrder
-    age_max?: SortOrder
-    habits?: SortOrder
-    contact_zalo?: SortOrder
-    contact_messenger?: SortOrder
-    contact_phone?: SortOrder
-    photos?: SortOrder
-    status?: SortOrder
-    user_id?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-  }
-
-  export type RoommatePostAvgOrderByAggregateInput = {
-    id?: SortOrder
-    budget?: SortOrder
-    age_min?: SortOrder
-    age_max?: SortOrder
-    user_id?: SortOrder
-  }
-
-  export type RoommatePostMaxOrderByAggregateInput = {
-    id?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    budget?: SortOrder
-    preferred_area?: SortOrder
-    gender_preference?: SortOrder
-    age_min?: SortOrder
-    age_max?: SortOrder
-    habits?: SortOrder
-    contact_zalo?: SortOrder
-    contact_messenger?: SortOrder
-    contact_phone?: SortOrder
-    status?: SortOrder
-    user_id?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-  }
-
-  export type RoommatePostMinOrderByAggregateInput = {
-    id?: SortOrder
-    title?: SortOrder
-    description?: SortOrder
-    budget?: SortOrder
-    preferred_area?: SortOrder
-    gender_preference?: SortOrder
-    age_min?: SortOrder
-    age_max?: SortOrder
-    habits?: SortOrder
-    contact_zalo?: SortOrder
-    contact_messenger?: SortOrder
-    contact_phone?: SortOrder
-    status?: SortOrder
-    user_id?: SortOrder
-    created_at?: SortOrder
-    updated_at?: SortOrder
-  }
-
-  export type RoommatePostSumOrderByAggregateInput = {
-    id?: SortOrder
-    budget?: SortOrder
-    age_min?: SortOrder
-    age_max?: SortOrder
-    user_id?: SortOrder
-  }
-
-  export type EnumRoommateGenderWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.RoommateGender | EnumRoommateGenderFieldRefInput<$PrismaModel>
-    in?: $Enums.RoommateGender[]
-    notIn?: $Enums.RoommateGender[]
-    not?: NestedEnumRoommateGenderWithAggregatesFilter<$PrismaModel> | $Enums.RoommateGender
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRoommateGenderFilter<$PrismaModel>
-    _max?: NestedEnumRoommateGenderFilter<$PrismaModel>
-  }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue
-    lte?: InputJsonValue
-    gt?: InputJsonValue
-    gte?: InputJsonValue
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
-  }
-
-  export type EnumRoommateStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.RoommateStatus | EnumRoommateStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RoommateStatus[]
-    notIn?: $Enums.RoommateStatus[]
-    not?: NestedEnumRoommateStatusWithAggregatesFilter<$PrismaModel> | $Enums.RoommateStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRoommateStatusFilter<$PrismaModel>
-    _max?: NestedEnumRoommateStatusFilter<$PrismaModel>
-  }
-
   export type PostsCreateNestedManyWithoutUserInput = {
     create?: XOR<PostsCreateWithoutUserInput, PostsUncheckedCreateWithoutUserInput> | PostsCreateWithoutUserInput[] | PostsUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PostsCreateOrConnectWithoutUserInput | PostsCreateOrConnectWithoutUserInput[]
@@ -8888,25 +7389,11 @@ export namespace Prisma {
     connect?: PostsWhereUniqueInput | PostsWhereUniqueInput[]
   }
 
-  export type RoommatePostCreateNestedManyWithoutUserInput = {
-    create?: XOR<RoommatePostCreateWithoutUserInput, RoommatePostUncheckedCreateWithoutUserInput> | RoommatePostCreateWithoutUserInput[] | RoommatePostUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RoommatePostCreateOrConnectWithoutUserInput | RoommatePostCreateOrConnectWithoutUserInput[]
-    createMany?: RoommatePostCreateManyUserInputEnvelope
-    connect?: RoommatePostWhereUniqueInput | RoommatePostWhereUniqueInput[]
-  }
-
   export type PostsUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<PostsCreateWithoutUserInput, PostsUncheckedCreateWithoutUserInput> | PostsCreateWithoutUserInput[] | PostsUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PostsCreateOrConnectWithoutUserInput | PostsCreateOrConnectWithoutUserInput[]
     createMany?: PostsCreateManyUserInputEnvelope
     connect?: PostsWhereUniqueInput | PostsWhereUniqueInput[]
-  }
-
-  export type RoommatePostUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<RoommatePostCreateWithoutUserInput, RoommatePostUncheckedCreateWithoutUserInput> | RoommatePostCreateWithoutUserInput[] | RoommatePostUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RoommatePostCreateOrConnectWithoutUserInput | RoommatePostCreateOrConnectWithoutUserInput[]
-    createMany?: RoommatePostCreateManyUserInputEnvelope
-    connect?: RoommatePostWhereUniqueInput | RoommatePostWhereUniqueInput[]
   }
 
   export type BigIntFieldUpdateOperationsInput = {
@@ -8961,6 +7448,10 @@ export namespace Prisma {
     set?: $Enums.users_user_role
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type PostsUpdateManyWithoutUserNestedInput = {
     create?: XOR<PostsCreateWithoutUserInput, PostsUncheckedCreateWithoutUserInput> | PostsCreateWithoutUserInput[] | PostsUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PostsCreateOrConnectWithoutUserInput | PostsCreateOrConnectWithoutUserInput[]
@@ -8975,20 +7466,6 @@ export namespace Prisma {
     deleteMany?: PostsScalarWhereInput | PostsScalarWhereInput[]
   }
 
-  export type RoommatePostUpdateManyWithoutUserNestedInput = {
-    create?: XOR<RoommatePostCreateWithoutUserInput, RoommatePostUncheckedCreateWithoutUserInput> | RoommatePostCreateWithoutUserInput[] | RoommatePostUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RoommatePostCreateOrConnectWithoutUserInput | RoommatePostCreateOrConnectWithoutUserInput[]
-    upsert?: RoommatePostUpsertWithWhereUniqueWithoutUserInput | RoommatePostUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: RoommatePostCreateManyUserInputEnvelope
-    set?: RoommatePostWhereUniqueInput | RoommatePostWhereUniqueInput[]
-    disconnect?: RoommatePostWhereUniqueInput | RoommatePostWhereUniqueInput[]
-    delete?: RoommatePostWhereUniqueInput | RoommatePostWhereUniqueInput[]
-    connect?: RoommatePostWhereUniqueInput | RoommatePostWhereUniqueInput[]
-    update?: RoommatePostUpdateWithWhereUniqueWithoutUserInput | RoommatePostUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: RoommatePostUpdateManyWithWhereWithoutUserInput | RoommatePostUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: RoommatePostScalarWhereInput | RoommatePostScalarWhereInput[]
-  }
-
   export type PostsUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<PostsCreateWithoutUserInput, PostsUncheckedCreateWithoutUserInput> | PostsCreateWithoutUserInput[] | PostsUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PostsCreateOrConnectWithoutUserInput | PostsCreateOrConnectWithoutUserInput[]
@@ -9001,20 +7478,6 @@ export namespace Prisma {
     update?: PostsUpdateWithWhereUniqueWithoutUserInput | PostsUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: PostsUpdateManyWithWhereWithoutUserInput | PostsUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: PostsScalarWhereInput | PostsScalarWhereInput[]
-  }
-
-  export type RoommatePostUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<RoommatePostCreateWithoutUserInput, RoommatePostUncheckedCreateWithoutUserInput> | RoommatePostCreateWithoutUserInput[] | RoommatePostUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: RoommatePostCreateOrConnectWithoutUserInput | RoommatePostCreateOrConnectWithoutUserInput[]
-    upsert?: RoommatePostUpsertWithWhereUniqueWithoutUserInput | RoommatePostUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: RoommatePostCreateManyUserInputEnvelope
-    set?: RoommatePostWhereUniqueInput | RoommatePostWhereUniqueInput[]
-    disconnect?: RoommatePostWhereUniqueInput | RoommatePostWhereUniqueInput[]
-    delete?: RoommatePostWhereUniqueInput | RoommatePostWhereUniqueInput[]
-    connect?: RoommatePostWhereUniqueInput | RoommatePostWhereUniqueInput[]
-    update?: RoommatePostUpdateWithWhereUniqueWithoutUserInput | RoommatePostUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: RoommatePostUpdateManyWithWhereWithoutUserInput | RoommatePostUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: RoommatePostScalarWhereInput | RoommatePostScalarWhereInput[]
   }
 
   export type UsersCreateNestedOneWithoutPostsInput = {
@@ -9071,6 +7534,14 @@ export namespace Prisma {
 
   export type EnumPostStatusFieldUpdateOperationsInput = {
     set?: $Enums.PostStatus
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type UsersUpdateOneRequiredWithoutPostsNestedInput = {
@@ -9155,28 +7626,6 @@ export namespace Prisma {
     upsert?: PostsUpsertWithoutImagesInput
     connect?: PostsWhereUniqueInput
     update?: XOR<XOR<PostsUpdateToOneWithWhereWithoutImagesInput, PostsUpdateWithoutImagesInput>, PostsUncheckedUpdateWithoutImagesInput>
-  }
-
-  export type UsersCreateNestedOneWithoutRoommate_postsInput = {
-    create?: XOR<UsersCreateWithoutRoommate_postsInput, UsersUncheckedCreateWithoutRoommate_postsInput>
-    connectOrCreate?: UsersCreateOrConnectWithoutRoommate_postsInput
-    connect?: UsersWhereUniqueInput
-  }
-
-  export type EnumRoommateGenderFieldUpdateOperationsInput = {
-    set?: $Enums.RoommateGender
-  }
-
-  export type EnumRoommateStatusFieldUpdateOperationsInput = {
-    set?: $Enums.RoommateStatus
-  }
-
-  export type UsersUpdateOneRequiredWithoutRoommate_postsNestedInput = {
-    create?: XOR<UsersCreateWithoutRoommate_postsInput, UsersUncheckedCreateWithoutRoommate_postsInput>
-    connectOrCreate?: UsersCreateOrConnectWithoutRoommate_postsInput
-    upsert?: UsersUpsertWithoutRoommate_postsInput
-    connect?: UsersWhereUniqueInput
-    update?: XOR<XOR<UsersUpdateToOneWithWhereWithoutRoommate_postsInput, UsersUpdateWithoutRoommate_postsInput>, UsersUncheckedUpdateWithoutRoommate_postsInput>
   }
 
   export type NestedBigIntFilter<$PrismaModel = never> = {
@@ -9283,6 +7732,11 @@ export namespace Prisma {
     in?: $Enums.users_user_role[]
     notIn?: $Enums.users_user_role[]
     not?: NestedEnumusers_user_roleFilter<$PrismaModel> | $Enums.users_user_role
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -9460,6 +7914,14 @@ export namespace Prisma {
     _max?: NestedEnumusers_user_roleFilter<$PrismaModel>
   }
 
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedEnumPostCategoryFilter<$PrismaModel = never> = {
     equals?: $Enums.PostCategory | EnumPostCategoryFieldRefInput<$PrismaModel>
     in?: $Enums.PostCategory[]
@@ -9526,61 +7988,20 @@ export namespace Prisma {
     _max?: NestedEnumPostStatusFilter<$PrismaModel>
   }
 
-  export type NestedEnumRoommateGenderFilter<$PrismaModel = never> = {
-    equals?: $Enums.RoommateGender | EnumRoommateGenderFieldRefInput<$PrismaModel>
-    in?: $Enums.RoommateGender[]
-    notIn?: $Enums.RoommateGender[]
-    not?: NestedEnumRoommateGenderFilter<$PrismaModel> | $Enums.RoommateGender
-  }
-
-  export type NestedEnumRoommateStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.RoommateStatus | EnumRoommateStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RoommateStatus[]
-    notIn?: $Enums.RoommateStatus[]
-    not?: NestedEnumRoommateStatusFilter<$PrismaModel> | $Enums.RoommateStatus
-  }
-
-  export type NestedEnumRoommateGenderWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.RoommateGender | EnumRoommateGenderFieldRefInput<$PrismaModel>
-    in?: $Enums.RoommateGender[]
-    notIn?: $Enums.RoommateGender[]
-    not?: NestedEnumRoommateGenderWithAggregatesFilter<$PrismaModel> | $Enums.RoommateGender
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRoommateGenderFilter<$PrismaModel>
-    _max?: NestedEnumRoommateGenderFilter<$PrismaModel>
-  }
-  export type NestedJsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue
-    lte?: InputJsonValue
-    gt?: InputJsonValue
-    gte?: InputJsonValue
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type NestedEnumRoommateStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.RoommateStatus | EnumRoommateStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.RoommateStatus[]
-    notIn?: $Enums.RoommateStatus[]
-    not?: NestedEnumRoommateStatusWithAggregatesFilter<$PrismaModel> | $Enums.RoommateStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumRoommateStatusFilter<$PrismaModel>
-    _max?: NestedEnumRoommateStatusFilter<$PrismaModel>
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type PostsCreateWithoutUserInput = {
@@ -9597,6 +8018,8 @@ export namespace Prisma {
     post_city: string
     category?: $Enums.PostCategory
     status?: $Enums.PostStatus
+    post_latitude?: number | null
+    post_longitude?: number | null
     created_at?: Date | string
     expired_at?: Date | string | null
     images?: PostImagesCreateNestedManyWithoutPostInput
@@ -9618,6 +8041,8 @@ export namespace Prisma {
     post_city: string
     category?: $Enums.PostCategory
     status?: $Enums.PostStatus
+    post_latitude?: number | null
+    post_longitude?: number | null
     created_at?: Date | string
     expired_at?: Date | string | null
     images?: PostImagesUncheckedCreateNestedManyWithoutPostInput
@@ -9631,53 +8056,6 @@ export namespace Prisma {
 
   export type PostsCreateManyUserInputEnvelope = {
     data: PostsCreateManyUserInput | PostsCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type RoommatePostCreateWithoutUserInput = {
-    title: string
-    description: string
-    budget: number
-    preferred_area: string
-    gender_preference?: $Enums.RoommateGender
-    age_min?: number | null
-    age_max?: number | null
-    habits?: string | null
-    contact_zalo?: string | null
-    contact_messenger?: string | null
-    contact_phone?: string | null
-    photos?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.RoommateStatus
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type RoommatePostUncheckedCreateWithoutUserInput = {
-    id?: number
-    title: string
-    description: string
-    budget: number
-    preferred_area: string
-    gender_preference?: $Enums.RoommateGender
-    age_min?: number | null
-    age_max?: number | null
-    habits?: string | null
-    contact_zalo?: string | null
-    contact_messenger?: string | null
-    contact_phone?: string | null
-    photos?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.RoommateStatus
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type RoommatePostCreateOrConnectWithoutUserInput = {
-    where: RoommatePostWhereUniqueInput
-    create: XOR<RoommatePostCreateWithoutUserInput, RoommatePostUncheckedCreateWithoutUserInput>
-  }
-
-  export type RoommatePostCreateManyUserInputEnvelope = {
-    data: RoommatePostCreateManyUserInput | RoommatePostCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -9715,55 +8093,18 @@ export namespace Prisma {
     post_city?: StringFilter<"Posts"> | string
     category?: EnumPostCategoryFilter<"Posts"> | $Enums.PostCategory
     status?: EnumPostStatusFilter<"Posts"> | $Enums.PostStatus
+    post_latitude?: FloatNullableFilter<"Posts"> | number | null
+    post_longitude?: FloatNullableFilter<"Posts"> | number | null
     user_id?: BigIntFilter<"Posts"> | bigint | number
     created_at?: DateTimeFilter<"Posts"> | Date | string
     expired_at?: DateTimeNullableFilter<"Posts"> | Date | string | null
   }
 
-  export type RoommatePostUpsertWithWhereUniqueWithoutUserInput = {
-    where: RoommatePostWhereUniqueInput
-    update: XOR<RoommatePostUpdateWithoutUserInput, RoommatePostUncheckedUpdateWithoutUserInput>
-    create: XOR<RoommatePostCreateWithoutUserInput, RoommatePostUncheckedCreateWithoutUserInput>
-  }
-
-  export type RoommatePostUpdateWithWhereUniqueWithoutUserInput = {
-    where: RoommatePostWhereUniqueInput
-    data: XOR<RoommatePostUpdateWithoutUserInput, RoommatePostUncheckedUpdateWithoutUserInput>
-  }
-
-  export type RoommatePostUpdateManyWithWhereWithoutUserInput = {
-    where: RoommatePostScalarWhereInput
-    data: XOR<RoommatePostUpdateManyMutationInput, RoommatePostUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type RoommatePostScalarWhereInput = {
-    AND?: RoommatePostScalarWhereInput | RoommatePostScalarWhereInput[]
-    OR?: RoommatePostScalarWhereInput[]
-    NOT?: RoommatePostScalarWhereInput | RoommatePostScalarWhereInput[]
-    id?: IntFilter<"RoommatePost"> | number
-    title?: StringFilter<"RoommatePost"> | string
-    description?: StringFilter<"RoommatePost"> | string
-    budget?: IntFilter<"RoommatePost"> | number
-    preferred_area?: StringFilter<"RoommatePost"> | string
-    gender_preference?: EnumRoommateGenderFilter<"RoommatePost"> | $Enums.RoommateGender
-    age_min?: IntNullableFilter<"RoommatePost"> | number | null
-    age_max?: IntNullableFilter<"RoommatePost"> | number | null
-    habits?: StringNullableFilter<"RoommatePost"> | string | null
-    contact_zalo?: StringNullableFilter<"RoommatePost"> | string | null
-    contact_messenger?: StringNullableFilter<"RoommatePost"> | string | null
-    contact_phone?: StringNullableFilter<"RoommatePost"> | string | null
-    photos?: JsonNullableFilter<"RoommatePost">
-    status?: EnumRoommateStatusFilter<"RoommatePost"> | $Enums.RoommateStatus
-    user_id?: BigIntFilter<"RoommatePost"> | bigint | number
-    created_at?: DateTimeFilter<"RoommatePost"> | Date | string
-    updated_at?: DateTimeFilter<"RoommatePost"> | Date | string
-  }
-
   export type UsersCreateWithoutPostsInput = {
     user_id?: bigint | number
-    user_name: string
     user_password: string
-    user_full_name?: string | null
+    user_first_name?: string | null
+    user_last_name?: string | null
     user_gender?: $Enums.users_user_gender | null
     user_birthday?: Date | string | null
     user_phone?: string | null
@@ -9776,14 +8117,18 @@ export namespace Prisma {
     user_created_at?: Date | string
     user_verification?: $Enums.users_user_verification
     user_role: $Enums.users_user_role
-    roommate_posts?: RoommatePostCreateNestedManyWithoutUserInput
+    otp?: string | null
+    otp_expiry_time?: Date | string | null
+    password_reset_token?: string | null
+    password_reset_expires?: Date | string | null
+    verified?: boolean
   }
 
   export type UsersUncheckedCreateWithoutPostsInput = {
     user_id?: bigint | number
-    user_name: string
     user_password: string
-    user_full_name?: string | null
+    user_first_name?: string | null
+    user_last_name?: string | null
     user_gender?: $Enums.users_user_gender | null
     user_birthday?: Date | string | null
     user_phone?: string | null
@@ -9796,7 +8141,11 @@ export namespace Prisma {
     user_created_at?: Date | string
     user_verification?: $Enums.users_user_verification
     user_role: $Enums.users_user_role
-    roommate_posts?: RoommatePostUncheckedCreateNestedManyWithoutUserInput
+    otp?: string | null
+    otp_expiry_time?: Date | string | null
+    password_reset_token?: string | null
+    password_reset_expires?: Date | string | null
+    verified?: boolean
   }
 
   export type UsersCreateOrConnectWithoutPostsInput = {
@@ -9862,9 +8211,9 @@ export namespace Prisma {
 
   export type UsersUpdateWithoutPostsInput = {
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    user_name?: StringFieldUpdateOperationsInput | string
     user_password?: StringFieldUpdateOperationsInput | string
-    user_full_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_last_name?: NullableStringFieldUpdateOperationsInput | string | null
     user_gender?: NullableEnumusers_user_genderFieldUpdateOperationsInput | $Enums.users_user_gender | null
     user_birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9877,14 +8226,18 @@ export namespace Prisma {
     user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
-    roommate_posts?: RoommatePostUpdateManyWithoutUserNestedInput
+    otp?: NullableStringFieldUpdateOperationsInput | string | null
+    otp_expiry_time?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    password_reset_token?: NullableStringFieldUpdateOperationsInput | string | null
+    password_reset_expires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UsersUncheckedUpdateWithoutPostsInput = {
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    user_name?: StringFieldUpdateOperationsInput | string
     user_password?: StringFieldUpdateOperationsInput | string
-    user_full_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_last_name?: NullableStringFieldUpdateOperationsInput | string | null
     user_gender?: NullableEnumusers_user_genderFieldUpdateOperationsInput | $Enums.users_user_gender | null
     user_birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user_phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9897,7 +8250,11 @@ export namespace Prisma {
     user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
-    roommate_posts?: RoommatePostUncheckedUpdateManyWithoutUserNestedInput
+    otp?: NullableStringFieldUpdateOperationsInput | string | null
+    otp_expiry_time?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    password_reset_token?: NullableStringFieldUpdateOperationsInput | string | null
+    password_reset_expires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PostImagesUpsertWithWhereUniqueWithoutPostInput = {
@@ -9971,6 +8328,8 @@ export namespace Prisma {
     post_city: string
     category?: $Enums.PostCategory
     status?: $Enums.PostStatus
+    post_latitude?: number | null
+    post_longitude?: number | null
     created_at?: Date | string
     expired_at?: Date | string | null
     user: UsersCreateNestedOneWithoutPostsInput
@@ -9992,6 +8351,8 @@ export namespace Prisma {
     post_city: string
     category?: $Enums.PostCategory
     status?: $Enums.PostStatus
+    post_latitude?: number | null
+    post_longitude?: number | null
     user_id: bigint | number
     created_at?: Date | string
     expired_at?: Date | string | null
@@ -10028,6 +8389,8 @@ export namespace Prisma {
     post_city?: StringFieldUpdateOperationsInput | string
     category?: EnumPostCategoryFieldUpdateOperationsInput | $Enums.PostCategory
     status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    post_latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    post_longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UsersUpdateOneRequiredWithoutPostsNestedInput
@@ -10049,6 +8412,8 @@ export namespace Prisma {
     post_city?: StringFieldUpdateOperationsInput | string
     category?: EnumPostCategoryFieldUpdateOperationsInput | $Enums.PostCategory
     status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    post_latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    post_longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -10069,6 +8434,8 @@ export namespace Prisma {
     post_city: string
     category?: $Enums.PostCategory
     status?: $Enums.PostStatus
+    post_latitude?: number | null
+    post_longitude?: number | null
     created_at?: Date | string
     expired_at?: Date | string | null
     user: UsersCreateNestedOneWithoutPostsInput
@@ -10090,6 +8457,8 @@ export namespace Prisma {
     post_city: string
     category?: $Enums.PostCategory
     status?: $Enums.PostStatus
+    post_latitude?: number | null
+    post_longitude?: number | null
     user_id: bigint | number
     created_at?: Date | string
     expired_at?: Date | string | null
@@ -10126,6 +8495,8 @@ export namespace Prisma {
     post_city?: StringFieldUpdateOperationsInput | string
     category?: EnumPostCategoryFieldUpdateOperationsInput | $Enums.PostCategory
     status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    post_latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    post_longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UsersUpdateOneRequiredWithoutPostsNestedInput
@@ -10147,106 +8518,12 @@ export namespace Prisma {
     post_city?: StringFieldUpdateOperationsInput | string
     category?: EnumPostCategoryFieldUpdateOperationsInput | $Enums.PostCategory
     status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    post_latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    post_longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     user_id?: BigIntFieldUpdateOperationsInput | bigint | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     roommate_details?: RoommateDetailsUncheckedUpdateOneWithoutPostNestedInput
-  }
-
-  export type UsersCreateWithoutRoommate_postsInput = {
-    user_id?: bigint | number
-    user_name: string
-    user_password: string
-    user_full_name?: string | null
-    user_gender?: $Enums.users_user_gender | null
-    user_birthday?: Date | string | null
-    user_phone?: string | null
-    user_email: string
-    user_address?: string | null
-    user_avatar?: string | null
-    user_avg_rating?: Decimal | DecimalJsLike | number | string | null
-    user_review_count?: number | null
-    user_bio?: string | null
-    user_created_at?: Date | string
-    user_verification?: $Enums.users_user_verification
-    user_role: $Enums.users_user_role
-    posts?: PostsCreateNestedManyWithoutUserInput
-  }
-
-  export type UsersUncheckedCreateWithoutRoommate_postsInput = {
-    user_id?: bigint | number
-    user_name: string
-    user_password: string
-    user_full_name?: string | null
-    user_gender?: $Enums.users_user_gender | null
-    user_birthday?: Date | string | null
-    user_phone?: string | null
-    user_email: string
-    user_address?: string | null
-    user_avatar?: string | null
-    user_avg_rating?: Decimal | DecimalJsLike | number | string | null
-    user_review_count?: number | null
-    user_bio?: string | null
-    user_created_at?: Date | string
-    user_verification?: $Enums.users_user_verification
-    user_role: $Enums.users_user_role
-    posts?: PostsUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UsersCreateOrConnectWithoutRoommate_postsInput = {
-    where: UsersWhereUniqueInput
-    create: XOR<UsersCreateWithoutRoommate_postsInput, UsersUncheckedCreateWithoutRoommate_postsInput>
-  }
-
-  export type UsersUpsertWithoutRoommate_postsInput = {
-    update: XOR<UsersUpdateWithoutRoommate_postsInput, UsersUncheckedUpdateWithoutRoommate_postsInput>
-    create: XOR<UsersCreateWithoutRoommate_postsInput, UsersUncheckedCreateWithoutRoommate_postsInput>
-    where?: UsersWhereInput
-  }
-
-  export type UsersUpdateToOneWithWhereWithoutRoommate_postsInput = {
-    where?: UsersWhereInput
-    data: XOR<UsersUpdateWithoutRoommate_postsInput, UsersUncheckedUpdateWithoutRoommate_postsInput>
-  }
-
-  export type UsersUpdateWithoutRoommate_postsInput = {
-    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    user_name?: StringFieldUpdateOperationsInput | string
-    user_password?: StringFieldUpdateOperationsInput | string
-    user_full_name?: NullableStringFieldUpdateOperationsInput | string | null
-    user_gender?: NullableEnumusers_user_genderFieldUpdateOperationsInput | $Enums.users_user_gender | null
-    user_birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    user_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    user_email?: StringFieldUpdateOperationsInput | string
-    user_address?: NullableStringFieldUpdateOperationsInput | string | null
-    user_avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    user_avg_rating?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    user_review_count?: NullableIntFieldUpdateOperationsInput | number | null
-    user_bio?: NullableStringFieldUpdateOperationsInput | string | null
-    user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
-    user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
-    posts?: PostsUpdateManyWithoutUserNestedInput
-  }
-
-  export type UsersUncheckedUpdateWithoutRoommate_postsInput = {
-    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
-    user_name?: StringFieldUpdateOperationsInput | string
-    user_password?: StringFieldUpdateOperationsInput | string
-    user_full_name?: NullableStringFieldUpdateOperationsInput | string | null
-    user_gender?: NullableEnumusers_user_genderFieldUpdateOperationsInput | $Enums.users_user_gender | null
-    user_birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    user_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    user_email?: StringFieldUpdateOperationsInput | string
-    user_address?: NullableStringFieldUpdateOperationsInput | string | null
-    user_avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    user_avg_rating?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    user_review_count?: NullableIntFieldUpdateOperationsInput | number | null
-    user_bio?: NullableStringFieldUpdateOperationsInput | string | null
-    user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
-    user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
-    posts?: PostsUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PostsCreateManyUserInput = {
@@ -10264,27 +8541,10 @@ export namespace Prisma {
     post_city: string
     category?: $Enums.PostCategory
     status?: $Enums.PostStatus
+    post_latitude?: number | null
+    post_longitude?: number | null
     created_at?: Date | string
     expired_at?: Date | string | null
-  }
-
-  export type RoommatePostCreateManyUserInput = {
-    id?: number
-    title: string
-    description: string
-    budget: number
-    preferred_area: string
-    gender_preference?: $Enums.RoommateGender
-    age_min?: number | null
-    age_max?: number | null
-    habits?: string | null
-    contact_zalo?: string | null
-    contact_messenger?: string | null
-    contact_phone?: string | null
-    photos?: NullableJsonNullValueInput | InputJsonValue
-    status?: $Enums.RoommateStatus
-    created_at?: Date | string
-    updated_at?: Date | string
   }
 
   export type PostsUpdateWithoutUserInput = {
@@ -10301,6 +8561,8 @@ export namespace Prisma {
     post_city?: StringFieldUpdateOperationsInput | string
     category?: EnumPostCategoryFieldUpdateOperationsInput | $Enums.PostCategory
     status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    post_latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    post_longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     images?: PostImagesUpdateManyWithoutPostNestedInput
@@ -10322,6 +8584,8 @@ export namespace Prisma {
     post_city?: StringFieldUpdateOperationsInput | string
     category?: EnumPostCategoryFieldUpdateOperationsInput | $Enums.PostCategory
     status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    post_latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    post_longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     images?: PostImagesUncheckedUpdateManyWithoutPostNestedInput
@@ -10343,64 +8607,10 @@ export namespace Prisma {
     post_city?: StringFieldUpdateOperationsInput | string
     category?: EnumPostCategoryFieldUpdateOperationsInput | $Enums.PostCategory
     status?: EnumPostStatusFieldUpdateOperationsInput | $Enums.PostStatus
+    post_latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    post_longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type RoommatePostUpdateWithoutUserInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    budget?: IntFieldUpdateOperationsInput | number
-    preferred_area?: StringFieldUpdateOperationsInput | string
-    gender_preference?: EnumRoommateGenderFieldUpdateOperationsInput | $Enums.RoommateGender
-    age_min?: NullableIntFieldUpdateOperationsInput | number | null
-    age_max?: NullableIntFieldUpdateOperationsInput | number | null
-    habits?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_zalo?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_messenger?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    photos?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumRoommateStatusFieldUpdateOperationsInput | $Enums.RoommateStatus
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RoommatePostUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    budget?: IntFieldUpdateOperationsInput | number
-    preferred_area?: StringFieldUpdateOperationsInput | string
-    gender_preference?: EnumRoommateGenderFieldUpdateOperationsInput | $Enums.RoommateGender
-    age_min?: NullableIntFieldUpdateOperationsInput | number | null
-    age_max?: NullableIntFieldUpdateOperationsInput | number | null
-    habits?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_zalo?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_messenger?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    photos?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumRoommateStatusFieldUpdateOperationsInput | $Enums.RoommateStatus
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type RoommatePostUncheckedUpdateManyWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    budget?: IntFieldUpdateOperationsInput | number
-    preferred_area?: StringFieldUpdateOperationsInput | string
-    gender_preference?: EnumRoommateGenderFieldUpdateOperationsInput | $Enums.RoommateGender
-    age_min?: NullableIntFieldUpdateOperationsInput | number | null
-    age_max?: NullableIntFieldUpdateOperationsInput | number | null
-    habits?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_zalo?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_messenger?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    photos?: NullableJsonNullValueInput | InputJsonValue
-    status?: EnumRoommateStatusFieldUpdateOperationsInput | $Enums.RoommateStatus
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PostImagesCreateManyPostInput = {
