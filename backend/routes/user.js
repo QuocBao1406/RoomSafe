@@ -14,7 +14,7 @@ router.get('/profile', verifyToken, async (req, res) => {
                 user_id: true, user_email: true, user_first_name: true, user_last_name: true,
                 user_phone: true, user_address: true, user_gender: true, user_birthday: true,
                 user_bio: true, user_avatar: true, user_role: true, user_created_at: true,
-                user_avg_rating: true
+                user_avg_rating: true, account_balance: true
             }
         });
 
@@ -28,8 +28,14 @@ router.get('/profile', verifyToken, async (req, res) => {
 
         const formattedUser = {
             ...user,
-            user_id: user.user_id.toString(),
-            user_avatar: avatarUrl 
+            id: user.user_id.toString(),
+            firstName: user.user_first_name,
+            lastName: user.user_last_name,
+            email: user.user_email,
+            role: user.user_role, // QUAN TRỌNG NHẤT: Đổi user_role -> role
+            avatar: avatarUrl,
+
+            account_balance: parseFloat(user.account_balance || 0)
         };
 
         res.status(200).json({ success: true, data: formattedUser });

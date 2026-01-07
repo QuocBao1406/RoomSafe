@@ -617,3 +617,50 @@ textarea {
     70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
     100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }
+
+.rp-payment-box {
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.rp-payment-header {
+    font-size: 1.1rem; font-weight: 700; color: #1e293b;
+    margin-bottom: 15px; display: flex; align-items: center; gap: 8px;
+}
+.rp-payment-header svg { color: var(--primary); }
+
+.rp-pay-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px; font-size: 0.95rem; color: #64748b;
+}
+
+.rp-bold { font-weight: 700; color: #1e293b; }
+.rp-price-minus { font-weight: 700; color: #ef4444; }
+.rp-text-green { color: #10b981; font-weight: 700; font-size: 1.1rem; }
+.rp-text-red { color: #ef4444; font-weight: 700; font-size: 1.1rem; }
+
+.rp-divider {
+    border-top: 1px dashed #cbd5e1; margin: 15px 0;
+}
+
+.rp-alert {
+    background: #fef2f2; border: 1px solid #fecaca;
+    color: #b91c1c; padding: 12px; border-radius: 8px;
+    font-size: 0.9rem; display: flex; gap: 10px; align-items: flex-start;
+    margin-top: 10px; animation: pulse 2s infinite;
+}
+
+.rp-link-dep {
+    color: var(--primary); font-weight: 700; text-decoration: underline;
+    cursor: pointer; margin-top: 4px; display: inline-block;
+}
+
+.rp-btn-submit.disabled {
+    background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}

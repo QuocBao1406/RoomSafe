@@ -12,7 +12,7 @@ import L from 'leaflet';
 import { 
     FaMapMarkedAlt, FaDollarSign, FaImages, FaInfoCircle, FaHome, FaCloudUploadAlt, FaTrash, 
     FaVenusMars, FaBriefcase, FaHeart, FaPaperPlane, FaLightbulb, FaMapPin, FaRulerCombined,
-    FaGamepad, FaBolt, FaTint, FaWifi, FaClock, FaCheckCircle, FaStar
+    FaGamepad, FaBolt, FaTint, FaWifi, FaClock, FaCheckCircle, FaStar, FaWallet, FaExclamationTriangle
 } from 'react-icons/fa';
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -32,8 +32,14 @@ const HOBBIES_LIST = [
     "Âm nhạc", "Xem phim", "Công nghệ", "Vẽ tranh"
 ];
 
+const PRICE_LIST = {
+    "7": 15000,
+    "15": 25000,
+    "30": 45000,
+}
+
 const RoommatePostPage = () => {
-    const { user } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
 
@@ -53,12 +59,17 @@ const RoommatePostPage = () => {
         title: '', description: '', price: '', area: '', 
         priceElectricity: '', priceWater: '', priceInternet: '',
         city: '', district: '', ward: '', address: '',
-        duration: '30', 
+        duration: '7', 
         genderPartner: 'ALL', ageMin: '', ageMax: '', career: '', 
         habits: '', hobbies: '', sharedCost: '',
         contactName: user?.name || '', 
         contactPhone: user?.phone || '',
     });
+
+    const selectedDuration = formData.duration || "7";
+    const postFee = PRICE_LIST[selectedDuration] || 15000;
+    const currentBalance = parseFloat(user?.account_balance || 0);
+    const isEnoughMoney = currentBalance >= postFee;
 
     const MapUpdater = ({ center }) => {
         const map = useMap();
@@ -115,6 +126,43 @@ const RoommatePostPage = () => {
         const timeoutId = setTimeout(() => fetchCoordinates(), 1000);
         return () => clearTimeout(timeoutId);
     }, [formData.city, formData.district, formData.ward]);
+
+    useEffect(() => {
+        const fetchLatestBalance = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            // Xử lý token nếu bị thừa dấu ngoặc kép (lỗi thường gặp)
+            const cleanToken = token.startsWith('"') ? token.slice(1, -1) : token;
+
+            try {
+                const res = await axios.get('http://localhost:5000/api/auth/profile', {
+                    headers: { Authorization: `Bearer ${cleanToken}` }
+                });
+
+                if (res.data.success || res.data.data) {
+                    const freshUser = res.data.data || res.data.user;
+                    const newBalance = parseFloat(freshUser.account_balance || 0);
+
+                    // Cập nhật Context
+                    setUser(prev => ({
+                        ...prev,
+                        ...freshUser,
+                        account_balance: newBalance
+                    }));
+
+                    // Cập nhật LocalStorage
+                    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+                    storedUser.account_balance = newBalance;
+                    localStorage.setItem('user', JSON.stringify(storedUser));
+                }
+            } catch (error) {
+                console.error("Lỗi đồng bộ ví:", error);
+            }
+        };
+
+        fetchLatestBalance();
+    }, [setUser]);
 
     // --- HANDLERS ---
     const handleProvinceChange = async (e) => {
@@ -207,6 +255,15 @@ const RoommatePostPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!isEnoughMoney) {
+            toast.error("Số dư không đủ để đăng tin!");
+            document.getElementById('rp-payment-widget')?.scrollIntoView({
+                behavior: 'smooth'
+            });
+            return;
+        }
+
         let token = localStorage.getItem('token');
         if (token && token.startsWith('"') && token.endsWith('"')) token = token.slice(1, -1);
 
@@ -231,9 +288,20 @@ const RoommatePostPage = () => {
 
             selectedFiles.forEach(file => data.append('images', file));
 
-            await axios.post('http://localhost:5000/api/roommates/create', data, {
+            const res = await axios.post('http://localhost:5000/api/roommates/create', data, {
                 headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
             });
+
+            if (res.data.newBalance) {
+                const newBal = parseFloat(res.data.newBalance);
+
+                setUser(prev => ({ ...prev, account_balance: newBal }));
+
+                const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+                storedUser.account_balance = newBal;
+                localStorage.setItem('user', JSON.stringify(storedUser));
+            }
+
             toast.success("Đăng tin thành công!");
             setTimeout(() => navigate("/roommate/manage"), 1500);
         } catch (error) {
@@ -287,7 +355,7 @@ const RoommatePostPage = () => {
                                 <select className="rp-select" name="duration" value={formData.duration} onChange={handleChange}>
                                     <option value="7">7 Ngày</option>
                                     <option value="15">15 Ngày</option>
-                                    <option value="30">30 Ngày (Khuyên dùng)</option>
+                                    <option value="30">30 Ngày</option>
                                     <option value="60">60 Ngày</option>
                                 </select>
                             </div>
@@ -536,18 +604,52 @@ const RoommatePostPage = () => {
                             </div>
                         </div>
 
-                        <div className="rp-tips">
-                            <h4><FaLightbulb /> Mẹo nhỏ</h4>
-                            <ul>
-                                <li><FaCheckCircle size={12}/> Ảnh thật tăng 40% độ tin cậy.</li>
-                                <li><FaCheckCircle size={12}/> Ghi rõ chi phí để tránh hiểu lầm.</li>
-                                <li><FaCheckCircle size={12}/> Mô tả thói quen để tìm người hợp cạ.</li>
-                            </ul>
+                        <div id="rp-payment-widget" className="rp-card rp-payment-box">
+                            <div className="rp-payment-header">
+                                <FaWallet /> Thông tin thanh toán
+                            </div>
+                            
+                            <div className="rp-pay-row">
+                                <span>Gói tin:</span>
+                                <span className="rp-bold">{selectedDuration} ngày</span>
+                            </div>
+                            
+                            <div className="rp-pay-row">
+                                <span>Phí đăng:</span>
+                                <span className="rp-price-minus">-{formatPrice(postFee)}đ</span>
+                            </div>
+
+                            <div className="rp-divider"></div>
+
+                            <div className="rp-pay-row">
+                                <span>Số dư ví:</span>
+                                <span className={isEnoughMoney ? "rp-text-green" : "rp-text-red"}>
+                                    {formatPrice(currentBalance)}đ
+                                </span>
+                            </div>
+
+                            {!isEnoughMoney && (
+                                <div className="rp-alert">
+                                    <FaExclamationTriangle />
+                                    <div>
+                                        Thiếu <b>{formatPrice(postFee - currentBalance)}đ</b>
+                                        <div className="rp-link-dep" onClick={() => navigate('/deposit')}>
+                                            Nạp ngay
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         <div className="rp-actions">
-                            <button type="submit" className="rp-btn-submit" disabled={loading}>
-                                {loading ? 'Đang xử lý...' : <><FaPaperPlane /> Đăng tin ngay</>}
+                            <button 
+                                type="submit" 
+                                className={`rp-btn-submit ${!isEnoughMoney ? 'disabled' : ''}`} 
+                                disabled={loading || !isEnoughMoney}
+                            >
+                                {loading ? 'Đang xử lý...' : (
+                                    isEnoughMoney ? <><FaPaperPlane /> Thanh toán & Đăng tin</> : 'Số dư không đủ'
+                                )}
                             </button>
                             <button type="button" className="rp-btn-cancel" onClick={() => window.history.back()}>Quay lại</button>
                         </div>

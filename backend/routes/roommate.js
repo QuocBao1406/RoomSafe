@@ -75,10 +75,19 @@ router.get("/detail/:id", async (req, res) => {
     }
 });
 
-// --- 1. ĐĂNG TIN MỚI ---
+// Route: Tạo tin tìm bạn ở ghép (Roommate)
 router.post('/create', verifyToken, upload.array('images', 5), async (req, res) => {
     try {
         const userId = req.user.id;
+        
+        // 1. Cấu hình bảng giá (Khớp với Frontend)
+        const PRICE_CONFIG = {
+            "7": 15000,
+            "15": 25000,
+            "30": 45000,
+            "60": 80000 
+        };
+
         const {
             title, description, price, area, address, 
             city, district, ward,
@@ -92,57 +101,116 @@ router.post('/create', verifyToken, upload.array('images', 5), async (req, res) 
 
         const parseIntSafe = (val) => (!val || val === '' || isNaN(val)) ? null : parseInt(val);
 
-        let expiredAt = null;
-        if (duration) {
-            const days = parseInt(duration);
-            if (!isNaN(days)) {
-                const date = new Date();
-                date.setDate(date.getDate() + days);
-                expiredAt = date; 
-            }
-        }
+        // 2. Tính toán phí và ngày hết hạn
+        const durationKey = String(duration || 30);
+        const postFee = PRICE_CONFIG[durationKey] || 15000;
+        const durationDays = parseInt(durationKey);
 
+        const expiredDate = new Date();
+        expiredDate.setDate(expiredDate.getDate() + durationDays);
+
+        // Xử lý ảnh
         let imageData = [];
         if (req.files && req.files.length > 0) {
             imageData = req.files.map(file => ({ image_url: file.path }));
         }
 
-        const newPost = await prisma.posts.create({
-            data: {
-                post_title: title,
-                post_description: description,
-                post_price: parseIntSafe(price) || 0,
-                post_area: parseFloat(area) || 0,
-                post_address: address,
-                post_city: city,
-                post_district: district,
-                post_ward: ward || '', 
-                price_electricity: parseIntSafe(priceElectricity),
-                price_water: parseIntSafe(priceWater),
-                price_internet: parseIntSafe(priceInternet),
-                category: category,
-                status: 'AVAILABLE',
-                user_id: BigInt(userId),
-                expired_at: expiredAt,
-                post_latitude: latitude ? parseFloat(latitude) : null,
-                post_longitude: longitude ? parseFloat(longitude) : null,
-                roommate_details: {
-                    create: {
-                        gender_partner: genderPartner || 'ALL',
-                        age_range_min: parseIntSafe(ageMin),
-                        age_range_max: parseIntSafe(ageMax),
-                        career: career,
-                        habits: habits,
-                        hobbies: hobbies,
-                        shared_cost: sharedCost 
-                    }
-                },
-                images: { create: imageData }
-            }
+        // 3. Kiểm tra User và Số dư
+        const user = await prisma.users.findUnique({
+            where: { user_id: BigInt(userId) }
         });
 
-        const result = { ...newPost, user_id: newPost.user_id.toString() };
-        res.status(201).json({ success: true, message: "Đăng tin thành công!", data: { postId: result.post_id } });
+        if (!user) return res.status(404).json({ message: "User không tồn tại" });
+
+        const currentBalance = Number(user.account_balance || 0);
+        
+        // --- CHẶN NẾU THIẾU TIỀN ---
+        if (currentBalance < postFee) {
+            return res.status(400).json({
+                success: false,
+                message: `Số dư không đủ! Cần ${postFee.toLocaleString()}đ để đăng tin.`
+            });
+        }
+
+        // 4. TRANSACTION: Trừ tiền + Tạo bài + Ghi lịch sử (Quan trọng)
+        const result = await prisma.$transaction(async (tx) => {
+            
+            // A. Trừ tiền User (Lấy lại user mới đã trừ tiền)
+            const updatedUser = await tx.users.update({
+                where: { user_id: BigInt(userId) },
+                data: { account_balance: { decrement: postFee } }
+            });
+
+            // B. Tạo bài viết (Kèm Roommate Details)
+            const newPost = await tx.posts.create({
+                data: {
+                    post_title: title,
+                    post_description: description,
+                    post_price: parseIntSafe(price) || 0,
+                    post_area: parseFloat(area) || 0,
+                    post_address: address,
+                    post_city: city,
+                    post_district: district,
+                    post_ward: ward || '',
+                    
+                    price_electricity: parseIntSafe(priceElectricity),
+                    price_water: parseIntSafe(priceWater),
+                    price_internet: parseIntSafe(priceInternet),
+                    
+                    category: category,
+                    status: 'AVAILABLE',
+                    user_id: BigInt(userId),
+                    expired_at: expiredDate, // Lưu ngày hết hạn
+                    
+                    post_latitude: latitude ? parseFloat(latitude) : null,
+                    post_longitude: longitude ? parseFloat(longitude) : null,
+
+                    // Lưu thông tin chi tiết tìm bạn
+                    roommate_details: {
+                        create: {
+                            gender_partner: genderPartner || 'ALL',
+                            age_range_min: parseIntSafe(ageMin),
+                            age_range_max: parseIntSafe(ageMax),
+                            career: career,
+                            habits: habits,
+                            hobbies: hobbies,
+                            shared_cost: sharedCost 
+                        }
+                    },
+                    // Lưu ảnh
+                    images: { create: imageData }
+                }
+            });
+
+            // C. Ghi lịch sử giao dịch
+            await tx.transactions.create({
+                data: {
+                    user_id: BigInt(userId),
+                    amount: -postFee, // Số âm
+                    type: 'PAYMENT',
+                    status: 'SUCCESS',
+                    payment_method: 'WALLET',
+                    transaction_code: `RP_${newPost.post_id}_${Date.now()}`,
+                    description: `Phí tìm bạn ở ghép (${durationDays} ngày): ${title.substring(0, 20)}...`
+                }
+            });
+
+            return { newPost, updatedUser };
+        });
+
+        // 5. Trả về kết quả kèm Số dư mới (để Frontend cập nhật ngay)
+        const responseData = { 
+            ...result.newPost, 
+            user_id: result.newPost.user_id.toString(),
+            post_id: result.newPost.post_id
+        };
+
+        res.status(201).json({ 
+            success: true, 
+            message: "Đăng tin thành công!", 
+            data: { postId: result.newPost.post_id },
+            newBalance: result.updatedUser.account_balance.toString() // Quan trọng
+        });
 
     } catch (error) {
         console.error("Lỗi đăng tin:", error);
