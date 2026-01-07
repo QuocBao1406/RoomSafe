@@ -1,8 +1,15 @@
 import express from 'express';
 import prisma from "../lib/db.js";
 import upload from "../lib/upload.js";
+import { PrismaClient } from '../generated/client/index.js';
 
 const router = express.Router();
+
+const PRICE_CONFIG = {
+    "7": 20000,
+    "15": 35000,
+    "30": 60000
+};
 
 // lay tin dang cua user cu the
 router.get("/user/:id", async(req,res) => {
@@ -40,86 +47,129 @@ router.get("/user/:id", async(req,res) => {
 
 // up toi da 10 anh
 router.post("/create", async (req, res) => {
-    upload.array('images', 10)(req,res, async (err ) => {
+    // Upload ảnh trước
+    upload.array('images', 10)(req, res, async (err) => {
         if(err) {
             console.error("Lỗi upload ảnh:", err);
-            return res.status(500).json({message: "Lỗi khi upload ảnh: " + err.message});
+            return res.status(500).json({message: "Lỗi upload ảnh: " + err.message});
         }
+
         try {
-            // lay du lieu tu form
+            // 1. Lấy dữ liệu từ form
             const {
                 title, description, price, area,
                 address, district, city, ward,
                 category, user_id,
-                price_electricity, price_water, price_internet, expire_duration,
+                price_electricity, price_water, price_internet, 
+                expire_duration, // Số ngày đăng (vd: "7")
                 latitude, longitude
             } = req.body;
 
             const imageFiles = req.files;
-
-            const durationDays = parseInt(expire_duration) || 7;
-            const expiredDate = new Date();
-            expiredDate.setDate(expiredDate.getDate() + durationDays);
-
-            console.log("Dữ liệu body: ", req.body);
-            console.log("file ảnh: ", imageFiles);
-
-            // lay link anh tu Cloudinary tra ve
+            
+            // Validate cơ bản
             if(!imageFiles || imageFiles.length === 0) {
-                return res.status(400).json({ message: "vui lòng chọn ít nhất 1 ảnh!"});
+                return res.status(400).json({ message: "Vui lòng chọn ít nhất 1 ảnh!"});
             }
 
             const userIdNum = Number(user_id);
-
             if(!userIdNum || isNaN(userIdNum)) {
-                return res.status(400).json({ message: "user_id không hợp lệ!"});
+                return res.status(400).json({ message: "User ID không hợp lệ!"});
             }
 
-            // luu vao database
-            const newPost = await prisma.posts.create({
-                data: {
-                    post_title: title,
-                    post_description: description,
-                    post_price: parseInt(price),
-                    post_area: parseFloat(area),
-                    post_address: address,
-                    post_district: district,
-                    post_city: city,
-                    post_ward: ward || "",
-                    category: category,
-                    price_electricity: parseInt(price_electricity),
-                    price_water: parseInt(price_water) || 0,
-                    price_internet: parseInt(price_internet) || 0,
-                    expired_at: expiredDate,
+            // 2. Tính toán phí đăng bài
+            const durationKey = String(expire_duration || "7"); 
+            const postFee = PRICE_CONFIG[durationKey] || 20000;
+            const durationDays = parseInt(durationKey);
 
-                    post_latitude: latitude ? parseFloat(latitude) : null,
-                    post_longitude: longitude ? parseFloat(longitude) : null,
+            // Tính ngày hết hạn
+            const expiredDate = new Date();
+            expiredDate.setDate(expiredDate.getDate() + durationDays);
 
-                    user_id: BigInt(userIdNum),
-
-                    images: {
-                        create: imageFiles.map(file => ({
-                            image_url: file.path
-                        }))
-                    }
-                }
+            // 3. Kiểm tra User & Số dư
+            const user = await prisma.users.findUnique({
+                where: { user_id: BigInt(userIdNum) }
             });
 
-            const responseData = {
-                ...newPost,
-                user_id: newPost.user_id.toString(),
-                post_id: newPost.post_id
+            if (!user) return res.status(404).json({ message: "User không tồn tại" });
+
+            // --- QUAN TRỌNG: CHẶN NẾU THIẾU TIỀN ---
+            // Chuyển account_balance về số (vì trong DB có thể là Decimal hoặc BigInt)
+            const currentBalance = Number(user.account_balance || 0);
+            
+            if (currentBalance < postFee) {
+                return res.status(400).json({ 
+                    message: `Số dư không đủ! Cần ${postFee.toLocaleString()}đ để đăng gói ${durationDays} ngày.` 
+                });
             }
 
+            // 4. TRANSACTION: Trừ tiền + Tạo bài + Ghi lịch sử
+            const newPost = await prisma.$transaction(async (tx) => {
+                
+                // A. Trừ tiền User
+                await tx.users.update({
+                    where: { user_id: BigInt(userIdNum) },
+                    data: { 
+                        account_balance: { decrement: postFee } 
+                    }
+                });
+
+                // B. Tạo bài viết
+                const createdPost = await tx.posts.create({
+                    data: {
+                        post_title: title,
+                        post_description: description,
+                        post_price: parseInt(price),
+                        post_area: parseFloat(area),
+                        post_address: address,
+                        post_district: district,
+                        post_city: city,
+                        post_ward: ward || "",
+                        category: category,
+                        price_electricity: parseInt(price_electricity || 0),
+                        price_water: parseInt(price_water) || 0,
+                        price_internet: parseInt(price_internet) || 0,
+                        
+                        expired_at: expiredDate,
+                        status: 'AVAILABLE', // Trạng thái mặc định
+
+                        post_latitude: latitude ? parseFloat(latitude) : null,
+                        post_longitude: longitude ? parseFloat(longitude) : null,
+
+                        user_id: BigInt(userIdNum),
+
+                        images: {
+                            create: imageFiles.map(file => ({
+                                image_url: file.path
+                            }))
+                        }
+                    }
+                });
+
+                // C. Ghi lịch sử giao dịch (Transactions)
+                await tx.transactions.create({
+                    data: {
+                        user_id: BigInt(userIdNum),
+                        amount: -postFee, // Số âm
+                        type: 'PAYMENT',
+                        status: 'SUCCESS',
+                        payment_method: 'WALLET',
+                        transaction_code: `POST_${createdPost.post_id}_${Date.now()}`,
+                        description: `Phí đăng tin (${durationDays} ngày): ${title.substring(0, 30)}...`
+                    }
+                });
+
+                return createdPost;
+            });
+
+            // 5. Trả về kết quả
             res.status(200).json({
-                message: "Đăng tin thành công!",
+                message: `Đăng tin thành công! Đã trừ ${postFee.toLocaleString()}đ`,
                 postId: newPost.post_id,
             });
-        } catch(error) {
-            console.error("Lỗi cụ thể:", error);
-            console.error("Lỗi Server:", JSON.stringify(error, null, 2));
-            if(Object.keys(error).length === 0) console.error(error);
 
+        } catch(error) {
+            console.error("Lỗi Server:", error);
             res.status(500).json({ message: "Lỗi server: " + error.message });
         }
     })

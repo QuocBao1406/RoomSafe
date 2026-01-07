@@ -33,6 +33,11 @@ export type RoommateDetails = $Result.DefaultSelection<Prisma.$RoommateDetailsPa
  * 
  */
 export type PostImages = $Result.DefaultSelection<Prisma.$PostImagesPayload>
+/**
+ * Model Transactions
+ * 
+ */
+export type Transactions = $Result.DefaultSelection<Prisma.$TransactionsPayload>
 
 /**
  * Enums
@@ -102,6 +107,24 @@ export const RoommateStatus: {
 
 export type RoommateStatus = (typeof RoommateStatus)[keyof typeof RoommateStatus]
 
+
+export const TransactionType: {
+  DEPOSIT: 'DEPOSIT',
+  PAYMENT: 'PAYMENT',
+  REFUND: 'REFUND'
+};
+
+export type TransactionType = (typeof TransactionType)[keyof typeof TransactionType]
+
+
+export const TransactionStatus: {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED'
+};
+
+export type TransactionStatus = (typeof TransactionStatus)[keyof typeof TransactionStatus]
+
 }
 
 export type users_user_gender = $Enums.users_user_gender
@@ -131,6 +154,14 @@ export const RoommateGender: typeof $Enums.RoommateGender
 export type RoommateStatus = $Enums.RoommateStatus
 
 export const RoommateStatus: typeof $Enums.RoommateStatus
+
+export type TransactionType = $Enums.TransactionType
+
+export const TransactionType: typeof $Enums.TransactionType
+
+export type TransactionStatus = $Enums.TransactionStatus
+
+export const TransactionStatus: typeof $Enums.TransactionStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -289,6 +320,16 @@ export class PrismaClient<
     * ```
     */
   get postImages(): Prisma.PostImagesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.transactions`: Exposes CRUD operations for the **Transactions** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Transactions
+    * const transactions = await prisma.transactions.findMany()
+    * ```
+    */
+  get transactions(): Prisma.TransactionsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -733,7 +774,8 @@ export namespace Prisma {
     Users: 'Users',
     Posts: 'Posts',
     RoommateDetails: 'RoommateDetails',
-    PostImages: 'PostImages'
+    PostImages: 'PostImages',
+    Transactions: 'Transactions'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -752,7 +794,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "users" | "posts" | "roommateDetails" | "postImages"
+      modelProps: "users" | "posts" | "roommateDetails" | "postImages" | "transactions"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1020,6 +1062,72 @@ export namespace Prisma {
           }
         }
       }
+      Transactions: {
+        payload: Prisma.$TransactionsPayload<ExtArgs>
+        fields: Prisma.TransactionsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TransactionsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TransactionsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionsPayload>
+          }
+          findFirst: {
+            args: Prisma.TransactionsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TransactionsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionsPayload>
+          }
+          findMany: {
+            args: Prisma.TransactionsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionsPayload>[]
+          }
+          create: {
+            args: Prisma.TransactionsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionsPayload>
+          }
+          createMany: {
+            args: Prisma.TransactionsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.TransactionsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionsPayload>
+          }
+          update: {
+            args: Prisma.TransactionsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionsPayload>
+          }
+          deleteMany: {
+            args: Prisma.TransactionsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TransactionsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.TransactionsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TransactionsPayload>
+          }
+          aggregate: {
+            args: Prisma.TransactionsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTransactions>
+          }
+          groupBy: {
+            args: Prisma.TransactionsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TransactionsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TransactionsCountArgs<ExtArgs>
+            result: $Utils.Optional<TransactionsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1120,6 +1228,7 @@ export namespace Prisma {
     posts?: PostsOmit
     roommateDetails?: RoommateDetailsOmit
     postImages?: PostImagesOmit
+    transactions?: TransactionsOmit
   }
 
   /* Types for Logging */
@@ -1201,10 +1310,12 @@ export namespace Prisma {
 
   export type UsersCountOutputType = {
     posts: number
+    transactions: number
   }
 
   export type UsersCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     posts?: boolean | UsersCountOutputTypeCountPostsArgs
+    transactions?: boolean | UsersCountOutputTypeCountTransactionsArgs
   }
 
   // Custom InputTypes
@@ -1223,6 +1334,13 @@ export namespace Prisma {
    */
   export type UsersCountOutputTypeCountPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PostsWhereInput
+  }
+
+  /**
+   * UsersCountOutputType without action
+   */
+  export type UsersCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TransactionsWhereInput
   }
 
 
@@ -1277,12 +1395,14 @@ export namespace Prisma {
     user_id: number | null
     user_avg_rating: Decimal | null
     user_review_count: number | null
+    account_balance: Decimal | null
   }
 
   export type UsersSumAggregateOutputType = {
     user_id: bigint | null
     user_avg_rating: Decimal | null
     user_review_count: number | null
+    account_balance: Decimal | null
   }
 
   export type UsersMinAggregateOutputType = {
@@ -1302,6 +1422,7 @@ export namespace Prisma {
     user_created_at: Date | null
     user_verification: $Enums.users_user_verification | null
     user_role: $Enums.users_user_role | null
+    account_balance: Decimal | null
     otp: string | null
     otp_expiry_time: Date | null
     password_reset_token: string | null
@@ -1326,6 +1447,7 @@ export namespace Prisma {
     user_created_at: Date | null
     user_verification: $Enums.users_user_verification | null
     user_role: $Enums.users_user_role | null
+    account_balance: Decimal | null
     otp: string | null
     otp_expiry_time: Date | null
     password_reset_token: string | null
@@ -1350,6 +1472,7 @@ export namespace Prisma {
     user_created_at: number
     user_verification: number
     user_role: number
+    account_balance: number
     otp: number
     otp_expiry_time: number
     password_reset_token: number
@@ -1363,12 +1486,14 @@ export namespace Prisma {
     user_id?: true
     user_avg_rating?: true
     user_review_count?: true
+    account_balance?: true
   }
 
   export type UsersSumAggregateInputType = {
     user_id?: true
     user_avg_rating?: true
     user_review_count?: true
+    account_balance?: true
   }
 
   export type UsersMinAggregateInputType = {
@@ -1388,6 +1513,7 @@ export namespace Prisma {
     user_created_at?: true
     user_verification?: true
     user_role?: true
+    account_balance?: true
     otp?: true
     otp_expiry_time?: true
     password_reset_token?: true
@@ -1412,6 +1538,7 @@ export namespace Prisma {
     user_created_at?: true
     user_verification?: true
     user_role?: true
+    account_balance?: true
     otp?: true
     otp_expiry_time?: true
     password_reset_token?: true
@@ -1436,6 +1563,7 @@ export namespace Prisma {
     user_created_at?: true
     user_verification?: true
     user_role?: true
+    account_balance?: true
     otp?: true
     otp_expiry_time?: true
     password_reset_token?: true
@@ -1547,6 +1675,7 @@ export namespace Prisma {
     user_created_at: Date
     user_verification: $Enums.users_user_verification
     user_role: $Enums.users_user_role
+    account_balance: Decimal
     otp: string | null
     otp_expiry_time: Date | null
     password_reset_token: string | null
@@ -1590,12 +1719,14 @@ export namespace Prisma {
     user_created_at?: boolean
     user_verification?: boolean
     user_role?: boolean
+    account_balance?: boolean
     otp?: boolean
     otp_expiry_time?: boolean
     password_reset_token?: boolean
     password_reset_expires?: boolean
     verified?: boolean
     posts?: boolean | Users$postsArgs<ExtArgs>
+    transactions?: boolean | Users$transactionsArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["users"]>
 
@@ -1618,6 +1749,7 @@ export namespace Prisma {
     user_created_at?: boolean
     user_verification?: boolean
     user_role?: boolean
+    account_balance?: boolean
     otp?: boolean
     otp_expiry_time?: boolean
     password_reset_token?: boolean
@@ -1625,9 +1757,10 @@ export namespace Prisma {
     verified?: boolean
   }
 
-  export type UsersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "user_password" | "user_first_name" | "user_last_name" | "user_gender" | "user_birthday" | "user_phone" | "user_email" | "user_address" | "user_avatar" | "user_avg_rating" | "user_review_count" | "user_bio" | "user_created_at" | "user_verification" | "user_role" | "otp" | "otp_expiry_time" | "password_reset_token" | "password_reset_expires" | "verified", ExtArgs["result"]["users"]>
+  export type UsersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "user_password" | "user_first_name" | "user_last_name" | "user_gender" | "user_birthday" | "user_phone" | "user_email" | "user_address" | "user_avatar" | "user_avg_rating" | "user_review_count" | "user_bio" | "user_created_at" | "user_verification" | "user_role" | "account_balance" | "otp" | "otp_expiry_time" | "password_reset_token" | "password_reset_expires" | "verified", ExtArgs["result"]["users"]>
   export type UsersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     posts?: boolean | Users$postsArgs<ExtArgs>
+    transactions?: boolean | Users$transactionsArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -1635,6 +1768,7 @@ export namespace Prisma {
     name: "Users"
     objects: {
       posts: Prisma.$PostsPayload<ExtArgs>[]
+      transactions: Prisma.$TransactionsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       user_id: bigint
@@ -1653,6 +1787,7 @@ export namespace Prisma {
       user_created_at: Date
       user_verification: $Enums.users_user_verification
       user_role: $Enums.users_user_role
+      account_balance: Prisma.Decimal
       otp: string | null
       otp_expiry_time: Date | null
       password_reset_token: string | null
@@ -1999,6 +2134,7 @@ export namespace Prisma {
   export interface Prisma__UsersClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     posts<T extends Users$postsArgs<ExtArgs> = {}>(args?: Subset<T, Users$postsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    transactions<T extends Users$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, Users$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2044,6 +2180,7 @@ export namespace Prisma {
     readonly user_created_at: FieldRef<"Users", 'DateTime'>
     readonly user_verification: FieldRef<"Users", 'users_user_verification'>
     readonly user_role: FieldRef<"Users", 'users_user_role'>
+    readonly account_balance: FieldRef<"Users", 'Decimal'>
     readonly otp: FieldRef<"Users", 'String'>
     readonly otp_expiry_time: FieldRef<"Users", 'DateTime'>
     readonly password_reset_token: FieldRef<"Users", 'String'>
@@ -2413,6 +2550,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PostsScalarFieldEnum | PostsScalarFieldEnum[]
+  }
+
+  /**
+   * Users.transactions
+   */
+  export type Users$transactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transactions
+     */
+    select?: TransactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transactions
+     */
+    omit?: TransactionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionsInclude<ExtArgs> | null
+    where?: TransactionsWhereInput
+    orderBy?: TransactionsOrderByWithRelationInput | TransactionsOrderByWithRelationInput[]
+    cursor?: TransactionsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TransactionsScalarFieldEnum | TransactionsScalarFieldEnum[]
   }
 
   /**
@@ -5601,6 +5762,1032 @@ export namespace Prisma {
 
 
   /**
+   * Model Transactions
+   */
+
+  export type AggregateTransactions = {
+    _count: TransactionsCountAggregateOutputType | null
+    _avg: TransactionsAvgAggregateOutputType | null
+    _sum: TransactionsSumAggregateOutputType | null
+    _min: TransactionsMinAggregateOutputType | null
+    _max: TransactionsMaxAggregateOutputType | null
+  }
+
+  export type TransactionsAvgAggregateOutputType = {
+    transaction_id: number | null
+    user_id: number | null
+    amount: Decimal | null
+  }
+
+  export type TransactionsSumAggregateOutputType = {
+    transaction_id: bigint | null
+    user_id: bigint | null
+    amount: Decimal | null
+  }
+
+  export type TransactionsMinAggregateOutputType = {
+    transaction_id: bigint | null
+    user_id: bigint | null
+    amount: Decimal | null
+    type: $Enums.TransactionType | null
+    status: $Enums.TransactionStatus | null
+    payment_method: string | null
+    transaction_code: string | null
+    description: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type TransactionsMaxAggregateOutputType = {
+    transaction_id: bigint | null
+    user_id: bigint | null
+    amount: Decimal | null
+    type: $Enums.TransactionType | null
+    status: $Enums.TransactionStatus | null
+    payment_method: string | null
+    transaction_code: string | null
+    description: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type TransactionsCountAggregateOutputType = {
+    transaction_id: number
+    user_id: number
+    amount: number
+    type: number
+    status: number
+    payment_method: number
+    transaction_code: number
+    description: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type TransactionsAvgAggregateInputType = {
+    transaction_id?: true
+    user_id?: true
+    amount?: true
+  }
+
+  export type TransactionsSumAggregateInputType = {
+    transaction_id?: true
+    user_id?: true
+    amount?: true
+  }
+
+  export type TransactionsMinAggregateInputType = {
+    transaction_id?: true
+    user_id?: true
+    amount?: true
+    type?: true
+    status?: true
+    payment_method?: true
+    transaction_code?: true
+    description?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type TransactionsMaxAggregateInputType = {
+    transaction_id?: true
+    user_id?: true
+    amount?: true
+    type?: true
+    status?: true
+    payment_method?: true
+    transaction_code?: true
+    description?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type TransactionsCountAggregateInputType = {
+    transaction_id?: true
+    user_id?: true
+    amount?: true
+    type?: true
+    status?: true
+    payment_method?: true
+    transaction_code?: true
+    description?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type TransactionsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Transactions to aggregate.
+     */
+    where?: TransactionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Transactions to fetch.
+     */
+    orderBy?: TransactionsOrderByWithRelationInput | TransactionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TransactionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Transactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Transactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Transactions
+    **/
+    _count?: true | TransactionsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TransactionsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TransactionsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TransactionsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TransactionsMaxAggregateInputType
+  }
+
+  export type GetTransactionsAggregateType<T extends TransactionsAggregateArgs> = {
+        [P in keyof T & keyof AggregateTransactions]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTransactions[P]>
+      : GetScalarType<T[P], AggregateTransactions[P]>
+  }
+
+
+
+
+  export type TransactionsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TransactionsWhereInput
+    orderBy?: TransactionsOrderByWithAggregationInput | TransactionsOrderByWithAggregationInput[]
+    by: TransactionsScalarFieldEnum[] | TransactionsScalarFieldEnum
+    having?: TransactionsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TransactionsCountAggregateInputType | true
+    _avg?: TransactionsAvgAggregateInputType
+    _sum?: TransactionsSumAggregateInputType
+    _min?: TransactionsMinAggregateInputType
+    _max?: TransactionsMaxAggregateInputType
+  }
+
+  export type TransactionsGroupByOutputType = {
+    transaction_id: bigint
+    user_id: bigint
+    amount: Decimal
+    type: $Enums.TransactionType
+    status: $Enums.TransactionStatus
+    payment_method: string
+    transaction_code: string | null
+    description: string | null
+    created_at: Date
+    updated_at: Date
+    _count: TransactionsCountAggregateOutputType | null
+    _avg: TransactionsAvgAggregateOutputType | null
+    _sum: TransactionsSumAggregateOutputType | null
+    _min: TransactionsMinAggregateOutputType | null
+    _max: TransactionsMaxAggregateOutputType | null
+  }
+
+  type GetTransactionsGroupByPayload<T extends TransactionsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TransactionsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TransactionsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TransactionsGroupByOutputType[P]>
+            : GetScalarType<T[P], TransactionsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TransactionsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    transaction_id?: boolean
+    user_id?: boolean
+    amount?: boolean
+    type?: boolean
+    status?: boolean
+    payment_method?: boolean
+    transaction_code?: boolean
+    description?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    user?: boolean | UsersDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["transactions"]>
+
+
+
+  export type TransactionsSelectScalar = {
+    transaction_id?: boolean
+    user_id?: boolean
+    amount?: boolean
+    type?: boolean
+    status?: boolean
+    payment_method?: boolean
+    transaction_code?: boolean
+    description?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type TransactionsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"transaction_id" | "user_id" | "amount" | "type" | "status" | "payment_method" | "transaction_code" | "description" | "created_at" | "updated_at", ExtArgs["result"]["transactions"]>
+  export type TransactionsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UsersDefaultArgs<ExtArgs>
+  }
+
+  export type $TransactionsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Transactions"
+    objects: {
+      user: Prisma.$UsersPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      transaction_id: bigint
+      user_id: bigint
+      amount: Prisma.Decimal
+      type: $Enums.TransactionType
+      status: $Enums.TransactionStatus
+      payment_method: string
+      transaction_code: string | null
+      description: string | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["transactions"]>
+    composites: {}
+  }
+
+  type TransactionsGetPayload<S extends boolean | null | undefined | TransactionsDefaultArgs> = $Result.GetResult<Prisma.$TransactionsPayload, S>
+
+  type TransactionsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TransactionsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TransactionsCountAggregateInputType | true
+    }
+
+  export interface TransactionsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Transactions'], meta: { name: 'Transactions' } }
+    /**
+     * Find zero or one Transactions that matches the filter.
+     * @param {TransactionsFindUniqueArgs} args - Arguments to find a Transactions
+     * @example
+     * // Get one Transactions
+     * const transactions = await prisma.transactions.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TransactionsFindUniqueArgs>(args: SelectSubset<T, TransactionsFindUniqueArgs<ExtArgs>>): Prisma__TransactionsClient<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Transactions that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TransactionsFindUniqueOrThrowArgs} args - Arguments to find a Transactions
+     * @example
+     * // Get one Transactions
+     * const transactions = await prisma.transactions.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TransactionsFindUniqueOrThrowArgs>(args: SelectSubset<T, TransactionsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TransactionsClient<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Transactions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransactionsFindFirstArgs} args - Arguments to find a Transactions
+     * @example
+     * // Get one Transactions
+     * const transactions = await prisma.transactions.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TransactionsFindFirstArgs>(args?: SelectSubset<T, TransactionsFindFirstArgs<ExtArgs>>): Prisma__TransactionsClient<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Transactions that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransactionsFindFirstOrThrowArgs} args - Arguments to find a Transactions
+     * @example
+     * // Get one Transactions
+     * const transactions = await prisma.transactions.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TransactionsFindFirstOrThrowArgs>(args?: SelectSubset<T, TransactionsFindFirstOrThrowArgs<ExtArgs>>): Prisma__TransactionsClient<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Transactions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransactionsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Transactions
+     * const transactions = await prisma.transactions.findMany()
+     * 
+     * // Get first 10 Transactions
+     * const transactions = await prisma.transactions.findMany({ take: 10 })
+     * 
+     * // Only select the `transaction_id`
+     * const transactionsWithTransaction_idOnly = await prisma.transactions.findMany({ select: { transaction_id: true } })
+     * 
+     */
+    findMany<T extends TransactionsFindManyArgs>(args?: SelectSubset<T, TransactionsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Transactions.
+     * @param {TransactionsCreateArgs} args - Arguments to create a Transactions.
+     * @example
+     * // Create one Transactions
+     * const Transactions = await prisma.transactions.create({
+     *   data: {
+     *     // ... data to create a Transactions
+     *   }
+     * })
+     * 
+     */
+    create<T extends TransactionsCreateArgs>(args: SelectSubset<T, TransactionsCreateArgs<ExtArgs>>): Prisma__TransactionsClient<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Transactions.
+     * @param {TransactionsCreateManyArgs} args - Arguments to create many Transactions.
+     * @example
+     * // Create many Transactions
+     * const transactions = await prisma.transactions.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TransactionsCreateManyArgs>(args?: SelectSubset<T, TransactionsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Transactions.
+     * @param {TransactionsDeleteArgs} args - Arguments to delete one Transactions.
+     * @example
+     * // Delete one Transactions
+     * const Transactions = await prisma.transactions.delete({
+     *   where: {
+     *     // ... filter to delete one Transactions
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TransactionsDeleteArgs>(args: SelectSubset<T, TransactionsDeleteArgs<ExtArgs>>): Prisma__TransactionsClient<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Transactions.
+     * @param {TransactionsUpdateArgs} args - Arguments to update one Transactions.
+     * @example
+     * // Update one Transactions
+     * const transactions = await prisma.transactions.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TransactionsUpdateArgs>(args: SelectSubset<T, TransactionsUpdateArgs<ExtArgs>>): Prisma__TransactionsClient<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Transactions.
+     * @param {TransactionsDeleteManyArgs} args - Arguments to filter Transactions to delete.
+     * @example
+     * // Delete a few Transactions
+     * const { count } = await prisma.transactions.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TransactionsDeleteManyArgs>(args?: SelectSubset<T, TransactionsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Transactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransactionsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Transactions
+     * const transactions = await prisma.transactions.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TransactionsUpdateManyArgs>(args: SelectSubset<T, TransactionsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Transactions.
+     * @param {TransactionsUpsertArgs} args - Arguments to update or create a Transactions.
+     * @example
+     * // Update or create a Transactions
+     * const transactions = await prisma.transactions.upsert({
+     *   create: {
+     *     // ... data to create a Transactions
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Transactions we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TransactionsUpsertArgs>(args: SelectSubset<T, TransactionsUpsertArgs<ExtArgs>>): Prisma__TransactionsClient<$Result.GetResult<Prisma.$TransactionsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Transactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransactionsCountArgs} args - Arguments to filter Transactions to count.
+     * @example
+     * // Count the number of Transactions
+     * const count = await prisma.transactions.count({
+     *   where: {
+     *     // ... the filter for the Transactions we want to count
+     *   }
+     * })
+    **/
+    count<T extends TransactionsCountArgs>(
+      args?: Subset<T, TransactionsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TransactionsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Transactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransactionsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TransactionsAggregateArgs>(args: Subset<T, TransactionsAggregateArgs>): Prisma.PrismaPromise<GetTransactionsAggregateType<T>>
+
+    /**
+     * Group by Transactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TransactionsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TransactionsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TransactionsGroupByArgs['orderBy'] }
+        : { orderBy?: TransactionsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TransactionsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTransactionsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Transactions model
+   */
+  readonly fields: TransactionsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Transactions.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TransactionsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UsersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UsersDefaultArgs<ExtArgs>>): Prisma__UsersClient<$Result.GetResult<Prisma.$UsersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Transactions model
+   */
+  interface TransactionsFieldRefs {
+    readonly transaction_id: FieldRef<"Transactions", 'BigInt'>
+    readonly user_id: FieldRef<"Transactions", 'BigInt'>
+    readonly amount: FieldRef<"Transactions", 'Decimal'>
+    readonly type: FieldRef<"Transactions", 'TransactionType'>
+    readonly status: FieldRef<"Transactions", 'TransactionStatus'>
+    readonly payment_method: FieldRef<"Transactions", 'String'>
+    readonly transaction_code: FieldRef<"Transactions", 'String'>
+    readonly description: FieldRef<"Transactions", 'String'>
+    readonly created_at: FieldRef<"Transactions", 'DateTime'>
+    readonly updated_at: FieldRef<"Transactions", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Transactions findUnique
+   */
+  export type TransactionsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transactions
+     */
+    select?: TransactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transactions
+     */
+    omit?: TransactionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionsInclude<ExtArgs> | null
+    /**
+     * Filter, which Transactions to fetch.
+     */
+    where: TransactionsWhereUniqueInput
+  }
+
+  /**
+   * Transactions findUniqueOrThrow
+   */
+  export type TransactionsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transactions
+     */
+    select?: TransactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transactions
+     */
+    omit?: TransactionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionsInclude<ExtArgs> | null
+    /**
+     * Filter, which Transactions to fetch.
+     */
+    where: TransactionsWhereUniqueInput
+  }
+
+  /**
+   * Transactions findFirst
+   */
+  export type TransactionsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transactions
+     */
+    select?: TransactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transactions
+     */
+    omit?: TransactionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionsInclude<ExtArgs> | null
+    /**
+     * Filter, which Transactions to fetch.
+     */
+    where?: TransactionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Transactions to fetch.
+     */
+    orderBy?: TransactionsOrderByWithRelationInput | TransactionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Transactions.
+     */
+    cursor?: TransactionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Transactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Transactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Transactions.
+     */
+    distinct?: TransactionsScalarFieldEnum | TransactionsScalarFieldEnum[]
+  }
+
+  /**
+   * Transactions findFirstOrThrow
+   */
+  export type TransactionsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transactions
+     */
+    select?: TransactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transactions
+     */
+    omit?: TransactionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionsInclude<ExtArgs> | null
+    /**
+     * Filter, which Transactions to fetch.
+     */
+    where?: TransactionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Transactions to fetch.
+     */
+    orderBy?: TransactionsOrderByWithRelationInput | TransactionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Transactions.
+     */
+    cursor?: TransactionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Transactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Transactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Transactions.
+     */
+    distinct?: TransactionsScalarFieldEnum | TransactionsScalarFieldEnum[]
+  }
+
+  /**
+   * Transactions findMany
+   */
+  export type TransactionsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transactions
+     */
+    select?: TransactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transactions
+     */
+    omit?: TransactionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionsInclude<ExtArgs> | null
+    /**
+     * Filter, which Transactions to fetch.
+     */
+    where?: TransactionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Transactions to fetch.
+     */
+    orderBy?: TransactionsOrderByWithRelationInput | TransactionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Transactions.
+     */
+    cursor?: TransactionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Transactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Transactions.
+     */
+    skip?: number
+    distinct?: TransactionsScalarFieldEnum | TransactionsScalarFieldEnum[]
+  }
+
+  /**
+   * Transactions create
+   */
+  export type TransactionsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transactions
+     */
+    select?: TransactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transactions
+     */
+    omit?: TransactionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Transactions.
+     */
+    data: XOR<TransactionsCreateInput, TransactionsUncheckedCreateInput>
+  }
+
+  /**
+   * Transactions createMany
+   */
+  export type TransactionsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Transactions.
+     */
+    data: TransactionsCreateManyInput | TransactionsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Transactions update
+   */
+  export type TransactionsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transactions
+     */
+    select?: TransactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transactions
+     */
+    omit?: TransactionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Transactions.
+     */
+    data: XOR<TransactionsUpdateInput, TransactionsUncheckedUpdateInput>
+    /**
+     * Choose, which Transactions to update.
+     */
+    where: TransactionsWhereUniqueInput
+  }
+
+  /**
+   * Transactions updateMany
+   */
+  export type TransactionsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Transactions.
+     */
+    data: XOR<TransactionsUpdateManyMutationInput, TransactionsUncheckedUpdateManyInput>
+    /**
+     * Filter which Transactions to update
+     */
+    where?: TransactionsWhereInput
+    /**
+     * Limit how many Transactions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Transactions upsert
+   */
+  export type TransactionsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transactions
+     */
+    select?: TransactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transactions
+     */
+    omit?: TransactionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Transactions to update in case it exists.
+     */
+    where: TransactionsWhereUniqueInput
+    /**
+     * In case the Transactions found by the `where` argument doesn't exist, create a new Transactions with this data.
+     */
+    create: XOR<TransactionsCreateInput, TransactionsUncheckedCreateInput>
+    /**
+     * In case the Transactions was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TransactionsUpdateInput, TransactionsUncheckedUpdateInput>
+  }
+
+  /**
+   * Transactions delete
+   */
+  export type TransactionsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transactions
+     */
+    select?: TransactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transactions
+     */
+    omit?: TransactionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionsInclude<ExtArgs> | null
+    /**
+     * Filter which Transactions to delete.
+     */
+    where: TransactionsWhereUniqueInput
+  }
+
+  /**
+   * Transactions deleteMany
+   */
+  export type TransactionsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Transactions to delete
+     */
+    where?: TransactionsWhereInput
+    /**
+     * Limit how many Transactions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Transactions without action
+   */
+  export type TransactionsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transactions
+     */
+    select?: TransactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Transactions
+     */
+    omit?: TransactionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionsInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -5631,6 +6818,7 @@ export namespace Prisma {
     user_created_at: 'user_created_at',
     user_verification: 'user_verification',
     user_role: 'user_role',
+    account_balance: 'account_balance',
     otp: 'otp',
     otp_expiry_time: 'otp_expiry_time',
     password_reset_token: 'password_reset_token',
@@ -5688,6 +6876,22 @@ export namespace Prisma {
   };
 
   export type PostImagesScalarFieldEnum = (typeof PostImagesScalarFieldEnum)[keyof typeof PostImagesScalarFieldEnum]
+
+
+  export const TransactionsScalarFieldEnum: {
+    transaction_id: 'transaction_id',
+    user_id: 'user_id',
+    amount: 'amount',
+    type: 'type',
+    status: 'status',
+    payment_method: 'payment_method',
+    transaction_code: 'transaction_code',
+    description: 'description',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type TransactionsScalarFieldEnum = (typeof TransactionsScalarFieldEnum)[keyof typeof TransactionsScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -5750,6 +6954,15 @@ export namespace Prisma {
   };
 
   export type PostImagesOrderByRelevanceFieldEnum = (typeof PostImagesOrderByRelevanceFieldEnum)[keyof typeof PostImagesOrderByRelevanceFieldEnum]
+
+
+  export const TransactionsOrderByRelevanceFieldEnum: {
+    payment_method: 'payment_method',
+    transaction_code: 'transaction_code',
+    description: 'description'
+  };
+
+  export type TransactionsOrderByRelevanceFieldEnum = (typeof TransactionsOrderByRelevanceFieldEnum)[keyof typeof TransactionsOrderByRelevanceFieldEnum]
 
 
   /**
@@ -5839,6 +7052,20 @@ export namespace Prisma {
    */
   export type EnumPostStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PostStatus'>
     
+
+
+  /**
+   * Reference to a field of type 'TransactionType'
+   */
+  export type EnumTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionType'>
+    
+
+
+  /**
+   * Reference to a field of type 'TransactionStatus'
+   */
+  export type EnumTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionStatus'>
+    
   /**
    * Deep Input Types
    */
@@ -5864,12 +7091,14 @@ export namespace Prisma {
     user_created_at?: DateTimeFilter<"Users"> | Date | string
     user_verification?: Enumusers_user_verificationFilter<"Users"> | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFilter<"Users"> | $Enums.users_user_role
+    account_balance?: DecimalFilter<"Users"> | Decimal | DecimalJsLike | number | string
     otp?: StringNullableFilter<"Users"> | string | null
     otp_expiry_time?: DateTimeNullableFilter<"Users"> | Date | string | null
     password_reset_token?: StringNullableFilter<"Users"> | string | null
     password_reset_expires?: DateTimeNullableFilter<"Users"> | Date | string | null
     verified?: BoolFilter<"Users"> | boolean
     posts?: PostsListRelationFilter
+    transactions?: TransactionsListRelationFilter
   }
 
   export type UsersOrderByWithRelationInput = {
@@ -5889,12 +7118,14 @@ export namespace Prisma {
     user_created_at?: SortOrder
     user_verification?: SortOrder
     user_role?: SortOrder
+    account_balance?: SortOrder
     otp?: SortOrderInput | SortOrder
     otp_expiry_time?: SortOrderInput | SortOrder
     password_reset_token?: SortOrderInput | SortOrder
     password_reset_expires?: SortOrderInput | SortOrder
     verified?: SortOrder
     posts?: PostsOrderByRelationAggregateInput
+    transactions?: TransactionsOrderByRelationAggregateInput
     _relevance?: UsersOrderByRelevanceInput
   }
 
@@ -5918,12 +7149,14 @@ export namespace Prisma {
     user_created_at?: DateTimeFilter<"Users"> | Date | string
     user_verification?: Enumusers_user_verificationFilter<"Users"> | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFilter<"Users"> | $Enums.users_user_role
+    account_balance?: DecimalFilter<"Users"> | Decimal | DecimalJsLike | number | string
     otp?: StringNullableFilter<"Users"> | string | null
     otp_expiry_time?: DateTimeNullableFilter<"Users"> | Date | string | null
     password_reset_token?: StringNullableFilter<"Users"> | string | null
     password_reset_expires?: DateTimeNullableFilter<"Users"> | Date | string | null
     verified?: BoolFilter<"Users"> | boolean
     posts?: PostsListRelationFilter
+    transactions?: TransactionsListRelationFilter
   }, "user_id" | "user_phone" | "user_email">
 
   export type UsersOrderByWithAggregationInput = {
@@ -5943,6 +7176,7 @@ export namespace Prisma {
     user_created_at?: SortOrder
     user_verification?: SortOrder
     user_role?: SortOrder
+    account_balance?: SortOrder
     otp?: SortOrderInput | SortOrder
     otp_expiry_time?: SortOrderInput | SortOrder
     password_reset_token?: SortOrderInput | SortOrder
@@ -5975,6 +7209,7 @@ export namespace Prisma {
     user_created_at?: DateTimeWithAggregatesFilter<"Users"> | Date | string
     user_verification?: Enumusers_user_verificationWithAggregatesFilter<"Users"> | $Enums.users_user_verification
     user_role?: Enumusers_user_roleWithAggregatesFilter<"Users"> | $Enums.users_user_role
+    account_balance?: DecimalWithAggregatesFilter<"Users"> | Decimal | DecimalJsLike | number | string
     otp?: StringNullableWithAggregatesFilter<"Users"> | string | null
     otp_expiry_time?: DateTimeNullableWithAggregatesFilter<"Users"> | Date | string | null
     password_reset_token?: StringNullableWithAggregatesFilter<"Users"> | string | null
@@ -6242,6 +7477,89 @@ export namespace Prisma {
     post_id?: IntWithAggregatesFilter<"PostImages"> | number
   }
 
+  export type TransactionsWhereInput = {
+    AND?: TransactionsWhereInput | TransactionsWhereInput[]
+    OR?: TransactionsWhereInput[]
+    NOT?: TransactionsWhereInput | TransactionsWhereInput[]
+    transaction_id?: BigIntFilter<"Transactions"> | bigint | number
+    user_id?: BigIntFilter<"Transactions"> | bigint | number
+    amount?: DecimalFilter<"Transactions"> | Decimal | DecimalJsLike | number | string
+    type?: EnumTransactionTypeFilter<"Transactions"> | $Enums.TransactionType
+    status?: EnumTransactionStatusFilter<"Transactions"> | $Enums.TransactionStatus
+    payment_method?: StringFilter<"Transactions"> | string
+    transaction_code?: StringNullableFilter<"Transactions"> | string | null
+    description?: StringNullableFilter<"Transactions"> | string | null
+    created_at?: DateTimeFilter<"Transactions"> | Date | string
+    updated_at?: DateTimeFilter<"Transactions"> | Date | string
+    user?: XOR<UsersScalarRelationFilter, UsersWhereInput>
+  }
+
+  export type TransactionsOrderByWithRelationInput = {
+    transaction_id?: SortOrder
+    user_id?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    payment_method?: SortOrder
+    transaction_code?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    user?: UsersOrderByWithRelationInput
+    _relevance?: TransactionsOrderByRelevanceInput
+  }
+
+  export type TransactionsWhereUniqueInput = Prisma.AtLeast<{
+    transaction_id?: bigint | number
+    transaction_code?: string
+    AND?: TransactionsWhereInput | TransactionsWhereInput[]
+    OR?: TransactionsWhereInput[]
+    NOT?: TransactionsWhereInput | TransactionsWhereInput[]
+    user_id?: BigIntFilter<"Transactions"> | bigint | number
+    amount?: DecimalFilter<"Transactions"> | Decimal | DecimalJsLike | number | string
+    type?: EnumTransactionTypeFilter<"Transactions"> | $Enums.TransactionType
+    status?: EnumTransactionStatusFilter<"Transactions"> | $Enums.TransactionStatus
+    payment_method?: StringFilter<"Transactions"> | string
+    description?: StringNullableFilter<"Transactions"> | string | null
+    created_at?: DateTimeFilter<"Transactions"> | Date | string
+    updated_at?: DateTimeFilter<"Transactions"> | Date | string
+    user?: XOR<UsersScalarRelationFilter, UsersWhereInput>
+  }, "transaction_id" | "transaction_code">
+
+  export type TransactionsOrderByWithAggregationInput = {
+    transaction_id?: SortOrder
+    user_id?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    payment_method?: SortOrder
+    transaction_code?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: TransactionsCountOrderByAggregateInput
+    _avg?: TransactionsAvgOrderByAggregateInput
+    _max?: TransactionsMaxOrderByAggregateInput
+    _min?: TransactionsMinOrderByAggregateInput
+    _sum?: TransactionsSumOrderByAggregateInput
+  }
+
+  export type TransactionsScalarWhereWithAggregatesInput = {
+    AND?: TransactionsScalarWhereWithAggregatesInput | TransactionsScalarWhereWithAggregatesInput[]
+    OR?: TransactionsScalarWhereWithAggregatesInput[]
+    NOT?: TransactionsScalarWhereWithAggregatesInput | TransactionsScalarWhereWithAggregatesInput[]
+    transaction_id?: BigIntWithAggregatesFilter<"Transactions"> | bigint | number
+    user_id?: BigIntWithAggregatesFilter<"Transactions"> | bigint | number
+    amount?: DecimalWithAggregatesFilter<"Transactions"> | Decimal | DecimalJsLike | number | string
+    type?: EnumTransactionTypeWithAggregatesFilter<"Transactions"> | $Enums.TransactionType
+    status?: EnumTransactionStatusWithAggregatesFilter<"Transactions"> | $Enums.TransactionStatus
+    payment_method?: StringWithAggregatesFilter<"Transactions"> | string
+    transaction_code?: StringNullableWithAggregatesFilter<"Transactions"> | string | null
+    description?: StringNullableWithAggregatesFilter<"Transactions"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"Transactions"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"Transactions"> | Date | string
+  }
+
   export type UsersCreateInput = {
     user_id?: bigint | number
     user_password: string
@@ -6259,12 +7577,14 @@ export namespace Prisma {
     user_created_at?: Date | string
     user_verification?: $Enums.users_user_verification
     user_role: $Enums.users_user_role
+    account_balance?: Decimal | DecimalJsLike | number | string
     otp?: string | null
     otp_expiry_time?: Date | string | null
     password_reset_token?: string | null
     password_reset_expires?: Date | string | null
     verified?: boolean
     posts?: PostsCreateNestedManyWithoutUserInput
+    transactions?: TransactionsCreateNestedManyWithoutUserInput
   }
 
   export type UsersUncheckedCreateInput = {
@@ -6284,12 +7604,14 @@ export namespace Prisma {
     user_created_at?: Date | string
     user_verification?: $Enums.users_user_verification
     user_role: $Enums.users_user_role
+    account_balance?: Decimal | DecimalJsLike | number | string
     otp?: string | null
     otp_expiry_time?: Date | string | null
     password_reset_token?: string | null
     password_reset_expires?: Date | string | null
     verified?: boolean
     posts?: PostsUncheckedCreateNestedManyWithoutUserInput
+    transactions?: TransactionsUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UsersUpdateInput = {
@@ -6309,12 +7631,14 @@ export namespace Prisma {
     user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
+    account_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     otp?: NullableStringFieldUpdateOperationsInput | string | null
     otp_expiry_time?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password_reset_token?: NullableStringFieldUpdateOperationsInput | string | null
     password_reset_expires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     posts?: PostsUpdateManyWithoutUserNestedInput
+    transactions?: TransactionsUpdateManyWithoutUserNestedInput
   }
 
   export type UsersUncheckedUpdateInput = {
@@ -6334,12 +7658,14 @@ export namespace Prisma {
     user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
+    account_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     otp?: NullableStringFieldUpdateOperationsInput | string | null
     otp_expiry_time?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password_reset_token?: NullableStringFieldUpdateOperationsInput | string | null
     password_reset_expires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     posts?: PostsUncheckedUpdateManyWithoutUserNestedInput
+    transactions?: TransactionsUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UsersCreateManyInput = {
@@ -6359,6 +7685,7 @@ export namespace Prisma {
     user_created_at?: Date | string
     user_verification?: $Enums.users_user_verification
     user_role: $Enums.users_user_role
+    account_balance?: Decimal | DecimalJsLike | number | string
     otp?: string | null
     otp_expiry_time?: Date | string | null
     password_reset_token?: string | null
@@ -6383,6 +7710,7 @@ export namespace Prisma {
     user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
+    account_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     otp?: NullableStringFieldUpdateOperationsInput | string | null
     otp_expiry_time?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password_reset_token?: NullableStringFieldUpdateOperationsInput | string | null
@@ -6407,6 +7735,7 @@ export namespace Prisma {
     user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
+    account_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     otp?: NullableStringFieldUpdateOperationsInput | string | null
     otp_expiry_time?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password_reset_token?: NullableStringFieldUpdateOperationsInput | string | null
@@ -6690,6 +8019,96 @@ export namespace Prisma {
     post_id?: IntFieldUpdateOperationsInput | number
   }
 
+  export type TransactionsCreateInput = {
+    transaction_id?: bigint | number
+    amount: Decimal | DecimalJsLike | number | string
+    type: $Enums.TransactionType
+    status?: $Enums.TransactionStatus
+    payment_method: string
+    transaction_code?: string | null
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    user: UsersCreateNestedOneWithoutTransactionsInput
+  }
+
+  export type TransactionsUncheckedCreateInput = {
+    transaction_id?: bigint | number
+    user_id: bigint | number
+    amount: Decimal | DecimalJsLike | number | string
+    type: $Enums.TransactionType
+    status?: $Enums.TransactionStatus
+    payment_method: string
+    transaction_code?: string | null
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type TransactionsUpdateInput = {
+    transaction_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    payment_method?: StringFieldUpdateOperationsInput | string
+    transaction_code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UsersUpdateOneRequiredWithoutTransactionsNestedInput
+  }
+
+  export type TransactionsUncheckedUpdateInput = {
+    transaction_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    payment_method?: StringFieldUpdateOperationsInput | string
+    transaction_code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransactionsCreateManyInput = {
+    transaction_id?: bigint | number
+    user_id: bigint | number
+    amount: Decimal | DecimalJsLike | number | string
+    type: $Enums.TransactionType
+    status?: $Enums.TransactionStatus
+    payment_method: string
+    transaction_code?: string | null
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type TransactionsUpdateManyMutationInput = {
+    transaction_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    payment_method?: StringFieldUpdateOperationsInput | string
+    transaction_code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransactionsUncheckedUpdateManyInput = {
+    transaction_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    payment_method?: StringFieldUpdateOperationsInput | string
+    transaction_code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type BigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[]
@@ -6796,6 +8215,17 @@ export namespace Prisma {
     not?: NestedEnumusers_user_roleFilter<$PrismaModel> | $Enums.users_user_role
   }
 
+  export type DecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -6807,12 +8237,22 @@ export namespace Prisma {
     none?: PostsWhereInput
   }
 
+  export type TransactionsListRelationFilter = {
+    every?: TransactionsWhereInput
+    some?: TransactionsWhereInput
+    none?: TransactionsWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type PostsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TransactionsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -6839,6 +8279,7 @@ export namespace Prisma {
     user_created_at?: SortOrder
     user_verification?: SortOrder
     user_role?: SortOrder
+    account_balance?: SortOrder
     otp?: SortOrder
     otp_expiry_time?: SortOrder
     password_reset_token?: SortOrder
@@ -6850,6 +8291,7 @@ export namespace Prisma {
     user_id?: SortOrder
     user_avg_rating?: SortOrder
     user_review_count?: SortOrder
+    account_balance?: SortOrder
   }
 
   export type UsersMaxOrderByAggregateInput = {
@@ -6869,6 +8311,7 @@ export namespace Prisma {
     user_created_at?: SortOrder
     user_verification?: SortOrder
     user_role?: SortOrder
+    account_balance?: SortOrder
     otp?: SortOrder
     otp_expiry_time?: SortOrder
     password_reset_token?: SortOrder
@@ -6893,6 +8336,7 @@ export namespace Prisma {
     user_created_at?: SortOrder
     user_verification?: SortOrder
     user_role?: SortOrder
+    account_balance?: SortOrder
     otp?: SortOrder
     otp_expiry_time?: SortOrder
     password_reset_token?: SortOrder
@@ -6904,6 +8348,7 @@ export namespace Prisma {
     user_id?: SortOrder
     user_avg_rating?: SortOrder
     user_review_count?: SortOrder
+    account_balance?: SortOrder
   }
 
   export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -7046,6 +8491,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumusers_user_roleFilter<$PrismaModel>
     _max?: NestedEnumusers_user_roleFilter<$PrismaModel>
+  }
+
+  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -7382,6 +8843,97 @@ export namespace Prisma {
     post_id?: SortOrder
   }
 
+  export type EnumTransactionTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionType | EnumTransactionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionType[]
+    notIn?: $Enums.TransactionType[]
+    not?: NestedEnumTransactionTypeFilter<$PrismaModel> | $Enums.TransactionType
+  }
+
+  export type EnumTransactionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionStatus | EnumTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionStatus[]
+    notIn?: $Enums.TransactionStatus[]
+    not?: NestedEnumTransactionStatusFilter<$PrismaModel> | $Enums.TransactionStatus
+  }
+
+  export type TransactionsOrderByRelevanceInput = {
+    fields: TransactionsOrderByRelevanceFieldEnum | TransactionsOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type TransactionsCountOrderByAggregateInput = {
+    transaction_id?: SortOrder
+    user_id?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    payment_method?: SortOrder
+    transaction_code?: SortOrder
+    description?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type TransactionsAvgOrderByAggregateInput = {
+    transaction_id?: SortOrder
+    user_id?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type TransactionsMaxOrderByAggregateInput = {
+    transaction_id?: SortOrder
+    user_id?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    payment_method?: SortOrder
+    transaction_code?: SortOrder
+    description?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type TransactionsMinOrderByAggregateInput = {
+    transaction_id?: SortOrder
+    user_id?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    payment_method?: SortOrder
+    transaction_code?: SortOrder
+    description?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type TransactionsSumOrderByAggregateInput = {
+    transaction_id?: SortOrder
+    user_id?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type EnumTransactionTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionType | EnumTransactionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionType[]
+    notIn?: $Enums.TransactionType[]
+    not?: NestedEnumTransactionTypeWithAggregatesFilter<$PrismaModel> | $Enums.TransactionType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTransactionTypeFilter<$PrismaModel>
+    _max?: NestedEnumTransactionTypeFilter<$PrismaModel>
+  }
+
+  export type EnumTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionStatus | EnumTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionStatus[]
+    notIn?: $Enums.TransactionStatus[]
+    not?: NestedEnumTransactionStatusWithAggregatesFilter<$PrismaModel> | $Enums.TransactionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTransactionStatusFilter<$PrismaModel>
+    _max?: NestedEnumTransactionStatusFilter<$PrismaModel>
+  }
+
   export type PostsCreateNestedManyWithoutUserInput = {
     create?: XOR<PostsCreateWithoutUserInput, PostsUncheckedCreateWithoutUserInput> | PostsCreateWithoutUserInput[] | PostsUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PostsCreateOrConnectWithoutUserInput | PostsCreateOrConnectWithoutUserInput[]
@@ -7389,11 +8941,25 @@ export namespace Prisma {
     connect?: PostsWhereUniqueInput | PostsWhereUniqueInput[]
   }
 
+  export type TransactionsCreateNestedManyWithoutUserInput = {
+    create?: XOR<TransactionsCreateWithoutUserInput, TransactionsUncheckedCreateWithoutUserInput> | TransactionsCreateWithoutUserInput[] | TransactionsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TransactionsCreateOrConnectWithoutUserInput | TransactionsCreateOrConnectWithoutUserInput[]
+    createMany?: TransactionsCreateManyUserInputEnvelope
+    connect?: TransactionsWhereUniqueInput | TransactionsWhereUniqueInput[]
+  }
+
   export type PostsUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<PostsCreateWithoutUserInput, PostsUncheckedCreateWithoutUserInput> | PostsCreateWithoutUserInput[] | PostsUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PostsCreateOrConnectWithoutUserInput | PostsCreateOrConnectWithoutUserInput[]
     createMany?: PostsCreateManyUserInputEnvelope
     connect?: PostsWhereUniqueInput | PostsWhereUniqueInput[]
+  }
+
+  export type TransactionsUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TransactionsCreateWithoutUserInput, TransactionsUncheckedCreateWithoutUserInput> | TransactionsCreateWithoutUserInput[] | TransactionsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TransactionsCreateOrConnectWithoutUserInput | TransactionsCreateOrConnectWithoutUserInput[]
+    createMany?: TransactionsCreateManyUserInputEnvelope
+    connect?: TransactionsWhereUniqueInput | TransactionsWhereUniqueInput[]
   }
 
   export type BigIntFieldUpdateOperationsInput = {
@@ -7448,6 +9014,14 @@ export namespace Prisma {
     set?: $Enums.users_user_role
   }
 
+  export type DecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
   }
@@ -7466,6 +9040,20 @@ export namespace Prisma {
     deleteMany?: PostsScalarWhereInput | PostsScalarWhereInput[]
   }
 
+  export type TransactionsUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TransactionsCreateWithoutUserInput, TransactionsUncheckedCreateWithoutUserInput> | TransactionsCreateWithoutUserInput[] | TransactionsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TransactionsCreateOrConnectWithoutUserInput | TransactionsCreateOrConnectWithoutUserInput[]
+    upsert?: TransactionsUpsertWithWhereUniqueWithoutUserInput | TransactionsUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TransactionsCreateManyUserInputEnvelope
+    set?: TransactionsWhereUniqueInput | TransactionsWhereUniqueInput[]
+    disconnect?: TransactionsWhereUniqueInput | TransactionsWhereUniqueInput[]
+    delete?: TransactionsWhereUniqueInput | TransactionsWhereUniqueInput[]
+    connect?: TransactionsWhereUniqueInput | TransactionsWhereUniqueInput[]
+    update?: TransactionsUpdateWithWhereUniqueWithoutUserInput | TransactionsUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TransactionsUpdateManyWithWhereWithoutUserInput | TransactionsUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TransactionsScalarWhereInput | TransactionsScalarWhereInput[]
+  }
+
   export type PostsUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<PostsCreateWithoutUserInput, PostsUncheckedCreateWithoutUserInput> | PostsCreateWithoutUserInput[] | PostsUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PostsCreateOrConnectWithoutUserInput | PostsCreateOrConnectWithoutUserInput[]
@@ -7478,6 +9066,20 @@ export namespace Prisma {
     update?: PostsUpdateWithWhereUniqueWithoutUserInput | PostsUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: PostsUpdateManyWithWhereWithoutUserInput | PostsUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: PostsScalarWhereInput | PostsScalarWhereInput[]
+  }
+
+  export type TransactionsUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TransactionsCreateWithoutUserInput, TransactionsUncheckedCreateWithoutUserInput> | TransactionsCreateWithoutUserInput[] | TransactionsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TransactionsCreateOrConnectWithoutUserInput | TransactionsCreateOrConnectWithoutUserInput[]
+    upsert?: TransactionsUpsertWithWhereUniqueWithoutUserInput | TransactionsUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TransactionsCreateManyUserInputEnvelope
+    set?: TransactionsWhereUniqueInput | TransactionsWhereUniqueInput[]
+    disconnect?: TransactionsWhereUniqueInput | TransactionsWhereUniqueInput[]
+    delete?: TransactionsWhereUniqueInput | TransactionsWhereUniqueInput[]
+    connect?: TransactionsWhereUniqueInput | TransactionsWhereUniqueInput[]
+    update?: TransactionsUpdateWithWhereUniqueWithoutUserInput | TransactionsUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TransactionsUpdateManyWithWhereWithoutUserInput | TransactionsUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TransactionsScalarWhereInput | TransactionsScalarWhereInput[]
   }
 
   export type UsersCreateNestedOneWithoutPostsInput = {
@@ -7628,6 +9230,28 @@ export namespace Prisma {
     update?: XOR<XOR<PostsUpdateToOneWithWhereWithoutImagesInput, PostsUpdateWithoutImagesInput>, PostsUncheckedUpdateWithoutImagesInput>
   }
 
+  export type UsersCreateNestedOneWithoutTransactionsInput = {
+    create?: XOR<UsersCreateWithoutTransactionsInput, UsersUncheckedCreateWithoutTransactionsInput>
+    connectOrCreate?: UsersCreateOrConnectWithoutTransactionsInput
+    connect?: UsersWhereUniqueInput
+  }
+
+  export type EnumTransactionTypeFieldUpdateOperationsInput = {
+    set?: $Enums.TransactionType
+  }
+
+  export type EnumTransactionStatusFieldUpdateOperationsInput = {
+    set?: $Enums.TransactionStatus
+  }
+
+  export type UsersUpdateOneRequiredWithoutTransactionsNestedInput = {
+    create?: XOR<UsersCreateWithoutTransactionsInput, UsersUncheckedCreateWithoutTransactionsInput>
+    connectOrCreate?: UsersCreateOrConnectWithoutTransactionsInput
+    upsert?: UsersUpsertWithoutTransactionsInput
+    connect?: UsersWhereUniqueInput
+    update?: XOR<XOR<UsersUpdateToOneWithWhereWithoutTransactionsInput, UsersUpdateWithoutTransactionsInput>, UsersUncheckedUpdateWithoutTransactionsInput>
+  }
+
   export type NestedBigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[]
@@ -7732,6 +9356,17 @@ export namespace Prisma {
     in?: $Enums.users_user_role[]
     notIn?: $Enums.users_user_role[]
     not?: NestedEnumusers_user_roleFilter<$PrismaModel> | $Enums.users_user_role
+  }
+
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
@@ -7914,6 +9549,22 @@ export namespace Prisma {
     _max?: NestedEnumusers_user_roleFilter<$PrismaModel>
   }
 
+  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -8004,6 +9655,40 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumTransactionTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionType | EnumTransactionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionType[]
+    notIn?: $Enums.TransactionType[]
+    not?: NestedEnumTransactionTypeFilter<$PrismaModel> | $Enums.TransactionType
+  }
+
+  export type NestedEnumTransactionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionStatus | EnumTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionStatus[]
+    notIn?: $Enums.TransactionStatus[]
+    not?: NestedEnumTransactionStatusFilter<$PrismaModel> | $Enums.TransactionStatus
+  }
+
+  export type NestedEnumTransactionTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionType | EnumTransactionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionType[]
+    notIn?: $Enums.TransactionType[]
+    not?: NestedEnumTransactionTypeWithAggregatesFilter<$PrismaModel> | $Enums.TransactionType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTransactionTypeFilter<$PrismaModel>
+    _max?: NestedEnumTransactionTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TransactionStatus | EnumTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TransactionStatus[]
+    notIn?: $Enums.TransactionStatus[]
+    not?: NestedEnumTransactionStatusWithAggregatesFilter<$PrismaModel> | $Enums.TransactionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTransactionStatusFilter<$PrismaModel>
+    _max?: NestedEnumTransactionStatusFilter<$PrismaModel>
+  }
+
   export type PostsCreateWithoutUserInput = {
     post_title: string
     post_description: string
@@ -8059,6 +9744,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TransactionsCreateWithoutUserInput = {
+    transaction_id?: bigint | number
+    amount: Decimal | DecimalJsLike | number | string
+    type: $Enums.TransactionType
+    status?: $Enums.TransactionStatus
+    payment_method: string
+    transaction_code?: string | null
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type TransactionsUncheckedCreateWithoutUserInput = {
+    transaction_id?: bigint | number
+    amount: Decimal | DecimalJsLike | number | string
+    type: $Enums.TransactionType
+    status?: $Enums.TransactionStatus
+    payment_method: string
+    transaction_code?: string | null
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type TransactionsCreateOrConnectWithoutUserInput = {
+    where: TransactionsWhereUniqueInput
+    create: XOR<TransactionsCreateWithoutUserInput, TransactionsUncheckedCreateWithoutUserInput>
+  }
+
+  export type TransactionsCreateManyUserInputEnvelope = {
+    data: TransactionsCreateManyUserInput | TransactionsCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PostsUpsertWithWhereUniqueWithoutUserInput = {
     where: PostsWhereUniqueInput
     update: XOR<PostsUpdateWithoutUserInput, PostsUncheckedUpdateWithoutUserInput>
@@ -8100,6 +9819,38 @@ export namespace Prisma {
     expired_at?: DateTimeNullableFilter<"Posts"> | Date | string | null
   }
 
+  export type TransactionsUpsertWithWhereUniqueWithoutUserInput = {
+    where: TransactionsWhereUniqueInput
+    update: XOR<TransactionsUpdateWithoutUserInput, TransactionsUncheckedUpdateWithoutUserInput>
+    create: XOR<TransactionsCreateWithoutUserInput, TransactionsUncheckedCreateWithoutUserInput>
+  }
+
+  export type TransactionsUpdateWithWhereUniqueWithoutUserInput = {
+    where: TransactionsWhereUniqueInput
+    data: XOR<TransactionsUpdateWithoutUserInput, TransactionsUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TransactionsUpdateManyWithWhereWithoutUserInput = {
+    where: TransactionsScalarWhereInput
+    data: XOR<TransactionsUpdateManyMutationInput, TransactionsUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TransactionsScalarWhereInput = {
+    AND?: TransactionsScalarWhereInput | TransactionsScalarWhereInput[]
+    OR?: TransactionsScalarWhereInput[]
+    NOT?: TransactionsScalarWhereInput | TransactionsScalarWhereInput[]
+    transaction_id?: BigIntFilter<"Transactions"> | bigint | number
+    user_id?: BigIntFilter<"Transactions"> | bigint | number
+    amount?: DecimalFilter<"Transactions"> | Decimal | DecimalJsLike | number | string
+    type?: EnumTransactionTypeFilter<"Transactions"> | $Enums.TransactionType
+    status?: EnumTransactionStatusFilter<"Transactions"> | $Enums.TransactionStatus
+    payment_method?: StringFilter<"Transactions"> | string
+    transaction_code?: StringNullableFilter<"Transactions"> | string | null
+    description?: StringNullableFilter<"Transactions"> | string | null
+    created_at?: DateTimeFilter<"Transactions"> | Date | string
+    updated_at?: DateTimeFilter<"Transactions"> | Date | string
+  }
+
   export type UsersCreateWithoutPostsInput = {
     user_id?: bigint | number
     user_password: string
@@ -8117,11 +9868,13 @@ export namespace Prisma {
     user_created_at?: Date | string
     user_verification?: $Enums.users_user_verification
     user_role: $Enums.users_user_role
+    account_balance?: Decimal | DecimalJsLike | number | string
     otp?: string | null
     otp_expiry_time?: Date | string | null
     password_reset_token?: string | null
     password_reset_expires?: Date | string | null
     verified?: boolean
+    transactions?: TransactionsCreateNestedManyWithoutUserInput
   }
 
   export type UsersUncheckedCreateWithoutPostsInput = {
@@ -8141,11 +9894,13 @@ export namespace Prisma {
     user_created_at?: Date | string
     user_verification?: $Enums.users_user_verification
     user_role: $Enums.users_user_role
+    account_balance?: Decimal | DecimalJsLike | number | string
     otp?: string | null
     otp_expiry_time?: Date | string | null
     password_reset_token?: string | null
     password_reset_expires?: Date | string | null
     verified?: boolean
+    transactions?: TransactionsUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UsersCreateOrConnectWithoutPostsInput = {
@@ -8226,11 +9981,13 @@ export namespace Prisma {
     user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
+    account_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     otp?: NullableStringFieldUpdateOperationsInput | string | null
     otp_expiry_time?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password_reset_token?: NullableStringFieldUpdateOperationsInput | string | null
     password_reset_expires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    transactions?: TransactionsUpdateManyWithoutUserNestedInput
   }
 
   export type UsersUncheckedUpdateWithoutPostsInput = {
@@ -8250,11 +10007,13 @@ export namespace Prisma {
     user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
     user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
+    account_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     otp?: NullableStringFieldUpdateOperationsInput | string | null
     otp_expiry_time?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     password_reset_token?: NullableStringFieldUpdateOperationsInput | string | null
     password_reset_expires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    transactions?: TransactionsUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PostImagesUpsertWithWhereUniqueWithoutPostInput = {
@@ -8526,6 +10285,126 @@ export namespace Prisma {
     roommate_details?: RoommateDetailsUncheckedUpdateOneWithoutPostNestedInput
   }
 
+  export type UsersCreateWithoutTransactionsInput = {
+    user_id?: bigint | number
+    user_password: string
+    user_first_name?: string | null
+    user_last_name?: string | null
+    user_gender?: $Enums.users_user_gender | null
+    user_birthday?: Date | string | null
+    user_phone?: string | null
+    user_email: string
+    user_address?: string | null
+    user_avatar?: string | null
+    user_avg_rating?: Decimal | DecimalJsLike | number | string | null
+    user_review_count?: number | null
+    user_bio?: string | null
+    user_created_at?: Date | string
+    user_verification?: $Enums.users_user_verification
+    user_role: $Enums.users_user_role
+    account_balance?: Decimal | DecimalJsLike | number | string
+    otp?: string | null
+    otp_expiry_time?: Date | string | null
+    password_reset_token?: string | null
+    password_reset_expires?: Date | string | null
+    verified?: boolean
+    posts?: PostsCreateNestedManyWithoutUserInput
+  }
+
+  export type UsersUncheckedCreateWithoutTransactionsInput = {
+    user_id?: bigint | number
+    user_password: string
+    user_first_name?: string | null
+    user_last_name?: string | null
+    user_gender?: $Enums.users_user_gender | null
+    user_birthday?: Date | string | null
+    user_phone?: string | null
+    user_email: string
+    user_address?: string | null
+    user_avatar?: string | null
+    user_avg_rating?: Decimal | DecimalJsLike | number | string | null
+    user_review_count?: number | null
+    user_bio?: string | null
+    user_created_at?: Date | string
+    user_verification?: $Enums.users_user_verification
+    user_role: $Enums.users_user_role
+    account_balance?: Decimal | DecimalJsLike | number | string
+    otp?: string | null
+    otp_expiry_time?: Date | string | null
+    password_reset_token?: string | null
+    password_reset_expires?: Date | string | null
+    verified?: boolean
+    posts?: PostsUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UsersCreateOrConnectWithoutTransactionsInput = {
+    where: UsersWhereUniqueInput
+    create: XOR<UsersCreateWithoutTransactionsInput, UsersUncheckedCreateWithoutTransactionsInput>
+  }
+
+  export type UsersUpsertWithoutTransactionsInput = {
+    update: XOR<UsersUpdateWithoutTransactionsInput, UsersUncheckedUpdateWithoutTransactionsInput>
+    create: XOR<UsersCreateWithoutTransactionsInput, UsersUncheckedCreateWithoutTransactionsInput>
+    where?: UsersWhereInput
+  }
+
+  export type UsersUpdateToOneWithWhereWithoutTransactionsInput = {
+    where?: UsersWhereInput
+    data: XOR<UsersUpdateWithoutTransactionsInput, UsersUncheckedUpdateWithoutTransactionsInput>
+  }
+
+  export type UsersUpdateWithoutTransactionsInput = {
+    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_password?: StringFieldUpdateOperationsInput | string
+    user_first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_gender?: NullableEnumusers_user_genderFieldUpdateOperationsInput | $Enums.users_user_gender | null
+    user_birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_phone?: NullableStringFieldUpdateOperationsInput | string | null
+    user_email?: StringFieldUpdateOperationsInput | string
+    user_address?: NullableStringFieldUpdateOperationsInput | string | null
+    user_avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    user_avg_rating?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    user_review_count?: NullableIntFieldUpdateOperationsInput | number | null
+    user_bio?: NullableStringFieldUpdateOperationsInput | string | null
+    user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
+    user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
+    account_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    otp?: NullableStringFieldUpdateOperationsInput | string | null
+    otp_expiry_time?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    password_reset_token?: NullableStringFieldUpdateOperationsInput | string | null
+    password_reset_expires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    posts?: PostsUpdateManyWithoutUserNestedInput
+  }
+
+  export type UsersUncheckedUpdateWithoutTransactionsInput = {
+    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_password?: StringFieldUpdateOperationsInput | string
+    user_first_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_last_name?: NullableStringFieldUpdateOperationsInput | string | null
+    user_gender?: NullableEnumusers_user_genderFieldUpdateOperationsInput | $Enums.users_user_gender | null
+    user_birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user_phone?: NullableStringFieldUpdateOperationsInput | string | null
+    user_email?: StringFieldUpdateOperationsInput | string
+    user_address?: NullableStringFieldUpdateOperationsInput | string | null
+    user_avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    user_avg_rating?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    user_review_count?: NullableIntFieldUpdateOperationsInput | number | null
+    user_bio?: NullableStringFieldUpdateOperationsInput | string | null
+    user_created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user_verification?: Enumusers_user_verificationFieldUpdateOperationsInput | $Enums.users_user_verification
+    user_role?: Enumusers_user_roleFieldUpdateOperationsInput | $Enums.users_user_role
+    account_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    otp?: NullableStringFieldUpdateOperationsInput | string | null
+    otp_expiry_time?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    password_reset_token?: NullableStringFieldUpdateOperationsInput | string | null
+    password_reset_expires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    posts?: PostsUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type PostsCreateManyUserInput = {
     post_id?: number
     post_title: string
@@ -8545,6 +10424,18 @@ export namespace Prisma {
     post_longitude?: number | null
     created_at?: Date | string
     expired_at?: Date | string | null
+  }
+
+  export type TransactionsCreateManyUserInput = {
+    transaction_id?: bigint | number
+    amount: Decimal | DecimalJsLike | number | string
+    type: $Enums.TransactionType
+    status?: $Enums.TransactionStatus
+    payment_method: string
+    transaction_code?: string | null
+    description?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
   }
 
   export type PostsUpdateWithoutUserInput = {
@@ -8611,6 +10502,42 @@ export namespace Prisma {
     post_longitude?: NullableFloatFieldUpdateOperationsInput | number | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     expired_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type TransactionsUpdateWithoutUserInput = {
+    transaction_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    payment_method?: StringFieldUpdateOperationsInput | string
+    transaction_code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransactionsUncheckedUpdateWithoutUserInput = {
+    transaction_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    payment_method?: StringFieldUpdateOperationsInput | string
+    transaction_code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TransactionsUncheckedUpdateManyWithoutUserInput = {
+    transaction_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    type?: EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+    status?: EnumTransactionStatusFieldUpdateOperationsInput | $Enums.TransactionStatus
+    payment_method?: StringFieldUpdateOperationsInput | string
+    transaction_code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PostImagesCreateManyPostInput = {

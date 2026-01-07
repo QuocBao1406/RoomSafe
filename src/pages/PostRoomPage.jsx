@@ -11,7 +11,7 @@ import L from 'leaflet';
 import { 
             FaHome, FaMapMarked , FaImages, FaInfoCircle, FaDollarSign, FaCloudUploadAlt, 
             FaTrash, FaTags, FaMapPin, FaLightbulb,
-            FaPaperPlane
+            FaPaperPlane, FaWallet, FaExclamationTriangle
         } from 'react-icons/fa';
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -20,6 +20,12 @@ L.Icon.Default.mergeOptions({
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
+
+const PRICE_LIST = {
+    "7": 20000,   // 7 ngày = 20k
+    "15": 35000,  // 15 ngày = 35k (Rẻ hơn chút)
+    "30": 60000   // 30 ngày = 60k (Best deal)
+};
 
 const PostRoomPage = () => {
     const { user } = useContext(UserContext);
@@ -33,6 +39,13 @@ const PostRoomPage = () => {
     const { register, handleSubmit, setValue, watch, formState: { errors, isSubmitting }} = useForm();
 
     const watchedValues = watch();
+
+    const selectedDuration = watchedValues.duration || "7";
+    const postFee = PRICE_LIST[selectedDuration] || 20000;
+    
+    // Lấy số dư
+    const currentBalance = parseFloat(user?.account_balance || 0);
+    const isEnoughMoney = currentBalance >= postFee;
 
     const [provinces, setProvinces] = useState([]); // danh sach tinh/thanh pho
     const [districts, setDistricts] = useState([]); // danh sach quan/huyen
@@ -234,6 +247,12 @@ const PostRoomPage = () => {
     }
 
     const onSubmit = async (data) => {
+        if(!isEnoughMoney) {
+            toast.error("Số dư không đủ để đăng tin!");
+            document.getElementById('payment-widget')?.scrollIntoView({behavior: 'smooth'});
+            return;
+        }
+
         if (selectedImages.length === 0) {
             toast.error("vui lòng chọn ít nhất 1 ảnh minh họa!");
             return;
@@ -596,18 +615,50 @@ const PostRoomPage = () => {
                                 </div>
                             </div>
 
-                            <div className="tips-widget">
-                                <h4><FaLightbulb />Mẹo hay</h4>
-                                <ul>
-                                    <li>Hình ảnh rõ nét tăng 30% lượt xem.</li>
-                                    <li>Tiêu đề đầy đủ địa điểm thu hút hơn.</li>
-                                    <li>Điền đúng giá để tránh bị báo cáo.</li>
-                                </ul>
+                            {/* --- WIDGET THANH TOÁN (MỚI) --- */}
+                            <div id="payment-widget" className="payment-summary-card">
+                                <div className="payment-header">
+                                    <FaWallet /> Thông tin thanh toán
+                                </div>
+                                
+                                <div className="payment-row">
+                                    <span>Gói tin:</span>
+                                    <span className="bold">{selectedDuration} ngày</span>
+                                </div>
+                                
+                                <div className="payment-row">
+                                    <span>Phí đăng:</span>
+                                    <span className="price-tag">-{formatPrice(postFee)}đ</span>
+                                </div>
+
+                                <div className="payment-divider"></div>
+
+                                <div className="payment-row">
+                                    <span>Số dư ví:</span>
+                                    <span className={isEnoughMoney ? "text-green" : "text-red"}>
+                                        {formatPrice(currentBalance)}đ
+                                    </span>
+                                </div>
+
+                                {!isEnoughMoney && (
+                                    <div className="alert-box">
+                                        <FaExclamationTriangle />
+                                        <div>
+                                            Thiếu <b>{formatPrice(postFee - currentBalance)}đ</b>
+                                            <div 
+                                                className="link-deposit" 
+                                                onClick={() => navigate('/deposit')}
+                                            >
+                                                Nạp ngay
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="form-actions">
-                                <button type="submit" className="btn-submit" disabled={isSubmitting}>
-                                    {isSubmitting ? 'Đang xử lý...' : <><FaPaperPlane />Đăng tin ngay</>}
+                                <button type="submit" className={`btn-submit ${!isEnoughMoney ? 'disabled' : ''}`} disabled={isSubmitting || !isEnoughMoney}>
+                                    {isSubmitting ? 'Đang xử lý...' : (isEnoughMoney ? <><FaPaperPlane />Thanh Toán & Đăng tin</> : 'Số dư không đủ')}
                                 </button>
                                 <button type="button" className="btn-cancel" onClick={() => navigate(-1)}>Hủy bỏ</button>
                             </div>

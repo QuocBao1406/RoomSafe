@@ -24,7 +24,7 @@ const SupportChat = () => {
         setIsTyping(true);
         setTimeout(() => {
             const helloText = user 
-                ? `Chào ${user.full_name || user.username}! 👋\nRoomSafe AI có thể giúp gì cho việc ${user.role === 'LANDLORD' ? 'quản lý trọ' : 'tìm phòng'} của bạn?`
+                ? `Chào ${user.firstName}! 👋\nRoomSafe AI có thể giúp gì cho việc ${user.role === 'LANDLORD' ? 'quản lý trọ' : 'tìm phòng'} của bạn?`
                 : "Xin chào! 👋\nMình là trợ lý ảo RoomSafe. Bạn cần tìm phòng trọ hay đăng tin?";
             
             const timeNow = new Date().toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'});

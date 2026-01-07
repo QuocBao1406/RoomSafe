@@ -209,7 +209,7 @@ const RoommateListPage = () => {
                                 // Ưu tiên 2: Lấy từ item.users (trường hợp API join bảng users)
                                 // Ưu tiên 3: Lấy từ item.contact_name (trường hợp form đăng tin)
                                 const user = item.user || item.users || {};
-                                const hostName = `${user.user_first_name || ""} ${user.user_last_name || ""}`.trim() || "Người đăng";
+                                const hostName = `${user.user_last_name || ""} ${user.user_first_name || ""}`.trim() || "Người đăng";
                                 const hostAvatar = user.user_avatar || user.avatar || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
                                 return (

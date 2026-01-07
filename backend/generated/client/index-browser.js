@@ -138,6 +138,7 @@ exports.Prisma.UsersScalarFieldEnum = {
   user_created_at: 'user_created_at',
   user_verification: 'user_verification',
   user_role: 'user_role',
+  account_balance: 'account_balance',
   otp: 'otp',
   otp_expiry_time: 'otp_expiry_time',
   password_reset_token: 'password_reset_token',
@@ -185,6 +186,19 @@ exports.Prisma.PostImagesScalarFieldEnum = {
   post_id: 'post_id'
 };
 
+exports.Prisma.TransactionsScalarFieldEnum = {
+  transaction_id: 'transaction_id',
+  user_id: 'user_id',
+  amount: 'amount',
+  type: 'type',
+  status: 'status',
+  payment_method: 'payment_method',
+  transaction_code: 'transaction_code',
+  description: 'description',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -228,6 +242,12 @@ exports.Prisma.RoommateDetailsOrderByRelevanceFieldEnum = {
 exports.Prisma.PostImagesOrderByRelevanceFieldEnum = {
   image_url: 'image_url'
 };
+
+exports.Prisma.TransactionsOrderByRelevanceFieldEnum = {
+  payment_method: 'payment_method',
+  transaction_code: 'transaction_code',
+  description: 'description'
+};
 exports.users_user_gender = exports.$Enums.users_user_gender = {
   MALE: 'MALE',
   FEMALE: 'FEMALE',
@@ -260,11 +280,24 @@ exports.PostStatus = exports.$Enums.PostStatus = {
   HIDDEN: 'HIDDEN'
 };
 
+exports.TransactionType = exports.$Enums.TransactionType = {
+  DEPOSIT: 'DEPOSIT',
+  PAYMENT: 'PAYMENT',
+  REFUND: 'REFUND'
+};
+
+exports.TransactionStatus = exports.$Enums.TransactionStatus = {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED'
+};
+
 exports.Prisma.ModelName = {
   Users: 'Users',
   Posts: 'Posts',
   RoommateDetails: 'RoommateDetails',
-  PostImages: 'PostImages'
+  PostImages: 'PostImages',
+  Transactions: 'Transactions'
 };
 
 /**

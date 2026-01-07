@@ -539,3 +539,81 @@ textarea {
     .three-cols, .two-cols { grid-template-columns: 1fr; }
     .post-page-wrapper { padding: 30px 15px; }
 }
+
+.payment-summary-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+    margin-top: 20px;
+}
+
+.payment-header {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.payment-header svg { color: #4f46e5; }
+
+.payment-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    color: #64748b;
+}
+
+.payment-row .bold { font-weight: 700; color: #1e293b; }
+.payment-row .price-tag { font-weight: 700; color: #ef4444; } /* Màu đỏ cho khoản trừ */
+.payment-row .text-green { color: #10b981; font-weight: 700; font-size: 1.1rem; }
+.payment-row .text-red { color: #ef4444; font-weight: 700; font-size: 1.1rem; }
+
+.payment-divider {
+    border-top: 1px dashed #cbd5e1;
+    margin: 15px 0;
+}
+
+/* Cảnh báo thiếu tiền */
+.alert-box {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 10px;
+    animation: pulse 2s infinite;
+}
+
+.link-deposit {
+    color: #2563eb;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 4px;
+    display: inline-block;
+}
+
+/* Disabled Button Style */
+.btn-submit.disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}

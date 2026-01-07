@@ -22,6 +22,7 @@ import AdminUsersPage from './pages/admin/AdminUsersPage.jsx';
 import AdminPostsPage from './pages/admin/AdminPostsPage.jsx';
 import { useLocation } from 'react-router-dom';
 import SupportChat from './components/SupportChat.jsx';
+import DepositPage from './pages/DepositPage.jsx';
 
 function AppContent() {
 
@@ -51,6 +52,7 @@ function AppContent() {
           <Route element={<ProtectedRoute allowedRoles={['LANDLORD', 'TENANT']} />}>
              <Route path="/profile" element={<ProfilePage />} />
              <Route path="/room/:id" element={<RoomDetailPage />} />
+             <Route path="deposit" element={<DepositPage />} />
           </Route>
 
           {/* --- LANDLORD ONLY --- */}

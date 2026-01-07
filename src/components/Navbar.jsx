@@ -8,7 +8,7 @@ import AuthPage from '../pages/LoginPage.jsx';
 import { UserContext } from '../contexts/UserContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
-import { FaUser, FaSignOutAlt, FaPlusCircle } from "react-icons/fa";
+import { FaUser, FaSignOutAlt, FaPlusCircle, FaWallet } from "react-icons/fa";
 
 const mobileMenuVariants = {
   hidden: {
@@ -206,6 +206,14 @@ const Navbar = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                   >
+                    <div className="nav-show">
+                      Chào <label>{user.firstName}</label>,<br />
+                      Số dư: {user.account_balance}đ
+                    </div>
+                    <hr className="nav-line"></hr>
+                    <NavLink to="/deposit" className="dropdown-item" onClick={() => setIsDropdownOpen(false)}>
+                      <FaWallet className="dropdown-icon" /> Nạp tiền
+                    </NavLink>
                     <NavLink to="/profile" className="dropdown-item" onClick={() => setIsDropdownOpen(false)}>
                       <FaUser className="dropdown-icon" /> Thông tin cá nhân
                     </NavLink>

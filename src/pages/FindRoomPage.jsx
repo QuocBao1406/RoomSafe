@@ -287,7 +287,7 @@ const FindRoomPage = () => {
                                     <div className="user-info">
                                         <img className="user-avatar" src={post.user?.user_avatar || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="user" />
                                         <span>
-                                            {`${post.user?.user_first_name || ""} ${post.user?.user_last_name || ""}`.trim() || "Chủ trọ"}
+                                            {`${post.user?.user_last_name || ""} ${post.user?.user_first_name || ""}`.trim() || "Chủ trọ"}
                                         </span>
                                     </div>
                                     <span className="time-posted">

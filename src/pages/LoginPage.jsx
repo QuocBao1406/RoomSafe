@@ -82,6 +82,7 @@ function LoginPage() {
         provider: "local",
         avatar: userData.avatar || null,
         role: userData.role || userData.user_role || "TENANT",
+        account_balance: userData.account_balance,
         token: userData.token, // cần cho gọi API admin
       };
 

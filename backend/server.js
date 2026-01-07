@@ -9,15 +9,11 @@ import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import adminRoutes from "./routes/admin.js";
 import aiRoutes from "./routes/ai.js";
+import paymentRoutes from "./routes/payment.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({path: path.join(__dirname, '../.env')});
-
-console.log("------------------------------------------------");
-console.log("--> Đường dẫn file .env:", path.join(__dirname, '../.env'));
-console.log("--> Trạng thái JWT_SECRET:", process.env.JWT_SECRET ? "ĐÃ LOAD OK (Thành công)" : "VẪN LỖI (Undefined)");
-console.log("------------------------------------------------");
 
 BigInt.prototype.toJSON = function () {
     return this.toString();
@@ -35,6 +31,7 @@ app.use("/api/roommates", roommateRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/payment", paymentRoutes);
 
 app.listen(5000, () => {
     console.log("Server is running on http://localhost:5000");

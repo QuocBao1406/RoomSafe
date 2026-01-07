@@ -61,6 +61,7 @@ router.post("/login", async (req, res) => {
         firstName: user.user_first_name,
         lastName: user.user_last_name,
         role: user.user_role,
+        account_balance: user.account_balance,
       },
       "288918912ukjduiujhduiiuewjk18" // <--- SECRET_KEY
     );
@@ -74,6 +75,7 @@ router.post("/login", async (req, res) => {
       email: user.user_email,
       avatar: user.user_avatar || null,
       role: user.user_role,
+      account_balance: user.account_balance,
     });
 
     console.log("Đăng nhập thành công");
